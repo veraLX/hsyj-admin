@@ -25,15 +25,18 @@ html,body{
   .size;
 }
 .ivu-card-head{
-    border-bottom: none!important;
-    padding: 0!important;
-    > p{
-      color: red!important;
-      font-size: 30px!important;
-      font-weight: bold!important;
-      text-shadow: 0 0 5px #aaa!important;
-      height: 35px!important;
-      line-height: 35px!important;
-    }
+  border-bottom: none!important;
+  > p{
+    font-size: 16px!important;
+  }
+}
+.ivu-modal-header{
+  border-bottom: none!important
+}
+.ivu-modal-footer{
+  border-top: none!important
+}
+.ivu-modal-header p, .ivu-modal-header-inner{
+  font-size: 18px!important
 }
 </style>

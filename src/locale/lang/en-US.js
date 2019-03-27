@@ -45,5 +45,7 @@ export default {
   tree_select_page: 'Tree Selector',
   data_analysis_page: 'Data Analysis',
   account_management: 'Account Management',
+  site_management: 'Site Management',
+  activity_management: 'Activity Management',
   synchronization_student_information: 'Synchronization Student Information'
 }

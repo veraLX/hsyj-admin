@@ -43,7 +43,9 @@ export default {
   org_tree_page: '組織結構樹',
   drag_drawer_page: '可拖動抽屜',
   tree_select_page: '樹狀下拉選擇器',
-  data_analysis_page: '数据分析',
+  data_analysis_page: '数据管理',
   account_management: '账户管理',
+  site_management: '景点管理',
+  activity_management: '活动管理',
   synchronization_student_information: '学生信息同步'
 }

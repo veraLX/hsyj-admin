@@ -103,7 +103,7 @@ export default [
         name: 'data_analysis_page',
         meta: {
           icon: 'ios-navigate',
-          title: '数据分析'
+          title: '数据统计'
         },
         component: () => import('@/view/data-analysis/index.vue')
       }
@@ -144,6 +144,44 @@ export default [
           title: '学生信息同步'
         },
         component: () => import('@/view/synchronization-student-information/index.vue')
+      }
+    ]
+  },
+  {
+    path: '/siteManagement',
+    name: 'siteManagement',
+    meta: {
+      hideInBread: true
+    },
+    component: Main,
+    children: [
+      {
+        path: 'site_management',
+        name: 'site_management',
+        meta: {
+          icon: 'ios-navigate',
+          title: '景点管理'
+        },
+        component: () => import('@/view/site-management/index.vue')
+      }
+    ]
+  },
+  {
+    path: '/activityManagement',
+    name: 'activityManagement',
+    meta: {
+      hideInBread: true
+    },
+    component: Main,
+    children: [
+      {
+        path: 'activity_management',
+        name: 'activity_management',
+        meta: {
+          icon: 'ios-navigate',
+          title: '活动管理'
+        },
+        component: () => import('@/view/activity-management/index.vue')
       }
     ]
   },

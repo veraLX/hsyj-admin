@@ -41,7 +41,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .login-title{
     color: red;
     font-size: 60px;
@@ -51,5 +51,16 @@ export default {
     position: relative;
     top: 20%;
 }
-
+.ivu-card-head{
+    border-bottom: none!important;
+    padding: 0!important;
+    > p{
+      color: red!important;
+      font-size: 30px!important;
+      font-weight: bold!important;
+      text-shadow: 0 0 5px #aaa!important;
+      height: 35px!important;
+      line-height: 35px!important;
+    }
+}
 </style>
