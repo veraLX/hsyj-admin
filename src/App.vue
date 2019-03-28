@@ -37,6 +37,10 @@ html,body{
   border-top: none!important
 }
 .ivu-modal-header p, .ivu-modal-header-inner{
+  height: 22px!important;
   font-size: 18px!important
+}
+.ivu-poptip-body{
+  text-align: left!important
 }
 </style>

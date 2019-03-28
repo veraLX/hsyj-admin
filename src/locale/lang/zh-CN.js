@@ -46,6 +46,8 @@ export default {
   data_analysis_page: '数据统计',
   account_management: '账户管理',
   site_management: '景点管理',
+  school_management: '校区管理',
   activity_management: '活动管理',
+  message_management: '账户与留言',
   synchronization_student_information: '学生信息同步'
 }

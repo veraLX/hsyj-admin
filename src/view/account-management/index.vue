@@ -93,12 +93,49 @@ export default {
       ],
       AdministratorColumns: [
         { title: ' ', type: 'index', width: 60, align: 'center' },
-        { title: '管理员账户', key: 'name' },
-        { title: '管理员密码', key: 'password' },
+        { title: '管理员账户',
+          key: 'name',
+          render: (h, params) => {
+            if (params.row.$isEdit) {
+              return h('input', {
+                domProps: {
+                  value: params.row.name
+                },
+                on: {
+                  input: function (event) {
+                    params.row.name = event.target.value
+                  }
+                }
+              })
+            } else {
+              return h('div', params.row.name)
+            }
+          }
+        },
+        { title: '管理员密码',
+          key: 'password',
+          render: (h, params) => {
+            if (params.row.$isEdit) {
+              return h('input', {
+                domProps: {
+                  value: params.row.password
+                },
+                on: {
+                  input: function (event) {
+                    params.row.password = event.target.value
+                  }
+                }
+              })
+            } else {
+              return h('div', params.row.password)
+            }
+          }
+        },
         {
           title: '操作',
           key: 'action',
           width: 140,
+          align: 'center',
           options: ['delete'],
           render: (h, params) => {
             return h('div', [
@@ -107,8 +144,17 @@ export default {
                 props: {
                   type: 'primary',
                   size: 'small'
+                },
+                on: {
+                  click: () => {
+                    if (params.row.$isEdit) {
+                      this.$set(params.row, '$isEdit', false)
+                    } else {
+                      this.$set(params.row, '$isEdit', true)
+                    }
+                  }
                 }
-              }, '新增'),
+              }, params.row.$isEdit ? '保存' : '编辑'),
               h('Poptip', {
                 props: {
                   confirm: true,
@@ -133,11 +179,13 @@ export default {
       AdministratorData: [
         {
           name: 'fudan1',
-          password: 'fd12345678'
+          password: 'fd12345678',
+          $isEdit: false
         },
         {
           name: 'fudan2',
-          password: 'fd12345678'
+          password: 'fd12345678',
+          $isEdit: false
         }
       ]
     }

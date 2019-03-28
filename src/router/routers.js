@@ -167,6 +167,25 @@ export default [
     ]
   },
   {
+    path: '/schoolManagement',
+    name: 'schoolManagement',
+    meta: {
+      hideInBread: true
+    },
+    component: Main,
+    children: [
+      {
+        path: 'school_management',
+        name: 'school_management',
+        meta: {
+          icon: 'ios-navigate',
+          title: '校区管理'
+        },
+        component: () => import('@/view/school-management/index.vue')
+      }
+    ]
+  },
+  {
     path: '/activityManagement',
     name: 'activityManagement',
     meta: {
@@ -182,6 +201,25 @@ export default [
           title: '活动管理'
         },
         component: () => import('@/view/activity-management/index.vue')
+      }
+    ]
+  },
+  {
+    path: '/messageManagement',
+    name: 'messageManagement',
+    meta: {
+      hideInBread: true
+    },
+    component: Main,
+    children: [
+      {
+        path: 'message_management',
+        name: 'message_management',
+        meta: {
+          icon: 'ios-navigate',
+          title: '账户与留言'
+        },
+        component: () => import('@/view/message-management/index.vue')
       }
     ]
   },
