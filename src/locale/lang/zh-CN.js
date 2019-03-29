@@ -48,6 +48,7 @@ export default {
   site_management: '景点管理',
   school_management: '校区管理',
   activity_management: '活动管理',
+  answer_management: '答题管理',
   message_management: '账户与留言',
   synchronization_student_information: '学生信息同步'
 }

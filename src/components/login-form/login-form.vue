@@ -57,7 +57,7 @@ export default {
     return {
       form: {
         userName: 'super_admin',
-        password: '',
+        password: 'super_admin',
         code: ''
       }
     }
