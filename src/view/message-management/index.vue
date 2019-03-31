@@ -1,19 +1,21 @@
 <template>
   <div>
-    <Card>
-      <p slot="title">新增校区</p>
-      <Form ref="formInline" :model="formInline" :rules="ruleInline" inline :label-width="80">
-        <FormItem prop="password" label="校区名称:" :style="{'width': '400px'}">
-            <Input type="password" v-model="formInline.password" placeholder="输入景点名称"></Input>
-        </FormItem>
-        <Poptip confirm title="你确定要删除这个单子吗?" placement="right-end">
-            <Button type="primary" >增加</Button>
-        </Poptip>
-      </Form>
+    <Card >
+      <div slot="title">
+        <p style="display:inline">留言</p>&nbsp;&nbsp;
+        <Tag color="red">待审批留言数量 99 条</Tag>
+      </div>
+      <Table stripe :columns="MessageColumns" :data="MessageData"></Table>
     </Card>
     <Card :style="{'margin-top': '10px'}">
-      <p slot="title">校区列表</p>
-      <Table stripe :columns="schoolColumns" :data="schoolData"></Table>
+      <p slot="title">学生账户</p>
+      <Form ref="formInline" :model="formInline" inline :label-width="100">
+        <FormItem prop="number" label="学生学籍号码" :style="{'width': '400px'}">
+            <Input  v-model="formInline.number" placeholder="输入学生学籍号码"></Input>
+        </FormItem>
+        <Button type="primary">查询</Button>
+        <Table stripe :columns="StudentColumns" :data="StudentData"></Table>
+      </Form>
     </Card>
   </div>
 </template>
@@ -24,16 +26,29 @@ export default {
   data () {
     return {
       formInline: {
-        password: ''
+        number: ''
       },
-      ruleInline: {
-        password: [
-          { required: true, message: '请输入景点名称', trigger: 'blur' }
-        ]
-      },
-      schoolColumns: [
+      StudentColumns: [
+        { title: '学生姓名', key: 'name' },
+        { title: '学籍号', key: 'studentID' },
+        { title: '手机号码', key: 'phone' },
+        { title: '微信号码', key: 'weixin' }
+      ],
+      StudentData: [
+        {
+          name: ' 万苏文',
+          studentID: '1111111111',
+          phone: '1302589758',
+          weixin: '123123'
+        }
+      ],
+      MessageColumns: [
         { title: ' ', type: 'index', width: 60, align: 'center' },
-        { title: '校区名称', key: 'name' },
+        { title: '学生姓名', key: 'name' },
+        { title: '学籍号', key: 'studentID' },
+        { title: '景点', key: 'site' },
+        { title: '留言日期', key: 'time' },
+        { title: '留言内容', key: 'content', width: 300 },
         {
           title: '操作',
           key: 'action',
@@ -41,54 +56,52 @@ export default {
           align: 'center',
           options: ['delete'],
           render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                style: { 'margin-right': '8px' },
-                props: {
-                  type: 'primary',
-                  size: 'small',
-                  disabled: params.row.isOriginal
-                },
-                on: {
-                  click: () => {
-                    console.log(params)
+            if (!params.row.$isLogin) {
+              return h('div', [
+                h('Button', {
+                  style: { 'margin-right': '8px' },
+                  props: {
+                    type: 'primary',
+                    size: 'small'
                   }
-                }
-              }, '新增'),
-              h('Poptip', {
-                props: {
-                  confirm: true,
-                  title: '你确定要删除吗?'
-                },
-                on: {
-                  'on-ok': async () => {
+                }, '受理')
+              ])
+            } else {
+              return h('div', [
+                h('Button', {
+                  style: { 'margin-right': '8px' },
+                  props: {
+                    type: 'primary',
+                    size: 'small'
                   }
-                }
-              }, [
+                }, '通过'),
                 h('Button', {
                   props: {
                     type: 'error',
-                    size: 'small',
-                    disabled: params.row.isOriginal
+                    size: 'small'
                   }
-                }, '删除')
+                }, '拒绝')
               ])
-            ])
+            }
           }
         }
       ],
-      schoolData: [
+      MessageData: [
         {
-          name: '同济大学本校',
-          isOriginal: true
+          name: ' 王毅王',
+          studentID: '1111111111',
+          site: '财大老门',
+          time: '2019-05-01',
+          content: '三好坞有三座亭子，湖心亭和两个在山上的，成为聚友、约会、休闲的好地方。',
+          $isLogin: false
         },
         {
-          name: '同济大学北校',
-          isOriginal: false
-        },
-        {
-          name: '同济大学嘉定校区',
-          isOriginal: false
+          name: '苏毅王',
+          studentID: '1111111111',
+          site: 'APP首页',
+          time: '2019-05-01',
+          content: '更换手机号码，申请解绑',
+          $isLogin: true
         }
       ]
     }
@@ -100,22 +113,5 @@ export default {
 </script>
 
 <style>
-/* .schoolItem{
-    text-align: center;
-    padding: 10px;
-}
-.schoolItem > .ivu-card > .ivu-card-body{
-    display: flex;
-    justify-content: space-around;
-}
-.zeroTip{
-  color: red
-}
-.littleTitle{
-  font-size: 14px;
-  height: 40px;
-  line-height: 40px;
-  border-bottom: 1px solid #e8eaec;
-  margin-bottom: 18px;
-} */
+
 </style>

@@ -28,6 +28,8 @@ html,body{
   border-bottom: none!important;
   > p{
     font-size: 16px!important;
+    // height: 22px!important;
+    // line-height: 22px!important;
   }
 }
 .ivu-modal-header{

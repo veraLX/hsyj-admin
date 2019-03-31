@@ -54,9 +54,10 @@ export default {
         { title: '地点', key: 'site' },
         { title: '题干',
           key: 'question',
+          width: 300,
           render: (h, params) => {
             if (params.row.$isEdit) {
-              return h('input', {
+              return h('textarea', {
                 domProps: {
                   value: params.row.question
                 },
@@ -75,7 +76,7 @@ export default {
         { title: '选项B', key: 'B' },
         { title: '选项C', key: 'C' },
         { title: '选项D', key: 'D' },
-        { title: '正确答案', key: 'answer' },
+        { title: '正确答案', key: 'answer', width: 90 },
         {
           title: '操作',
           key: 'action',
