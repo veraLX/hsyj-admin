@@ -1,6 +1,15 @@
 <template>
   <div>
-    <Row :gutter="20">
+    <Card >
+      <p slot="title">新增机构</p>
+      <Form ref="formInline" :model="formInline" :rules="ruleInline" inline :label-width="80">
+        <FormItem prop="name" label="机构名称:" :style="{'width': '400px'}">
+            <Input v-model="formInline.name" placeholder="输入机构名称"></Input>
+        </FormItem>
+        <Button type="primary">增加</Button>
+      </Form>
+    </Card>
+    <Row :gutter="20" :style="{'margin-top': '10px'}">
       <i-col :xs="8" :md="8" :lg="4" class="schoolItem" v-for="(school, index) in schoolList" :key="index" @click="schoolDetail">
         <Card @click.native="schoolDetail(school)">
           <span>{{school.name}}</span>
@@ -8,15 +17,6 @@
         </Card>
       </i-col>
     </Row>
-    <Card :style="{'margin-top': '10px'}">
-      <p slot="title">新增机构</p>
-      <Form ref="formInline" :model="formInline" :rules="ruleInline" inline :label-width="80">
-        <FormItem prop="password" label="机构名称:" :style="{'width': '400px'}">
-            <Input type="password" v-model="formInline.password" placeholder="输入机构名称"></Input>
-        </FormItem>
-        <Button type="primary">增加</Button>
-      </Form>
-    </Card>
     <!-- <Card :style="{'margin-top': '20px'}">
       <p slot="title">新增校区</p>
       <Form ref="formInline" :model="formInline" :rules="ruleInline" inline :label-width="80">
@@ -61,7 +61,7 @@ export default {
       currentSchool: '',
       schoolModal: false,
       formInline: {
-        password: ''
+        name: ''
       },
       Administrator: {
         name: '',

@@ -1,110 +1,119 @@
 <template>
   <div>
-   <Card>
-      <p slot="title">新增活动</p>
-      <Form :model="activityForm" inline label-position="right" :label-width="100">
-        <FormItem prop="name" label="活动名称" :style="{'width': 'calc((100% - 30px)/3)'}">
-            <Input v-model="activityForm.name" placeholder="输入景点名称"></Input>
-        </FormItem>
-         <FormItem prop="school" label="主会场" :style="{'width': 'calc((100% - 30px)/3)'}">
-            <Select v-model="activityForm.school">
-              <!-- <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option> -->
-            </Select>
-        </FormItem>
-        <FormItem prop="audioURL" label="主板房" :style="{'width': 'calc((100% - 30px)/3)'}">
-            <Input v-model="activityForm.audioURL" placeholder="输入音频URL地址"></Input>
-        </FormItem>
-        <FormItem prop="longitude" label="协办方" :style="{'width': 'calc((100% - 30px)/3)'}">
-            <Input v-model="activityForm.longitude" placeholder="输入经度"></Input>
-        </FormItem>
-         <FormItem prop="startDate" label="开始日期" :style="{'width': 'calc((100% - 30px)/3)'}">
-            <DatePicker v-model="activityForm.startDate" type="date" placeholder="输入开始日期" :style="{'width': '100%'}" ></DatePicker>
-        </FormItem>
-        <FormItem prop="endDate" label="结束日期" :style="{'width': 'calc((100% - 30px)/3)'}">
-            <DatePicker v-model="activityForm.endDate" type="date" placeholder="输入结束日期" :style="{'width': '100%'}" ></DatePicker>
-        </FormItem>
-        <FormItem prop="universities" label="学校范围" :style="{'width': 'calc((100% - 20px)/3*2 + 4px)'}">
-          <Transfer
-          :data="data1"
-          :target-keys="targetKeys1"
-          :render-format="render1"
-          @on-change="handleChange1"></Transfer>
-        </FormItem>
-        <FormItem prop="shhoolClearanceThreshold" label="通关阈值(学校)" :style="{'width': 'calc((100% - 20px)/3 - 4px)'}">
-          <InputNumber :min="1" v-model="activityForm.shhoolClearanceThreshold"></InputNumber>
-        </FormItem>
-        <FormItem prop="scenic" label="景点选择" :style="{'width': 'calc((100% - 20px)/3*2 + 4px)'}">
-          <Transfer
-          :data="data2"
-          :target-keys="targetKeys2"
-          :render-format="render1"
-          @on-change="handleChange1"></Transfer>
-        </FormItem>
-        <FormItem prop="siteClearanceThreshold" label="通关阈值(景点)" :style="{'width': 'calc((100% - 20px)/3 - 4px)'}">
-          <InputNumber :min="1" v-model="activityForm.siteClearanceThreshold"></InputNumber>
-        </FormItem>
-         <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
-            <Checkbox v-model="single">是否设定起点</Checkbox>
-            <Select v-model="activityForm.school">
-              <!-- <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option> -->
-            </Select>
-        </FormItem>
-         <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
-            <Checkbox v-model="single">是否设定终点</Checkbox>
-            <Select v-model="activityForm.school">
-                <!-- <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option> -->
-              </Select>
-        </FormItem>
-         <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
-            <Checkbox v-model="single">是否团队赛</Checkbox>
-            <br/>组队人数：<InputNumber :min="1" v-model="activityForm.siteClearanceThreshold"></InputNumber>
-        </FormItem>
-        <FormItem prop="description" label="活动描述" :style="{'width': 'calc(100% - 10px)'}">
-            <Input type="textarea" v-model="activityForm.description" placeholder="输入描述"></Input>
-        </FormItem>
-        <Row class="imgRow">
-          <i-col span="20">
-            <span class="fromLabel">图片预览</span>
-            <div class="demo-upload-list" v-for="(item,index) in uploadList" :key="index">
-              <template v-if="item.status === 'finished'">
-                  <img :src="item.url">
-                  <div class="demo-upload-list-cover">
-                      <Icon size="40px" type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                      <Icon size="40px" type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                  </div>
-              </template>
-              <template v-else>
-                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-              </template>
-            </div>
-            <Upload
-              ref="upload"
-              :show-upload-list="false"
-              :default-file-list="defaultList"
-              :on-success="handleSuccess"
-              :format="['jpg','jpeg','png']"
-              :max-size="2048"
-              :on-format-error="handleFormatError"
-              :on-exceeded-size="handleMaxSize"
-              :before-upload="handleBeforeUpload"
-              multiple
-              type="drag"
-              action="//jsonplaceholder.typicode.com/posts/"
-              style="display: inline-block;width:142px;">
-              <div style="width: 142px;height:80px;line-height: 80px;">
-                  <Icon type="ios-camera" size="30"></Icon>
-              </div>
-            </Upload>
-          </i-col>
-          <i-col span="4">
-            <Button class="bottomRight" type="primary" >增加</Button>
-          </i-col>
-        </Row>
-      </Form>
-    </Card>
-    <Card :style="{'margin-top': '20px'}">
-      <p slot="title">活动列表</p>
-      <Table stripe :columns="activityColumns" :data="activityData"></Table>
+    <Card>
+    <Tabs value="new">
+        <TabPane label="新增活动" name="new">
+          <!-- <Card>
+              <p slot="title">新增活动</p> -->
+              <Form :model="activityForm" inline label-position="right" :label-width="100">
+                <FormItem prop="name" label="活动名称" :style="{'width': 'calc((100% - 30px)/3)'}">
+                    <Input v-model="activityForm.name" placeholder="输入景点名称"></Input>
+                </FormItem>
+                <FormItem prop="school" label="主会场" :style="{'width': 'calc((100% - 30px)/3)'}">
+                    <Select v-model="activityForm.school">
+                      <!-- <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option> -->
+                    </Select>
+                </FormItem>
+                <FormItem prop="audioURL" label="主板房" :style="{'width': 'calc((100% - 30px)/3)'}">
+                    <Input v-model="activityForm.audioURL" placeholder="输入音频URL地址"></Input>
+                </FormItem>
+                <FormItem prop="longitude" label="协办方" :style="{'width': 'calc((100% - 30px)/3)'}">
+                    <Input v-model="activityForm.longitude" placeholder="输入经度"></Input>
+                </FormItem>
+                <FormItem prop="startDate" label="开始日期" :style="{'width': 'calc((100% - 30px)/3)'}">
+                    <DatePicker v-model="activityForm.startDate" type="date" placeholder="输入开始日期" :style="{'width': '100%'}" ></DatePicker>
+                </FormItem>
+                <FormItem prop="endDate" label="结束日期" :style="{'width': 'calc((100% - 30px)/3)'}">
+                    <DatePicker v-model="activityForm.endDate" type="date" placeholder="输入结束日期" :style="{'width': '100%'}" ></DatePicker>
+                </FormItem>
+                <FormItem prop="universities" label="学校范围" :style="{'width': 'calc((100% - 20px)/2)'}">
+                  <Transfer
+                  :data="data1"
+                  :target-keys="targetKeys1"
+                  :render-format="render1"
+                  @on-change="handleChange1"></Transfer>
+                </FormItem>
+                <FormItem prop="scenic" label="景点选择" :style="{'width': 'calc((100% - 20px)/2)'}">
+                  <Transfer
+                  :data="data2"
+                  :target-keys="targetKeys2"
+                  :render-format="render1"
+                  @on-change="handleChange1"></Transfer>
+                </FormItem>
+                <FormItem prop="shhoolClearanceThreshold" label="通关阈值(学校)" :style="{'width': 'calc((100% - 20px)/2)'}">
+                  <InputNumber :min="1" v-model="activityForm.shhoolClearanceThreshold"></InputNumber>
+                </FormItem>
+
+                <FormItem prop="siteClearanceThreshold" label="通关阈值(景点)" :style="{'width': 'calc((100% - 20px)/2)'}">
+                  <InputNumber :min="1" v-model="activityForm.siteClearanceThreshold"></InputNumber>
+                </FormItem>
+                <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
+                    <Checkbox v-model="single">是否设定起点</Checkbox>
+                    <Select v-model="activityForm.school">
+                      <!-- <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option> -->
+                    </Select>
+                </FormItem>
+                <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
+                    <Checkbox v-model="single">是否设定终点</Checkbox>
+                    <Select v-model="activityForm.school">
+                        <!-- <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option> -->
+                      </Select>
+                </FormItem>
+                <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
+                    <Checkbox v-model="single">是否团队赛</Checkbox>
+                    <br/>组队人数：<InputNumber :min="1" v-model="activityForm.siteClearanceThreshold"></InputNumber>
+                </FormItem>
+                <FormItem prop="description" label="活动描述" :style="{'width': 'calc(100% - 10px)'}">
+                    <Input type="textarea" v-model="activityForm.description" placeholder="输入描述"></Input>
+                </FormItem>
+                <Row class="imgRow">
+                  <i-col span="20">
+                    <span class="fromLabel">图片预览</span>
+                    <div class="demo-upload-list" v-for="(item,index) in uploadList" :key="index">
+                      <template v-if="item.status === 'finished'">
+                          <img :src="item.url">
+                          <div class="demo-upload-list-cover">
+                              <Icon size="40px" type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
+                              <Icon size="40px" type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                          </div>
+                      </template>
+                      <template v-else>
+                          <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                      </template>
+                    </div>
+                    <Upload
+                      ref="upload"
+                      :show-upload-list="false"
+                      :default-file-list="defaultList"
+                      :on-success="handleSuccess"
+                      :format="['jpg','jpeg','png']"
+                      :max-size="2048"
+                      :on-format-error="handleFormatError"
+                      :on-exceeded-size="handleMaxSize"
+                      :before-upload="handleBeforeUpload"
+                      multiple
+                      type="drag"
+                      action="//jsonplaceholder.typicode.com/posts/"
+                      style="display: inline-block;width:142px;">
+                      <div style="width: 142px;height:80px;line-height: 80px;">
+                          <Icon type="ios-camera" size="30"></Icon>
+                      </div>
+                    </Upload>
+                  </i-col>
+                  <i-col span="4">
+                    <Button class="bottomRight" type="primary" >增加</Button>
+                  </i-col>
+                </Row>
+              </Form>
+            <!-- </Card> -->
+        </TabPane>
+        <TabPane label="活动列表" name="list">
+          <!-- <Card :style="{'margin-top': '20px'}">
+            <p slot="title">活动列表</p> -->
+            <Table stripe :columns="activityColumns" :data="activityData"></Table>
+          <!-- </Card> -->
+        </TabPane>
+    </Tabs>
     </Card>
   </div>
 </template>
@@ -132,7 +141,10 @@ export default {
         { key: '2', label: '上海交通大学' },
         { key: '3 ', label: '杨浦区教育局 ' },
         { key: '4 ', label: '上海财经大学 ' },
-        { key: '5 ', label: '同济大学 ' }],
+        { key: '5 ', label: '同济大学 ' },
+        { key: '6 ', label: '杨浦区教育局 ' },
+        { key: '7 ', label: '上海财经大学 ' },
+        { key: '8 ', label: '同济大学 ' }],
       targetKeys1: ['1', '2'],
       data2: [{ key: '1', label: '三好坞' },
         { key: '2', label: '同济大学' },

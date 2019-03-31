@@ -45,4 +45,7 @@ html,body{
 .ivu-poptip-body{
   text-align: left!important
 }
+.ivu-transfer-list{
+  height: 420px!important;
+}
 </style>

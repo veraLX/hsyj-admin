@@ -148,25 +148,6 @@ export default [
     ]
   },
   {
-    path: '/siteManagement',
-    name: 'siteManagement',
-    meta: {
-      hideInBread: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'site_management',
-        name: 'site_management',
-        meta: {
-          icon: 'ios-navigate',
-          title: '景点管理'
-        },
-        component: () => import('@/view/site-management/index.vue')
-      }
-    ]
-  },
-  {
     path: '/schoolManagement',
     name: 'schoolManagement',
     meta: {
@@ -182,6 +163,25 @@ export default [
           title: '校区管理'
         },
         component: () => import('@/view/school-management/index.vue')
+      }
+    ]
+  },
+  {
+    path: '/siteManagement',
+    name: 'siteManagement',
+    meta: {
+      hideInBread: true
+    },
+    component: Main,
+    children: [
+      {
+        path: 'site_management',
+        name: 'site_management',
+        meta: {
+          icon: 'ios-navigate',
+          title: '景点管理'
+        },
+        component: () => import('@/view/site-management/index.vue')
       }
     ]
   },

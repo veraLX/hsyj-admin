@@ -9,19 +9,19 @@
             </Select>
         </FormItem>
         <FormItem label="题干" :style="{'width': '400px'}">
-            <Input type="textarea" v-model="formInline.password" placeholder="输入题干"></Input>
+            <Input type="textarea" v-model="formInline.question" placeholder="输入题干"></Input>
         </FormItem>
         <FormItem label="选项A" :style="{'width': '400px'}">
-            <Input v-model="formInline.password" placeholder="输入选项A"></Input>
+            <Input v-model="formInline.A" placeholder="输入选项A"></Input>
         </FormItem>
         <FormItem label="选项B" :style="{'width': '400px'}">
-            <Input v-model="formInline.password" placeholder="输入选项B"></Input>
+            <Input v-model="formInline.B" placeholder="输入选项B"></Input>
         </FormItem>
         <FormItem label="选项C" :style="{'width': '400px'}">
-            <Input v-model="formInline.password" placeholder="输入选项C"></Input>
+            <Input v-model="formInline.C" placeholder="输入选项C"></Input>
         </FormItem>
         <FormItem label="选项D" :style="{'width': '400px'}">
-            <Input v-model="formInline.password" placeholder="输入选项D"></Input>
+            <Input v-model="formInline.D" placeholder="输入选项D"></Input>
         </FormItem>
         <div class="rightButton">
             <Button type="primary">增加</Button>
