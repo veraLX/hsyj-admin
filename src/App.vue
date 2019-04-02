@@ -48,4 +48,9 @@ html,body{
 .ivu-transfer-list{
   height: 420px!important;
 }
+.ivu-page{
+  padding: 15px 0!important;
+  display: flex!important;
+  justify-content: flex-end!important;
+}
 </style>

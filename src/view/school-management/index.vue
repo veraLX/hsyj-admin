@@ -3,20 +3,37 @@
     <Card>
       <p slot="title">新增校区</p>
       <Form ref="formInline" :model="schoolForm" :rules="ruleInline" inline :label-width="80">
-        <FormItem prop="name" label="校区名称" :style="{'width': '400px'}">
+        <FormItem prop="name" label="校区名称" :style="{'width': 'calc((100% - 30px)/3)'}">
             <Input v-model="schoolForm.name" placeholder="输入校区名称"></Input>
         </FormItem>
-        <FormItem prop="area" label="所属区县" :style="{'width': '400px'}">
+        <FormItem prop="area" label="所属区县" :style="{'width': 'calc((100% - 30px)/3)'}">
           <Select v-model="schoolForm.area">
             <!-- <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option> -->
           </Select>
         </FormItem>
-        <Button type="primary" >增加</Button>
+        <FormItem prop="longitude" label="经度" :style="{'width': 'calc((100% - 30px)/3)'}">
+            <Input v-model="schoolForm.longitude" placeholder="输入经度"></Input>
+        </FormItem>
+        <FormItem prop="location" label="地址" :style="{'width': 'calc((100% - 30px)/3*2 + 10px)'}">
+            <Input v-model="schoolForm.location" placeholder="输入地址"></Input>
+        </FormItem>
+        <FormItem prop="latitude" label="纬度" :style="{'width': 'calc((100% - 30px)/3)'}">
+            <Input v-model="schoolForm.latitude" placeholder="输入纬度"></Input>
+        </FormItem>
+        <FormItem prop="description" label="描述" :style="{'width': 'calc(100% - 10px)'}">
+            <Input type="textarea" v-model="schoolForm.description" placeholder="输入描述"></Input>
+        </FormItem>
+        <FormItem prop="image" label="图片预览" style="width:100%;">
+        </FormItem>
+        <FormItem style="width:100%;display: flex;justify-content: flex-end;padding-right: 10px;margin-bottom: 0;">
+            <Button class="bottomRight" type="primary" >增加</Button>
+        </FormItem>
       </Form>
     </Card>
     <Card :style="{'margin-top': '20px'}">
       <p slot="title">校区列表</p>
       <Table stripe :columns="schoolColumns" :data="schoolData"></Table>
+      <Page :total="100" />
     </Card>
   </div>
 </template>
@@ -28,7 +45,11 @@ export default {
     return {
       schoolForm: {
         name: '',
-        area: ''
+        area: '',
+        location: '',
+        longitude: '',
+        latitude: '',
+        description: ''
       },
       ruleInline: {
         // password: [
@@ -75,6 +96,14 @@ export default {
             }
           }
         },
+        { title: '经度',
+          key: 'longitude' },
+        { title: '纬度',
+          key: 'latitude' },
+        { title: '地址',
+          key: 'location' },
+        { title: '描述',
+          key: 'description' },
         {
           title: '操作',
           key: 'action',
@@ -139,16 +168,28 @@ export default {
         {
           name: '同济大学本校',
           area: '杨浦区',
+          longitude: '10.0.2',
+          latitude: '9.56.45',
+          location: '同济大学本校地址',
+          description: '同济大学本校同济大学本校同济大学本校同济大学本校同济大学本校',
           isOriginal: true
         },
         {
           name: '同济大学北校',
           area: '普陀区',
+          longitude: '10.0.2',
+          latitude: '9.56.45',
+          location: '同济大学本校地址',
+          description: '同济大学本校同济大学本校同济大学本校同济大学本校同济大学本校',
           isOriginal: false
         },
         {
           name: '同济大学嘉定校区',
           area: '嘉定区',
+          longitude: '10.0.2',
+          latitude: '9.56.45',
+          location: '同济大学本校地址',
+          description: '同济大学本校同济大学本校同济大学本校同济大学本校同济大学本校',
           isOriginal: false
         }
       ]
@@ -164,22 +205,9 @@ export default {
 </script>
 
 <style>
-/* .schoolItem{
-    text-align: center;
-    padding: 10px;
-}
-.schoolItem > .ivu-card > .ivu-card-body{
-    display: flex;
-    justify-content: space-around;
-}
-.zeroTip{
-  color: red
-}
-.littleTitle{
-  font-size: 14px;
-  height: 40px;
-  line-height: 40px;
-  border-bottom: 1px solid #e8eaec;
-  margin-bottom: 18px;
-} */
+.bottomRight{
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+    }
 </style>

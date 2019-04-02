@@ -31,6 +31,7 @@
     <Card :style="{'margin-top': '20px'}">
       <p slot="title">答题列表</p>
       <Table stripe :columns="AnswerColumns" :data="AnswerData"></Table>
+      <Page :total="100" />
     </Card>
   </div>
 </template>

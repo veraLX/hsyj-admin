@@ -111,6 +111,7 @@
           <!-- <Card :style="{'margin-top': '20px'}">
             <p slot="title">活动列表</p> -->
             <Table stripe :columns="activityColumns" :data="activityData"></Table>
+            <Page :total="100" />
           <!-- </Card> -->
         </TabPane>
     </Tabs>

@@ -6,6 +6,7 @@
         <Tag color="red">待审批留言数量 99 条</Tag>
       </div>
       <Table stripe :columns="MessageColumns" :data="MessageData"></Table>
+      <Page :total="100" />
     </Card>
     <Card :style="{'margin-top': '10px'}">
       <p slot="title">学生账户</p>
@@ -15,6 +16,7 @@
         </FormItem>
         <Button type="primary">查询</Button>
         <Table stripe :columns="StudentColumns" :data="StudentData"></Table>
+        <Page :total="100" />
       </Form>
     </Card>
   </div>

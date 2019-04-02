@@ -72,6 +72,7 @@
     <Card :style="{'margin-top': '20px'}">
       <p slot="title">景点列表</p>
       <Table stripe :columns="siteColumns" :data="siteData"></Table>
+      <Page :total="100" />
     </Card>
   </div>
 </template>
