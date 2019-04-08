@@ -4,15 +4,16 @@
       <p slot="title">新增景点</p>
       <Form :model="siteForm" :rules="ruleInline" inline label-position="right" :label-width="90">
         <FormItem prop="name" label="景点名称" :style="{'width': 'calc((100% - 30px)/3)'}">
-            <Input v-model="siteForm.name" placeholder="输入景点名称"></Input>
+            <Input v-model="siteForm.scenerytitle" placeholder="输入景点名称"></Input>
         </FormItem>
          <FormItem prop="school" label="校区" :style="{'width': 'calc((100% - 30px)/3)'}">
-            <Select v-model="siteForm.school">
-              <!-- <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option> -->
-            </Select>
+            <Input v-model="siteForm.address" placeholder="输入景点名称"></Input>
+            <!-- <Select v-model="siteForm.address">
+             <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
+            </Select> -->
         </FormItem>
         <FormItem prop="audioURL" label="音频URL地址" :style="{'width': 'calc((100% - 30px)/3)'}">
-            <Input v-model="siteForm.audioURL" placeholder="输入音频URL地址"></Input>
+            <Input v-model="siteForm.soundurl" placeholder="输入音频URL地址"></Input>
         </FormItem>
         <FormItem prop="longitude" label="经度" :style="{'width': 'calc((100% - 30px)/3)'}">
             <Input v-model="siteForm.longitude" placeholder="输入经度"></Input>
@@ -21,10 +22,10 @@
             <Input v-model="siteForm.latitude" placeholder="输入纬度"></Input>
         </FormItem>
         <FormItem prop="videoURL" label="视频URL地址" :style="{'width': 'calc((100% - 30px)/3)'}">
-            <Input v-model="siteForm.videoURL" placeholder="输入视频URL地址"></Input>
+            <Input v-model="siteForm.videourl" placeholder="输入视频URL地址"></Input>
         </FormItem>
         <FormItem prop="description" label="描述" :style="{'width': 'calc(100% - 10px)'}">
-            <Input type="textarea" v-model="siteForm.description" placeholder="输入描述"></Input>
+            <Input type="textarea" v-model="siteForm.shdesc" placeholder="输入描述"></Input>
         </FormItem>
         <Row class="imgRow">
           <i-col span="20">
@@ -61,7 +62,7 @@
             </Upload>
           </i-col>
           <i-col span="4">
-            <Button class="bottomRight" type="primary" >增加</Button>
+            <Button class="bottomRight" type="primary" @click="addSite">增加</Button>
           </i-col>
         </Row>
         <Modal title="View Image" v-model="visible">
@@ -78,34 +79,35 @@
 </template>
 
 <script>
+import { addScenery, sceneryList } from '@/api/scenery'
 export default {
   name: 'directive_page',
   data () {
     return {
       siteForm: {
-        name: '',
-        school: '',
+        scenerytitle: '',
+        address: '',
         longitude: '',
         latitude: '',
-        description: '',
-        audioURL: '',
-        videoURL: ''
+        shdesc: '',
+        soundurl: '',
+        videourl: ''
       },
       ruleInline: {
-        password: [
-          { required: true, message: '请输入景点名称', trigger: 'blur' }
-        ]
+        // password: [
+        //   { required: true, message: '请输入景点名称', trigger: 'blur' }
+        // ]
       },
       siteColumns: [
         { title: ' ', type: 'index', width: 60, align: 'center' },
-        { title: '景点名称', key: 'name' },
-        { title: '地点', key: 'location' },
+        { title: '景点名称', key: 'scenerytitle' },
+        { title: '地点', key: 'address' },
         { title: '经度', key: 'longitude' },
         { title: '纬度', key: 'latitude' },
-        { title: '描述', key: 'description', width: '200px' },
+        { title: '描述', key: 'shdesc', width: '200px' },
         { title: '图片预览' },
-        { title: '音频URL地址', key: 'audioURL', width: '110px' },
-        { title: '视频URL地址', key: 'videoURL', width: '110px' },
+        { title: '音频URL地址', key: 'soundurl', width: '110px' },
+        { title: '视频URL地址', key: 'videourl', width: '110px' },
         {
           title: '操作',
           key: 'action',
@@ -184,10 +186,15 @@ export default {
       uploadList: []
     }
   },
-  mounted () {
+  async mounted () {
     this.uploadList = this.$refs.upload.fileList
+
+    let scene = await sceneryList()
   },
   methods: {
+    async addSite(){
+      let data = await addScenery(this.siteForm)
+    },
     handleView (name) {
       this.imgName = name
       this.visible = true

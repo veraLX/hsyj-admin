@@ -4,7 +4,7 @@
       <p slot="title">新增校区</p>
       <Form ref="formInline" :model="schoolForm" :rules="ruleInline" inline :label-width="80">
         <FormItem prop="name" label="校区名称" :style="{'width': 'calc((100% - 30px)/3)'}">
-            <Input v-model="schoolForm.name" placeholder="输入校区名称"></Input>
+            <Input v-model="schoolForm.schoolname" placeholder="输入校区名称"></Input>
         </FormItem>
         <FormItem prop="area" label="所属区县" :style="{'width': 'calc((100% - 30px)/3)'}">
           <Select v-model="schoolForm.area">
