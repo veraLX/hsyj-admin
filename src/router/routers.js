@@ -102,7 +102,7 @@ export default [
         path: 'data_analysis_page',
         name: 'data_analysis_page',
         meta: {
-          icon: 'ios-navigate',
+          icon: 'ios-aperture',
           title: '数据统计'
         },
         component: () => import('@/view/data-analysis/index.vue')
@@ -121,7 +121,7 @@ export default [
         path: 'account_management',
         name: 'account_management',
         meta: {
-          icon: 'ios-navigate',
+          icon: 'md-person',
           title: '账户管理'
         },
         component: () => import('@/view/account-management/index.vue')
@@ -140,7 +140,7 @@ export default [
         path: 'synchronization_student_information',
         name: 'synchronization_student_information',
         meta: {
-          icon: 'ios-navigate',
+          icon: 'md-people',
           title: '学生信息同步'
         },
         component: () => import('@/view/synchronization-student-information/index.vue')
@@ -159,7 +159,7 @@ export default [
         path: 'school_management',
         name: 'school_management',
         meta: {
-          icon: 'ios-navigate',
+          icon: 'md-home',
           title: '校区管理'
         },
         component: () => import('@/view/school-management/index.vue')
@@ -178,7 +178,7 @@ export default [
         path: 'site_management',
         name: 'site_management',
         meta: {
-          icon: 'ios-navigate',
+          icon: 'md-pin',
           title: '景点管理'
         },
         component: () => import('@/view/site-management/index.vue')
@@ -197,7 +197,7 @@ export default [
         path: 'activity_management',
         name: 'activity_management',
         meta: {
-          icon: 'ios-navigate',
+          icon: 'md-ribbon',
           title: '活动管理'
         },
         component: () => import('@/view/activity-management/index.vue')
@@ -216,7 +216,7 @@ export default [
         path: 'answer_management',
         name: 'answer_management',
         meta: {
-          icon: 'ios-navigate',
+          icon: 'md-school',
           title: '答题管理'
         },
         component: () => import('@/view/answer-management/index.vue')
@@ -235,7 +235,7 @@ export default [
         path: 'message_management',
         name: 'message_management',
         meta: {
-          icon: 'ios-navigate',
+          icon: 'ios-send',
           title: '账户与留言'
         },
         component: () => import('@/view/message-management/index.vue')
