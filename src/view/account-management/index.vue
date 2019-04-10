@@ -2,7 +2,7 @@
   <div>
     <Card >
       <p slot="title">新增机构</p>
-      <Form ref="formInline" :model="formInline" :rules="ruleInline" inline :label-width="80">
+      <Form ref="formInline" :model="formInline" inline :label-width="80">
         <FormItem prop="name" label="机构名称:" :style="{'width': '400px'}">
             <Input v-model="formInline.name" placeholder="输入机构名称"></Input>
         </FormItem>
@@ -35,12 +35,12 @@
           <span>{{currentSchool.name}}</span>
       </p>
       <p class="littleTitle">新增管理员</p>
-      <Form ref="formInline" :model="Administrator" :rules="ruleInline" inline :label-width="100">
+      <Form ref="Administrator" :model="Administrator" :rules="administratorRule" inline :label-width="100">
         <FormItem prop="name" label="管理员账户" :style="{'width': '40%'}">
-            <Input v-model="formInline.name" placeholder="输入管理员账户"></Input>
+            <Input v-model="Administrator.name" placeholder="输入管理员账户"></Input>
         </FormItem>
         <FormItem prop="password" label="管理员密码" :style="{'width': '40%'}">
-            <Input v-model="formInline.password" placeholder="输入管理员密码"></Input>
+            <Input v-model="Administrator.password" placeholder="输入管理员密码"></Input>
         </FormItem>
         <Button type="primary">增加</Button>
       </Form>
@@ -68,9 +68,12 @@ export default {
         name: '',
         password: ''
       },
-      ruleInline: {
+      administratorRule: {
+        name: [
+          { required: true, message: '请输入管理员账户', trigger: 'blur' }
+        ],
         password: [
-          { required: true, message: '请输入机构名称', trigger: 'blur' }
+          { required: true, message: '请输入管理员密码', trigger: 'blur' }
         ]
       },
       schoolList: [

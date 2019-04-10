@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { addScenery, sceneryList } from '@/api/scenery'
+// import { addScenery, sceneryList } from '@/api/scenery'
 export default {
   name: 'directive_page',
   data () {
@@ -189,11 +189,11 @@ export default {
   async mounted () {
     this.uploadList = this.$refs.upload.fileList
 
-    let scene = await sceneryList()
+    // let scene = await sceneryList()
   },
   methods: {
-    async addSite(){
-      let data = await addScenery(this.siteForm)
+    async addSite () {
+      // let data = await addScenery(this.siteForm)
     },
     handleView (name) {
       this.imgName = name
