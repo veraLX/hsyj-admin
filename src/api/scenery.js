@@ -18,9 +18,9 @@ export const addScenery = (obj) => {
   })
 }
 
-export const sceneryList = () => {
+export const sceneryList = (currentPage, pageSize) => {
   return axios.request({
-    url: 'scenery',
+    url: 'scenery/index?page=' + currentPage + '&size=' + pageSize,
     method: 'get'
   })
 }

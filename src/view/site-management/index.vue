@@ -73,7 +73,7 @@
     <Card :style="{'margin-top': '20px'}">
       <p slot="title">景点列表</p>
       <Table stripe :columns="siteColumns" :data="siteData"></Table>
-      <Page :total="100" />
+      <Page show-total :total="count" :current="currentPage" :page-size="pageSize" @on-change="handlePage"/>
     </Card>
   </div>
 </template>
@@ -84,6 +84,10 @@ export default {
   name: 'directive_page',
   data () {
     return {
+      count: 0,
+      pageSize: 9,
+      totalPages: 1,
+      currentPage: 1,
       siteForm: {
         scenerytitle: '',
         address: '',
@@ -100,7 +104,7 @@ export default {
       },
       siteColumns: [
         { title: ' ', type: 'index', width: 60, align: 'center' },
-        { title: '景点名称', key: 'scenerytitle' },
+        { title: '景点名称', key: 'sceneryTitle' },
         { title: '地点', key: 'address' },
         { title: '经度', key: 'longitude' },
         { title: '纬度', key: 'latitude' },
@@ -153,22 +157,22 @@ export default {
       ],
       siteData: [
         {
-          name: '三好坞',
-          location: '同济大学本校',
+          scenerytitle: '三好坞',
+          address: '同济大学本校',
           longitude: '121.509621',
           latitude: '31.291241',
-          description: '50年代师生义务劳动建成，取名三好，寓意学生做“三好学生”。由陈从周设计、题/n三好坞/n 三好坞(4张)/n 名。其下淌的水叫做同心河。都说这里是中国高校百大最美地方之一，建于1956年。1987年为迎接80周年校庆，全面整顿“三好坞”。三好坞有三座亭子，湖心亭和两个在山上的，成为聚友、约会、休闲的好地方。',
-          audioURL: 'http://www.333ttt.com/up/?u=&page=1&id=',
-          videoURL: 'http://www.333ttt.com/up/?u=&page=2&id='
+          shdesc: '50年代师生义务劳动建成，取名三好，寓意学生做“三好学生”。由陈从周设计、题/n三好坞/n 三好坞(4张)/n 名。其下淌的水叫做同心河。都说这里是中国高校百大最美地方之一，建于1956年。1987年为迎接80周年校庆，全面整顿“三好坞”。三好坞有三座亭子，湖心亭和两个在山上的，成为聚友、约会、休闲的好地方。',
+          soundurl: 'http://www.333ttt.com/up/?u=&page=1&id=',
+          videourl: 'http://www.333ttt.com/up/?u=&page=2&id='
         },
         {
-          name: '三好坞',
-          location: '同济大学本校',
+          scenerytitle: '樱花弄',
+          address: '复旦大学本校',
           longitude: '121.509621',
           latitude: '31.291241',
-          description: '50年代师生义务劳动建成，取名三好，寓意学生做“三好学生”。由陈从周设计、题/n三好坞/n 三好坞(4张)/n 名。其下淌的水叫做同心河。都说这里是中国高校百大最美地方之一，建于1956年。1987年为迎接80周年校庆，全面整顿“三好坞”。三好坞有三座亭子，湖心亭和两个在山上的，成为聚友、约会、休闲的好地方。',
-          audioURL: 'http://www.333ttt.com/up/?u=&page=1&id=',
-          videoURL: 'http://www.333ttt.com/up/?u=&page=2&id='
+          shdesc: '50年代师生义务劳动建成，取名三好，寓意学生做“三好学生”。由陈从周设计、题/n三好坞/n 三好坞(4张)/n 名。其下淌的水叫做同心河。都说这里是中国高校百大最美地方之一，建于1956年。1987年为迎接80周年校庆，全面整顿“三好坞”。三好坞有三座亭子，湖心亭和两个在山上的，成为聚友、约会、休闲的好地方。',
+          soundurl: 'http://www.333ttt.com/up/?u=&page=1&id=',
+          videourl: 'http://www.333ttt.com/up/?u=&page=2&id='
         }
       ],
       defaultList: [
@@ -188,12 +192,27 @@ export default {
   },
   async mounted () {
     this.uploadList = this.$refs.upload.fileList
-
-    let scene = await sceneryList()
+    let scene = await sceneryList(this.currentPage, this.pageSize)
+    this.siteData = scene.data.data.data
+    this.totalPages = scene.data.totalPages
+    this.pageSize = scene.data.pageSize
+    this.currentPage = scene.data.currentPage
+    this.count = scene.data.count
+    console.log('scene', scene)
   },
   methods: {
-    async addSite(){
+    async flashAllSiteData () {
+      let scene = await sceneryList(this.currentPage, this.pageSize)
+      this.siteData = scene.data.data.data
+      this.totalPages = scene.data.totalPages
+      this.pageSize = scene.data.pageSize
+      this.currentPage = scene.data.currentPage
+      this.count = scene.data.count
+    },
+    async addSite () {
       let data = await addScenery(this.siteForm)
+      this.flashAllSiteData()
+      console.log('addSite', data)
     },
     handleView (name) {
       this.imgName = name
@@ -227,6 +246,10 @@ export default {
         })
       }
       return check
+    },
+    handlePage (value) {
+      this.currentPage = value
+      this.flashAllSiteData()
     }
   }
 }
