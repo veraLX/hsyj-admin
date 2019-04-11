@@ -4,15 +4,15 @@
       <p slot="title">新增机构</p>
       <Form ref="formInline" :model="formInline" inline :label-width="80">
         <FormItem prop="name" label="机构名称:" :style="{'width': '400px'}">
-            <Input v-model="formInline.name" placeholder="输入机构名称"></Input>
+            <Input v-model="formInline.schoolname" placeholder="输入机构名称"/>
         </FormItem>
-        <Button type="primary">增加</Button>
+        <Button type="primary" @click="addSchool">增加</Button>
       </Form>
     </Card>
     <Row :gutter="20" :style="{'margin-top': '10px'}">
       <i-col :xs="8" :md="8" :lg="4" class="schoolItem" v-for="(school, index) in schoolList" :key="index" @click="schoolDetail">
         <Card @click.native="schoolDetail(school)">
-          <span>{{school.name}}</span>
+          <span>{{school.schoolName}}</span>
           <span :class="school.totalPeople == 0 ? 'zeroTip' : ''">{{school.totalPeople}}<span :style="{'color': '#000'}">人</span></span>
         </Card>
       </i-col>
@@ -37,10 +37,10 @@
       <p class="littleTitle">新增管理员</p>
       <Form ref="Administrator" :model="Administrator" :rules="administratorRule" inline :label-width="100">
         <FormItem prop="name" label="管理员账户" :style="{'width': '40%'}">
-            <Input v-model="Administrator.name" placeholder="输入管理员账户"></Input>
+            <Input v-model="Administrator.name" placeholder="输入管理员账户"/>
         </FormItem>
         <FormItem prop="password" label="管理员密码" :style="{'width': '40%'}">
-            <Input v-model="Administrator.password" placeholder="输入管理员密码"></Input>
+            <Input v-model="Administrator.password" placeholder="输入管理员密码"/>
         </FormItem>
         <Button type="primary">增加</Button>
       </Form>
@@ -55,6 +55,9 @@
 </template>
 
 <script>
+import {
+  addSchool, getSchoolList
+} from '@/api/school'
 export default {
   name: 'directive_page',
   data () {
@@ -62,7 +65,8 @@ export default {
       currentSchool: '',
       schoolModal: false,
       formInline: {
-        name: ''
+        schoolname: '',
+        parentid: -1
       },
       Administrator: {
         name: '',
@@ -76,25 +80,7 @@ export default {
           { required: true, message: '请输入管理员密码', trigger: 'blur' }
         ]
       },
-      schoolList: [
-        { name: '上海财经大学', totalPeople: 5, isSchool: true },
-        { name: '复旦大学', totalPeople: 0, isSchool: true },
-        { name: '同济大学', totalPeople: 1, isSchool: true },
-        { name: '华东师范大学', totalPeople: 2, isSchool: true },
-        { name: '东华大学', totalPeople: 0, isSchool: true },
-        { name: '上海海事大学', totalPeople: 1, isSchool: true },
-        { name: '华东理工大学', totalPeople: 1, isSchool: true },
-        { name: '上海财经大学', totalPeople: 5, isSchool: true },
-        { name: '复旦大学', totalPeople: 0, isSchool: true },
-        { name: '同济大学', totalPeople: 1, isSchool: true },
-        { name: '华东师范大学', totalPeople: 2, isSchool: true },
-        { name: '东华大学', totalPeople: 0, isSchool: true },
-        { name: '上海海事大学', totalPeople: 1, isSchool: true },
-        { name: '华东理工大学', totalPeople: 1, isSchool: true },
-        { name: '上海市教育局委员会', totalPeople: 5, isSchool: false },
-        { name: '虹口区教育局', totalPeople: 0, isSchool: false },
-        { name: '杨浦区教育局', totalPeople: 1, isSchool: false }
-      ],
+      schoolList: [],
       AdministratorColumns: [
         { title: ' ', type: 'index', width: 60, align: 'center' },
         { title: '管理员账户',
@@ -194,12 +180,25 @@ export default {
       ]
     }
   },
+  mounted () {
+    this.getSchoolList()
+  },
   methods: {
+    async getSchoolList () {
+      console.log('123')
+      const list = await getSchoolList()
+      this.schoolList = list.data.data.data ? list.data.data.data : []
+      console.log(this.schoolList)
+    },
     schoolDetail (school) {
       if (school.isSchool) {
         this.schoolModal = true
         this.currentSchool = school
       }
+    },
+    async addSchool () {
+      debugger
+      await addSchool(this.formInline)
     }
   }
 }
