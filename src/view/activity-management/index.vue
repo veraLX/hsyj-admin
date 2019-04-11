@@ -81,7 +81,8 @@
                           <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
                       </template>
                     </div>
-                    <Upload
+                    <iframe src="http://hsyj.100eduonline.com/static/admin/uploadComponent/upload.html" height="100" style="border: none;"/>
+                    <!-- <Upload
                       ref="upload"
                       :show-upload-list="false"
                       :default-file-list="defaultList"
@@ -98,7 +99,7 @@
                       <div style="width: 142px;height:80px;line-height: 80px;">
                           <Icon type="ios-camera" size="30"></Icon>
                       </div>
-                    </Upload>
+                    </Upload> -->
                   </i-col>
                   <i-col span="4">
                     <Button class="bottomRight" type="primary" >增加</Button>
