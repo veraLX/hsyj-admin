@@ -14,7 +14,6 @@ export const addSchool = (obj) => {
     'videourl': obj.videourl,
     'areaid': obj.areaid,
     'parentid': obj.parentid // 本条是分校区
-
   }
 
   return axios.request({
@@ -28,5 +27,34 @@ export const getSchoolList = () => {
   return axios.request({
     url: 'school/index?page=1&size=5',
     method: 'get'
+  })
+}
+
+export const deleteSchool = (data) => {
+  return axios.request({
+    url: 'school/delete?id=' + data,
+    method: 'get'
+  })
+}
+
+export const editSchool = (obj) => {
+  const data = {
+    'schoolname': obj.schoolname,
+    'province': obj.province,
+    'city': obj.city, // 所属区县
+    'address': obj.address,
+    'schooldesc': obj.schooldesc,
+    'sourceaddress': obj.sourceaddress,
+    'longitude': obj.longitude, // 经度
+    'latitude': obj.latitude, // 纬度
+    'soundurl': obj.soundurl,
+    'videourl': obj.videourl,
+    'areaid': obj.areaid,
+    'parentid': obj.parentid // 本条是分校区
+  }
+  return axios.request({
+    url: 'school/addEdit?id=' + obj.schoolID,
+    data,
+    method: 'post'
   })
 }

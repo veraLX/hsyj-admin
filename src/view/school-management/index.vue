@@ -40,7 +40,12 @@
 </template>
 
 <script>
-import { addSchool, getSchoolList } from '@/api/school'
+import {
+  addSchool,
+  getSchoolList,
+  deleteSchool,
+  editSchool
+} from '@/api/school'
 export default {
   name: 'directive_page',
   data () {
@@ -135,9 +140,11 @@ export default {
                     disabled: params.row.isOriginal
                   },
                   on: {
-                    click: () => {
+                    click: async () => {
                       if (params.row.$isEdit) {
                         this.$set(params.row, '$isEdit', false)
+                        await editSchool(params.row)
+                        this.getSchoolList()
                       } else {
                         this.$set(params.row, '$isEdit', true)
                       }
@@ -154,7 +161,10 @@ export default {
                     title: '你确定要删除吗?'
                   },
                   on: {
-                    'on-ok': async () => {}
+                    'on-ok': async () => {
+                      await deleteSchool(params.row.schoolID)
+                      this.getSchoolList()
+                    }
                   }
                 },
                 [
