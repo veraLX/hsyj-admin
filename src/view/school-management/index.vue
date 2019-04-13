@@ -40,7 +40,7 @@
               </div>
               <iframe
                 src="http://hsyj.100eduonline.com/static/admin/uploadComponent/upload.html"
-                height="100"
+                height="auto"
                 style="border: none;"
               />
             </i-col>
