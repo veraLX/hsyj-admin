@@ -166,7 +166,17 @@ export default {
                     click: async () => {
                       if (params.row.$isEdit) {
                         this.$set(params.row, '$isEdit', false)
-                        await editSchool(params.row)
+                        debugger
+                        let obj = {
+                          schoolname: params.row.schoolName,
+                          city: params.row.city,
+                          address: params.row.address,
+                          longitude: params.row.longitude,
+                          latitude: params.row.latitude,
+                          schooldesc: params.row.schooldesc,
+                          schoolID: params.row.schoolID
+                        }
+                        await editSchool(obj)
                         this.getSchoolList()
                       } else {
                         this.$set(params.row, '$isEdit', true)
