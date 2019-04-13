@@ -198,7 +198,9 @@ export default {
     },
     async addSchool () {
       debugger
+      console.log('formInline', this.formInline)
       await addSchool(this.formInline)
+      this.getSchoolList()
     }
   }
 }

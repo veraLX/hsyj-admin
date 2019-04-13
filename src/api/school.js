@@ -25,7 +25,7 @@ export const addSchool = (obj) => {
 
 export const getSchoolList = () => {
   return axios.request({
-    url: 'school/index?page=1&size=5',
+    url: 'school/index?page=1&size=100',
     method: 'get'
   })
 }
