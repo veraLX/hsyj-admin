@@ -3,8 +3,8 @@
     <Card>
       <p slot="title">新增校区</p>
       <Form ref="formInline" :model="schoolForm" :rules="ruleInline" inline :label-width="80">
-        <FormItem prop="schoolName" label="校区名称" :style="{'width': 'calc((100% - 30px)/3)'}">
-          <Input v-model="schoolForm.schoolName" placeholder="输入校区名称"/>
+        <FormItem prop="schoolname" label="校区名称" :style="{'width': 'calc((100% - 30px)/3)'}">
+          <Input v-model="schoolForm.schoolname" placeholder="输入校区名称"/>
         </FormItem>
         <FormItem prop="city" label="所属区县" :style="{'width': 'calc((100% - 30px)/3)'}">
           <Select v-model="schoolForm.city">
@@ -23,7 +23,29 @@
         <FormItem prop="schooldesc" label="描述" :style="{'width': 'calc(100% - 10px)'}">
           <Input type="textarea" v-model="schoolForm.schooldesc" placeholder="输入描述"/>
         </FormItem>
-        <FormItem prop="image" label="图片预览" style="width:100%;"></FormItem>
+        <FormItem prop="image" label="图片预览" style="width:100%;">
+          <Row class="imgRow">
+            <i-col span="20">
+              <div class="demo-upload-list" v-for="(item,index) in uploadList" :key="index">
+                <template v-if="item.status === 'finished'">
+                  <img :src="item.url">
+                  <div class="demo-upload-list-cover">
+                    <Icon size="40px" type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
+                    <Icon size="40px" type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                  </div>
+                </template>
+                <template v-else>
+                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                </template>
+              </div>
+              <iframe
+                src="http://hsyj.100eduonline.com/static/admin/uploadComponent/upload.html"
+                height="100"
+                style="border: none;"
+              />
+            </i-col>
+          </Row>
+        </FormItem>
         <FormItem
           style="width:100%;display: flex;justify-content: flex-end;padding-right: 10px;margin-bottom: 0;"
         >
@@ -58,6 +80,7 @@ export default {
         latitude: '',
         schooldesc: ''
       },
+      uploadList: [],
       ruleInline: {
         // password: [
         //   { required: true, message: '请输入景点名称', trigger: 'blur' }
@@ -200,7 +223,8 @@ export default {
     },
     async addSchool () {
       debugger
-      await addSchool(this.formInline)
+      await addSchool(this.schoolForm)
+      this.getSchoolList()
     }
   }
 }
