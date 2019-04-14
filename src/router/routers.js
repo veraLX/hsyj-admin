@@ -187,20 +187,30 @@ export default [
   },
   {
     path: '/activityManagement',
-    name: 'activityManagement',
+    name: 'activity_management',
     meta: {
-      hideInBread: true
+      icon: 'md-ribbon',
+      title: '活动管理'
     },
     component: Main,
     children: [
       {
-        path: 'activity_management',
-        name: 'activity_management',
+        path: 'activity_list',
+        name: 'activity_list',
         meta: {
           icon: 'md-ribbon',
-          title: '活动管理'
+          title: '活动列表'
         },
         component: () => import('@/view/activity-management/index.vue')
+      },
+      {
+        path: 'activity_add',
+        name: 'activity_add',
+        meta: {
+          icon: 'md-ribbon',
+          title: '新建活动'
+        },
+        component: () => import('@/view/activity-add/index.vue')
       }
     ]
   },

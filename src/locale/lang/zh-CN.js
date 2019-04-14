@@ -50,5 +50,7 @@ export default {
   activity_management: '活动管理',
   answer_management: '答题管理',
   message_management: '账户与留言',
+  activity_list: '活动列表',
+  activity_add: '新增活动',
   synchronization_school_information: '学校信息同步'
 }

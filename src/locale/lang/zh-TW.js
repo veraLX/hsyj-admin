@@ -47,5 +47,7 @@ export default {
   account_management: '账户管理',
   site_management: '景点管理',
   activity_management: '活动管理',
+  activity_list: '活动列表',
+  activity_add: '新增活动',
   synchronization_school_information: '学校信息同步'
 }
