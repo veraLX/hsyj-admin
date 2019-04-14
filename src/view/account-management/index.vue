@@ -20,8 +20,8 @@
     <!-- <Card :style="{'margin-top': '20px'}">
       <p slot="title">新增校区</p>
       <Form ref="formInline" :model="formInline" :rules="ruleInline" inline :label-width="80">
-        <FormItem prop="password" label="机构名称:" :style="{'width': '400px'}">
-            <Input type="password" v-model="formInline.password" placeholder="输入机构名称"></Input>
+        <FormItem prop="pwd" label="机构名称:" :style="{'width': '400px'}">
+            <Input type="pwd" v-model="formInline.pwd" placeholder="输入机构名称"></Input>
         </FormItem>
         <Button type="primary">增加</Button>
       </Form>
@@ -35,17 +35,17 @@
           <span>{{currentSchool.name}}</span>
       </p>
       <p class="littleTitle">新增管理员</p>
-      <Form ref="Administrator" :model="Administrator" :rules="administratorRule" inline :label-width="100">
+      <Form ref="administrator" :model="administrator" :rules="administratorRule" inline :label-width="100">
         <FormItem prop="name" label="管理员账户" :style="{'width': '40%'}">
-            <Input v-model="Administrator.userName" placeholder="输入管理员账户"/>
+            <Input v-model="administrator.userName" placeholder="输入管理员账户"/>
         </FormItem>
-        <FormItem prop="password" label="管理员密码" :style="{'width': '40%'}">
-            <Input v-model="Administrator.pwd" placeholder="输入管理员密码"/>
+        <FormItem prop="pwd" label="管理员密码" :style="{'width': '40%'}">
+            <Input v-model="administrator.pwd" placeholder="输入管理员密码"/>
         </FormItem>
         <Button type="primary" @click='addUser'>增加</Button>
       </Form>
       <p class="littleTitle">管理员列表</p>
-      <Table stripe :columns="AdministratorColumns" :data="AdministratorData"></Table>
+      <Table stripe :columns="AdministratorColumns" :data="administratorList"></Table>
       <Page :total="100" />
       <div slot="footer">
           <!-- <Button :size="buttonSize" type="primary" @click="groupUpdateMethod" >确定</Button> -->
@@ -56,8 +56,11 @@
 
 <script>
 import {
-  addSchool, getSchoolList, addUser
+  addSchool, getSchoolList
 } from '@/api/school'
+import {
+  addUser, getUserList, editUser, deleteUser
+} from '@/api/user'
 export default {
   name: 'directive_page',
   data () {
@@ -68,11 +71,11 @@ export default {
         schoolname: '',
         parentid: -1
       },
-      Administrator: {
+      administrator: {
         userName: '',
         pwd: '',
         usertype: 0,
-        Schooled: ''
+        schoolid: ''
       },
       administratorRule: {
         userName: [
@@ -86,40 +89,40 @@ export default {
       AdministratorColumns: [
         { title: ' ', type: 'index', width: 60, align: 'center' },
         { title: '管理员账户',
-          key: 'name',
+          key: 'userName',
           render: (h, params) => {
             if (params.row.$isEdit) {
               return h('input', {
                 domProps: {
-                  value: params.row.name
+                  value: params.row.userName
                 },
                 on: {
                   input: function (event) {
-                    params.row.name = event.target.value
+                    params.row.userName = event.target.value
                   }
                 }
               })
             } else {
-              return h('div', params.row.name)
+              return h('div', params.row.userName)
             }
           }
         },
         { title: '管理员密码',
-          key: 'password',
+          key: 'pwd',
           render: (h, params) => {
             if (params.row.$isEdit) {
               return h('input', {
                 domProps: {
-                  value: params.row.password
+                  value: params.row.pwd
                 },
                 on: {
                   input: function (event) {
-                    params.row.password = event.target.value
+                    params.row.pwd = event.target.value
                   }
                 }
               })
             } else {
-              return h('div', params.row.password)
+              return h('div', params.row.pwd)
             }
           }
         },
@@ -138,9 +141,18 @@ export default {
                   size: 'small'
                 },
                 on: {
-                  click: () => {
+                  click: async () => {
                     if (params.row.$isEdit) {
                       this.$set(params.row, '$isEdit', false)
+                      let obj = {
+                        userName: params.row.userName,
+                        pwd: params.row.pwd,
+                        usertype: params.row.usertype,
+                        schoolid: params.row.schoolid,
+                        sysUserID: params.row.sysUserID
+                      }
+                      await editUser(obj)
+                      this.getUserList(params.row.schoolid)
                     } else {
                       this.$set(params.row, '$isEdit', true)
                     }
@@ -154,6 +166,8 @@ export default {
                 },
                 on: {
                   'on-ok': async () => {
+                    await deleteUser(params.row.sysUserID)
+                    this.getUserList(params.row.schoolid)
                   }
                 }
               }, [
@@ -168,18 +182,7 @@ export default {
           }
         }
       ],
-      AdministratorData: [
-        {
-          name: 'fudan1',
-          password: 'fd12345678',
-          $isEdit: false
-        },
-        {
-          name: 'fudan2',
-          password: 'fd12345678',
-          $isEdit: false
-        }
-      ]
+      administratorList: [ ]
     }
   },
   mounted () {
@@ -187,26 +190,34 @@ export default {
   },
   methods: {
     async getSchoolList () {
-      console.log('123')
       const list = await getSchoolList()
       this.schoolList = list.data.data.data ? list.data.data.data : []
-      console.log(this.schoolList)
     },
-    schoolDetail (school) {
+    async getUserList (id) {
+      const list = await getUserList(id)
+      this.administratorList = list.data.data ? list.data.data : []
+      console.log('1111', list.data.data)
+    },
+    async schoolDetail (school) {
       debugger
       if (school.schoolID) {
         this.schoolModal = true
         this.currentSchool = school
-        this.$set(this.Administrator, 'Schooled', school.schoolID)
+        this.$set(this.administrator, 'schoolid', school.schoolID)
+        this.getUserList(school.schoolID)
       }
     },
     async addUser () {
-      debugger
-      console.log('formInline', this.Administrator)
-      await addUser(this.Administrator)
+      await addUser(this.administrator)
+      this.getUserList(this.administrator.schoolid)
+      this.administrator = {
+        userName: '',
+        pwd: '',
+        usertype: 0,
+        schoolid: this.administrator.schoolid
+      }
     },
     async addSchool () {
-      debugger
       console.log('formInline', this.formInline)
       await addSchool(this.formInline)
       this.getSchoolList()

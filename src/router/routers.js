@@ -214,25 +214,25 @@ export default [
       }
     ]
   },
-  {
-    path: '/answerManagement',
-    name: 'answerManagement',
-    meta: {
-      hideInBread: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'answer_management',
-        name: 'answer_management',
-        meta: {
-          icon: 'md-school',
-          title: '答题管理'
-        },
-        component: () => import('@/view/answer-management/index.vue')
-      }
-    ]
-  },
+  // {
+  //   path: '/answerManagement',
+  //   name: 'answerManagement',
+  //   meta: {
+  //     hideInBread: true
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: 'answer_management',
+  //       name: 'answer_management',
+  //       meta: {
+  //         icon: 'md-school',
+  //         title: '答题管理'
+  //       },
+  //       component: () => import('@/view/answer-management/index.vue')
+  //     }
+  //   ]
+  // },
   {
     path: '/messageManagement',
     name: 'messageManagement',

@@ -166,7 +166,6 @@ export default {
                     click: async () => {
                       if (params.row.$isEdit) {
                         this.$set(params.row, '$isEdit', false)
-                        debugger
                         let obj = {
                           schoolname: params.row.schoolName,
                           city: params.row.city,

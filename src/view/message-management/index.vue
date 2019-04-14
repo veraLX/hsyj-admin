@@ -11,11 +11,11 @@
     <Card :style="{'margin-top': '10px'}">
       <p slot="title">学生账户</p>
       <Form ref="formInline" :model="formInline" inline :label-width="100">
-        <FormItem prop="number" label="学生学籍号码" :style="{'width': '400px'}">
-            <Input  v-model="formInline.number" placeholder="输入学生学籍号码"/>
+        <FormItem prop="stuno" label="学生学籍号码" :style="{'width': '400px'}">
+            <Input  v-model="formInline.stuno" placeholder="输入学生学籍号码"/>
         </FormItem>
         <Button type="primary">查询</Button>
-        <Table stripe :columns="StudentColumns" :data="StudentData"></Table>
+        <Table stripe :columns="StudentColumns" :data="studentList"></Table>
         <Page :total="100" />
       </Form>
     </Card>
@@ -27,12 +27,18 @@ import {
   getMessageList,
   acceptMessage
 } from '@/api/message'
+import {
+  getStudentList
+} from '@/api/student'
 export default {
   name: 'directive_page',
   data () {
     return {
       formInline: {
-        number: ''
+        stuno: '',
+        studentname: '',
+        tel: '',
+        wxchat: ''
       },
       StudentColumns: [
         { title: '学生姓名', key: 'studentName' },
@@ -40,7 +46,7 @@ export default {
         { title: '手机号码', key: 'phone' },
         { title: '微信号码', key: 'weixin' }
       ],
-      StudentData: [
+      studentList: [
         {
           studentName: ' 万苏文',
           studentid: '1111111111',
@@ -132,6 +138,7 @@ export default {
   },
   mounted () {
     this.getMessageList()
+    this.getStudentList()
   },
   methods: {
     async getMessageList () {
@@ -142,6 +149,10 @@ export default {
           item.distype = this.getDistype(item.distype)
         })
       }
+    },
+    async getStudentList () {
+      const list = await getStudentList(this.formInline)
+      this.studentList = list.data.data.data ? list.data.data.data : []
     },
     getDistype (id) {
       // distype：留言类型0,景点; 1,活动,2 学校,3首页
