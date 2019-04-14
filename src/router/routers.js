@@ -94,6 +94,7 @@ export default [
     path: '/dataAnalysis',
     name: 'dataAnalysis',
     meta: {
+      icon: 'ios-aperture',
       hideInBread: true
     },
     component: Main,
@@ -113,7 +114,9 @@ export default [
     path: '/accountManagement',
     name: 'accountManagement',
     meta: {
-      hideInBread: true
+      icon: 'md-person',
+      hideInBread: true,
+      access: ['systemAdministrator']
     },
     component: Main,
     children: [
@@ -122,7 +125,8 @@ export default [
         name: 'account_management',
         meta: {
           icon: 'md-person',
-          title: '账户管理'
+          title: '账户管理',
+          access: ['systemAdministrator']
         },
         component: () => import('@/view/account-management/index.vue')
       }
@@ -132,7 +136,9 @@ export default [
     path: '/synchronizationSchoolInformation',
     name: 'synchronizationSchoolInformation',
     meta: {
-      hideInBread: true
+      icon: 'md-people',
+      hideInBread: true,
+      access: ['systemAdministrator']
     },
     component: Main,
     children: [
@@ -141,7 +147,8 @@ export default [
         name: 'synchronization_school_information',
         meta: {
           icon: 'md-people',
-          title: '学校信息同步'
+          title: '学校信息同步',
+          access: ['systemAdministrator']
         },
         component: () => import('@/view/synchronization-school-information/index.vue')
       }
@@ -151,7 +158,9 @@ export default [
     path: '/schoolManagement',
     name: 'schoolManagement',
     meta: {
-      hideInBread: true
+      icon: 'md-home',
+      hideInBread: true,
+      access: ['schoolAdministrator']
     },
     component: Main,
     children: [
@@ -160,7 +169,8 @@ export default [
         name: 'school_management',
         meta: {
           icon: 'md-home',
-          title: '校区管理'
+          title: '校区管理',
+          access: ['schoolAdministrator']
         },
         component: () => import('@/view/school-management/index.vue')
       }
@@ -170,7 +180,9 @@ export default [
     path: '/siteManagement',
     name: 'siteManagement',
     meta: {
-      hideInBread: true
+      hideInBread: true,
+      icon: 'md-pin',
+      access: ['schoolAdministrator']
     },
     component: Main,
     children: [
@@ -179,7 +191,8 @@ export default [
         name: 'site_management',
         meta: {
           icon: 'md-pin',
-          title: '景点管理'
+          title: '景点管理',
+          access: ['schoolAdministrator']
         },
         component: () => import('@/view/site-management/index.vue')
       }
@@ -190,7 +203,8 @@ export default [
     name: 'activity_management',
     meta: {
       icon: 'md-ribbon',
-      title: '活动管理'
+      title: '活动管理',
+      access: ['schoolAdministrator']
     },
     component: Main,
     children: [
@@ -199,7 +213,8 @@ export default [
         name: 'activity_list',
         meta: {
           icon: 'md-ribbon',
-          title: '活动列表'
+          title: '活动列表',
+          access: ['schoolAdministrator']
         },
         component: () => import('@/view/activity-management/index.vue')
       },
@@ -208,7 +223,8 @@ export default [
         name: 'activity_add',
         meta: {
           icon: 'md-ribbon',
-          title: '新建活动'
+          title: '新建活动',
+          access: ['schoolAdministrator']
         },
         component: () => import('@/view/activity-add/index.vue')
       }
@@ -237,7 +253,9 @@ export default [
     path: '/messageManagement',
     name: 'messageManagement',
     meta: {
-      hideInBread: true
+      icon: 'ios-send',
+      hideInBread: true,
+      access: ['schoolAdministrator']
     },
     component: Main,
     children: [
@@ -246,7 +264,8 @@ export default [
         name: 'message_management',
         meta: {
           icon: 'ios-send',
-          title: '账户与留言'
+          title: '账户与留言',
+          access: ['schoolAdministrator']
         },
         component: () => import('@/view/message-management/index.vue')
       }

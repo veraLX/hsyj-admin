@@ -1,19 +1,22 @@
 import {
   login,
   logout,
-  getUserInfo,
+  // getUserInfo,
   getMessage,
   getContentByMsgId,
   hasRead,
   removeReaded,
-  restoreTrash,
-  getUnreadCount
+  restoreTrash
+  // getUnreadCount
 } from '@/api/user'
-import { setToken, getToken } from '@/libs/util'
+import { setToken, getToken, setSessionUser } from '@/libs/util'
+import { Notice } from 'iview'
 
 export default {
   state: {
     userName: '',
+    schoolId: 0,
+    usertype: 0,
     userId: '',
     avatarImgPath: '',
     token: getToken(),
@@ -34,6 +37,23 @@ export default {
     },
     setUserName (state, name) {
       state.userName = name
+    },
+    setSchoolId (state, schoolId) {
+      state.schoolId = schoolId
+    },
+    setUserType (state, usertype) {
+      state.usertype = usertype
+    },
+    setUser (state, user) {
+      let access = ''
+      if (user.usertype === 1) {
+        access = 'systemAdministrator'
+      } else {
+        access = 'schoolAdministrator'
+      }
+      user.access = [access]
+      state.user = user
+      setSessionUser(user)
     },
     setAccess (state, access) {
       state.access = access
@@ -74,16 +94,41 @@ export default {
   },
   actions: {
     // 登录
-    handleLogin ({ commit }, { userName, password }) {
+    handleLogin ({ commit }, { userName, password, code }) {
       userName = userName.trim()
       return new Promise((resolve, reject) => {
-        login({
+        login(
           userName,
-          password
-        }).then(res => {
-          const data = res.data
-          commit('setToken', data.token)
-          resolve()
+          password,
+          code
+        ).then(res => {
+          if (res.data.errno !== 0) {
+            // this.$Notice.error({
+            //   title: res.data.errmsg
+            // })
+            // let _self = this
+            Notice.error({
+              title: res.data.errmsg.length > 0 ? res.data.errmsg : '验证出错,请刷新重试'
+            })
+          } else {
+            const data = res.data
+            let userData = JSON.parse(JSON.stringify(data.data.userData[0]))
+            delete (userData['pwd'])
+            commit('setUser', userData)
+            commit('setToken', data.data.userData[0].token)
+            commit('setUserName', data.data.userData[0].userName)
+            commit('setSchoolId', data.data.userData[0].schoolid)
+            commit('setUserType', data.data.userData[0].usertype)
+            let access = ''
+            if (data.data.userData[0].usertype === 1) {
+              access = 'systemAdministrator'
+            } else {
+              access = 'schoolAdministrator'
+            }
+            commit('setAccess', [access])
+            commit('setHasGetInfo', true)
+            resolve()
+          }
         }).catch(err => {
           reject(err)
         })
@@ -106,31 +151,31 @@ export default {
       })
     },
     // 获取用户相关信息
-    getUserInfo ({ state, commit }) {
-      return new Promise((resolve, reject) => {
-        try {
-          getUserInfo(state.token).then(res => {
-            const data = res.data
-            commit('setAvatar', data.avatar)
-            commit('setUserName', data.name)
-            commit('setUserId', data.user_id)
-            commit('setAccess', data.access)
-            commit('setHasGetInfo', true)
-            resolve(data)
-          }).catch(err => {
-            reject(err)
-          })
-        } catch (error) {
-          reject(error)
-        }
-      })
-    },
+    // getUserInfo ({ state, commit }) {
+    //   return new Promise((resolve, reject) => {
+    //     try {
+    //       getUserInfo(state.token).then(res => {
+    //         const data = res.data
+    //         commit('setAvatar', data.avatar)
+    //         commit('setUserName', data.name)
+    //         commit('setUserId', data.user_id)
+    //         commit('setAccess', data.access)
+    //         commit('setHasGetInfo', true)
+    //         resolve(data)
+    //       }).catch(err => {
+    //         reject(err)
+    //       })
+    //     } catch (error) {
+    //       reject(error)
+    //     }
+    //   })
+    // },
     // 此方法用来获取未读消息条数，接口只返回数值，不返回消息列表
     getUnreadMessageCount ({ state, commit }) {
-      getUnreadCount().then(res => {
-        const { data } = res
-        commit('setMessageCount', data)
-      })
+      // getUnreadCount().then(res => {
+      //   const { data } = res
+      //   commit('setMessageCount', data)
+      // })
     },
     // 获取消息列表，其中包含未读、已读、回收站三个列表
     getMessageList ({ state, commit }) {

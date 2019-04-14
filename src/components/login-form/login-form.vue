@@ -15,19 +15,14 @@
       </Input>
     </FormItem>
     <FormItem prop="password">
-      <Input v-model="form.code" placeholder="请输入验证码" style="width:66%;margin-right:4%">
-        <!-- <span slot="prepend">
-          <Icon :size="14" type="md-lock"></Icon>
-        </span> -->
-      </Input>
-       <Input v-model="form.code" placeholder="图片" style="width:30%">
-        <!-- <span slot="prepend">
-          <Icon :size="14" type="md-lock"></Icon>
-        </span> -->
-      </Input>
+      <div style="display: flex;">
+        <Input v-model="form.code" placeholder="请输入验证码" style="width:66%;margin-right:4%">
+        </Input>
+        <img :src="codeImg" alt="" @click="codeChange" style="cursor: pointer;"/>
+      </div>
     </FormItem>
     <FormItem>
-      <Button type="default" style="width:48%;margin-right:4%">清空</Button>
+      <Button type="default" @click="Clear" style="width:48%;margin-right:4%">清空</Button>
       <Button @click="handleSubmit" type="primary" style="width:48%">登录</Button>
     </FormItem>
   </Form>
@@ -51,32 +46,57 @@ export default {
           { required: true, message: '密码不能为空', trigger: 'blur' }
         ]
       }
+    },
+    codeRules: {
+      type: Array,
+      default: () => {
+        return [
+          { required: true, message: '验证码不能为空', trigger: 'blur' }
+        ]
+      }
     }
   },
   data () {
     return {
       form: {
-        userName: 'super_admin',
-        password: 'super_admin',
+        userName: '',
+        password: '',
         code: ''
-      }
+      },
+      codeImg: '',
+      currentRandom: 0
     }
   },
   computed: {
     rules () {
       return {
         userName: this.userNameRules,
-        password: this.passwordRules
+        password: this.passwordRules,
+        code: this.codeRules
       }
     }
   },
+  mounted () {
+    this.currentRandom = Math.random()
+    this.codeImg = `http://hsyj.100eduonline.com/api/auth/createCaptcha?v=${this.currentRandom}`
+  },
   methods: {
+    codeChange () {
+      this.currentRandom = Math.random()
+      this.codeImg = `http://hsyj.100eduonline.com/api/auth/createCaptcha?v=${this.currentRandom}`
+    },
+    Clear () {
+      this.form.userName = ''
+      this.form.password = ''
+      this.form.code = ''
+    },
     handleSubmit () {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.$emit('on-success-valid', {
             userName: this.form.userName,
-            password: this.form.password
+            password: this.form.password,
+            code: this.form.code
           })
         }
       })

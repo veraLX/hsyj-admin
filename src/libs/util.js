@@ -16,6 +16,19 @@ export const getToken = () => {
   else return false
 }
 
+export const getSessionUser = () => {
+  const user = sessionStorage.getItem('user')
+  if (user) {
+    return JSON.parse(user)
+  } else {
+    return {}
+  }
+}
+
+export const setSessionUser = (user) => {
+  sessionStorage.setItem('user', JSON.stringify(user))
+}
+
 export const hasChild = (item) => {
   return item.children && item.children.length !== 0
 }
@@ -156,8 +169,10 @@ export const getNewTagList = (list, newRoute) => {
  * @param {*} route 路由列表
  */
 const hasAccess = (access, route) => {
-  if (route.meta && route.meta.access) return hasOneOf(access, route.meta.access)
-  else return true
+  if (route.meta && route.meta.access) {
+    const hasOneOfboolean = hasOneOf(route.meta.access, access)
+    return hasOneOfboolean
+  } else return true
 }
 
 /**

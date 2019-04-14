@@ -39,7 +39,12 @@ export const getUnion = (arr1, arr2) => {
  * @description 判断要查询的数组是否至少有一个元素包含在目标数组中
  */
 export const hasOneOf = (targetarr, arr) => {
-  return targetarr.some(_ => arr.indexOf(_) > -1)
+  let has = false
+  if (targetarr[0] === arr[0]) {
+    has = true
+  }
+  return has
+  // return targetarr.some(_ => arr.indexOf(_) > -1)
 }
 
 /**
