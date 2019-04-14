@@ -42,7 +42,12 @@
                   <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
               </template>
             </div>
-            <Upload
+            <iframe
+                src="http://hsyj.100eduonline.com/static/admin/uploadComponent/upload.html"
+                height="auto"
+                style="border: none;"
+            />
+            <!-- <Upload
               ref="upload"
               :show-upload-list="false"
               :default-file-list="defaultList"
@@ -59,7 +64,7 @@
               <div style="width: 142px;height:80px;line-height: 80px;">
                   <Icon type="ios-camera" size="30"></Icon>
               </div>
-            </Upload>
+            </Upload> -->
           </i-col>
           <i-col span="4">
             <Button class="bottomRight" type="primary" @click="addSite">增加</Button>
@@ -79,7 +84,7 @@
 </template>
 
 <script>
-import { addScenery, sceneryList } from '@/api/scenery'
+import { addScenery, sceneryList, sceneryDelete, editScenery } from '@/api/scenery'
 export default {
   name: 'directive_page',
   data () {
@@ -120,19 +125,53 @@ export default {
           options: ['delete'],
           render: (h, params) => {
             return h('div', [
-              h('Button', {
-                style: { 'margin-right': '8px' },
-                props: {
-                  type: 'primary',
-                  size: 'small',
-                  disabled: params.row.isOriginal
-                },
-                on: {
-                  click: () => {
-                    console.log(params)
+              // h('Button', {
+              //   style: { 'margin-right': '8px' },
+              //   props: {
+              //     type: 'primary',
+              //     size: 'small',
+              //     disabled: params.row.isOriginal
+              //   },
+              //   on: {
+              //     click: () => {
+              //       console.log(params)
+              //     }
+              //   }
+              // }, '修改'),
+              h(
+                'Button',
+                {
+                  style: { 'margin-right': '8px' },
+                  props: {
+                    type: 'primary',
+                    size: 'small',
+                    disabled: params.row.isOriginal
+                  },
+                  on: {
+                    click: async () => {
+                      if (params.row.$isSiteEdit) {
+                        this.$set(params.row, '$isSiteEdit', false)
+                        let obj = {
+                          scenerytitle: params.row.scenerytitle,
+                          address: params.row.address,
+                          shdesc: params.row.shdesc,
+                          sourceaddress: params.row.sourceaddress,
+                          longitude: params.row.longitude,
+                          latitude: params.row.latitude,
+                          soundurl: params.row.soundurl,
+                          videourl: params.row.videourl,
+                          sceneryID: params.row.sceneryID
+                        }
+                        await editScenery(obj)
+                        this.flashAllSiteData()
+                      } else {
+                        this.$set(params.row, '$isSiteEdit', true)
+                      }
+                    }
                   }
-                }
-              }, '修改'),
+                },
+                params.row.$isSiteEdit ? '保存' : '编辑'
+              ),
               h('Poptip', {
                 props: {
                   confirm: true,
@@ -140,6 +179,7 @@ export default {
                 },
                 on: {
                   'on-ok': async () => {
+                    this.deleteSite(params.row)
                   }
                 }
               }, [
@@ -191,7 +231,7 @@ export default {
     }
   },
   async mounted () {
-    this.uploadList = this.$refs.upload.fileList
+    // this.uploadList = this.$refs.upload.fileList
     let scene = await sceneryList(this.currentPage, this.pageSize)
     this.siteData = scene.data.data.data
     this.totalPages = scene.data.totalPages
@@ -213,6 +253,16 @@ export default {
       let data = await addScenery(this.siteForm)
       this.flashAllSiteData()
       console.log('addSite', data)
+    },
+    // async editSite () {
+    //   let data = await editScenery(this.siteForm)
+    //   this.flashAllSiteData()
+    //   console.log('addSite', data)
+    // },
+    async deleteSite (rowData) {
+      sceneryDelete(rowData.sceneryID)
+      this.flashAllSiteData()
+      console.log('deleteSite', rowData)
     },
     handleView (name) {
       this.imgName = name
@@ -238,15 +288,15 @@ export default {
         desc: 'File  ' + file.name + ' is too large, no more than 2M.'
       })
     },
-    handleBeforeUpload () {
-      const check = this.uploadList.length < 5
-      if (!check) {
-        this.$Notice.warning({
-          title: 'Up to five pictures can be uploaded.'
-        })
-      }
-      return check
-    },
+    // handleBeforeUpload () {
+    //   const check = this.uploadList.length < 5
+    //   if (!check) {
+    //     this.$Notice.warning({
+    //       title: 'Up to five pictures can be uploaded.'
+    //     })
+    //   }
+    //   return check
+    // },
     handlePage (value) {
       this.currentPage = value
       this.flashAllSiteData()
