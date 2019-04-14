@@ -37,12 +37,12 @@
       <p class="littleTitle">新增管理员</p>
       <Form ref="Administrator" :model="Administrator" :rules="administratorRule" inline :label-width="100">
         <FormItem prop="name" label="管理员账户" :style="{'width': '40%'}">
-            <Input v-model="Administrator.name" placeholder="输入管理员账户"/>
+            <Input v-model="Administrator.userName" placeholder="输入管理员账户"/>
         </FormItem>
         <FormItem prop="password" label="管理员密码" :style="{'width': '40%'}">
-            <Input v-model="Administrator.password" placeholder="输入管理员密码"/>
+            <Input v-model="Administrator.pwd" placeholder="输入管理员密码"/>
         </FormItem>
-        <Button type="primary">增加</Button>
+        <Button type="primary" @click='addUser'>增加</Button>
       </Form>
       <p class="littleTitle">管理员列表</p>
       <Table stripe :columns="AdministratorColumns" :data="AdministratorData"></Table>
@@ -56,27 +56,29 @@
 
 <script>
 import {
-  addSchool, getSchoolList
+  addSchool, getSchoolList, addUser
 } from '@/api/school'
 export default {
   name: 'directive_page',
   data () {
     return {
-      currentSchool: '',
+      currentSchool: {},
       schoolModal: false,
       formInline: {
         schoolname: '',
         parentid: -1
       },
       Administrator: {
-        name: '',
-        password: ''
+        userName: '',
+        pwd: '',
+        usertype: 0,
+        Schooled: ''
       },
       administratorRule: {
-        name: [
+        userName: [
           { required: true, message: '请输入管理员账户', trigger: 'blur' }
         ],
-        password: [
+        pwd: [
           { required: true, message: '请输入管理员密码', trigger: 'blur' }
         ]
       },
@@ -191,10 +193,17 @@ export default {
       console.log(this.schoolList)
     },
     schoolDetail (school) {
-      if (school.isSchool) {
+      debugger
+      if (school.schoolID) {
         this.schoolModal = true
         this.currentSchool = school
+        this.$set(this.Administrator, 'Schooled', school.schoolID)
       }
+    },
+    async addUser () {
+      debugger
+      console.log('formInline', this.Administrator)
+      await addUser(this.Administrator)
     },
     async addSchool () {
       debugger

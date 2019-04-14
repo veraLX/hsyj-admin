@@ -58,3 +58,18 @@ export const editSchool = (obj) => {
     method: 'post'
   })
 }
+
+export const addUser = (obj) => {
+  const data = {
+    'userName': obj.userName,
+    'pwd': obj.pwd,
+    'usertype': obj.usertype,
+    'Schooled': obj.Schooled
+  }
+
+  return axios.request({
+    url: 'user/save',
+    data,
+    method: 'post'
+  })
+}
