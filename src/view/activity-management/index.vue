@@ -81,7 +81,7 @@
                           <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
                       </template>
                     </div>
-                    <iframe src="http://hsyj.100eduonline.com/static/admin/uploadComponent/upload.html" height="100" style="border: none;"/>
+                    <iframe src="http://hsyj.100eduonline.com/static/admin/uploadComponent/upload.html" height="120" width="100%" style="border: none;overflow:hidden"/>
                     <!-- <Upload
                       ref="upload"
                       :show-upload-list="false"
@@ -370,4 +370,12 @@ export default {
       color: #515a6e;
       line-height: 1;
     }
+    /*  */
+    #upload-btn{
+    background-color: transparent;
+    border: 1px solid #2d8cf0;
+    }
+    body {
+    margin: 0;
+}
 </style>

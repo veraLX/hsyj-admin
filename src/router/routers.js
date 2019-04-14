@@ -129,21 +129,21 @@ export default [
     ]
   },
   {
-    path: '/synchronizationStudentInformation',
-    name: 'synchronizationStudentInformation',
+    path: '/synchronizationSchoolInformation',
+    name: 'synchronizationSchoolInformation',
     meta: {
       hideInBread: true
     },
     component: Main,
     children: [
       {
-        path: 'synchronization_student_information',
-        name: 'synchronization_student_information',
+        path: 'synchronization_school_information',
+        name: 'synchronization_school_information',
         meta: {
           icon: 'md-people',
-          title: '学生信息同步'
+          title: '学校信息同步'
         },
-        component: () => import('@/view/synchronization-student-information/index.vue')
+        component: () => import('@/view/synchronization-school-information/index.vue')
       }
     ]
   },

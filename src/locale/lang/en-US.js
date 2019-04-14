@@ -47,5 +47,5 @@ export default {
   account_management: 'Account Management',
   site_management: 'Site Management',
   activity_management: 'Activity Management',
-  synchronization_student_information: 'Synchronization Student Information'
+  synchronization_school_information: 'Synchronization School Information'
 }
