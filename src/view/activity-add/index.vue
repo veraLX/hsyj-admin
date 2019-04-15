@@ -3,28 +3,24 @@
     <Card>
     <Tabs value="new">
         <TabPane label="新增活动" name="new">
-          <!-- <Card>
-              <p slot="title">新增活动</p> -->
               <Form :model="activityForm" inline label-position="right" :label-width="100">
-                <FormItem prop="name" label="活动名称" :style="{'width': 'calc((100% - 30px)/3)'}">
-                    <Input v-model="activityForm.name" placeholder="输入景点名称"></Input>
+                <FormItem prop="activityname" label="活动名称" :style="{'width': 'calc((100% - 30px)/3)'}">
+                    <Input v-model="activityForm.activityname" placeholder="输入活动名称"></Input>
                 </FormItem>
-                <FormItem prop="school" label="主会场" :style="{'width': 'calc((100% - 30px)/3)'}">
-                    <Select v-model="activityForm.school">
-                      <!-- <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option> -->
-                    </Select>
+                <FormItem prop="meetingplace" label="主会场" :style="{'width': 'calc((100% - 30px)/3)'}">
+                    <Input v-model="activityForm.sponsor" placeholder="输入主会场"></Input>
                 </FormItem>
-                <FormItem prop="audioURL" label="主板房" :style="{'width': 'calc((100% - 30px)/3)'}">
-                    <Input v-model="activityForm.audioURL" placeholder="输入音频URL地址"></Input>
+                <FormItem prop="sponsor" label="主办方" :style="{'width': 'calc((100% - 30px)/3)'}">
+                    <Input v-model="activityForm.sponsor" placeholder="输入主办方"></Input>
                 </FormItem>
-                <FormItem prop="longitude" label="协办方" :style="{'width': 'calc((100% - 30px)/3)'}">
-                    <Input v-model="activityForm.longitude" placeholder="输入经度"></Input>
+                <FormItem prop="secondsponsor" label="协办方" :style="{'width': 'calc((100% - 30px)/3)'}">
+                    <Input v-model="activityForm.secondsponsor" placeholder="输入协办方"></Input>
                 </FormItem>
-                <FormItem prop="startDate" label="开始日期" :style="{'width': 'calc((100% - 30px)/3)'}">
-                    <DatePicker v-model="activityForm.startDate" type="date" placeholder="输入开始日期" :style="{'width': '100%'}" ></DatePicker>
+                <FormItem prop="startdate" label="开始日期" :style="{'width': 'calc((100% - 30px)/3)'}">
+                    <DatePicker v-model="activityForm.startdate" type="date" placeholder="输入开始日期" :style="{'width': '100%'}" ></DatePicker>
                 </FormItem>
-                <FormItem prop="endDate" label="结束日期" :style="{'width': 'calc((100% - 30px)/3)'}">
-                    <DatePicker v-model="activityForm.endDate" type="date" placeholder="输入结束日期" :style="{'width': '100%'}" ></DatePicker>
+                <FormItem prop="enddate" label="结束日期" :style="{'width': 'calc((100% - 30px)/3)'}">
+                    <DatePicker v-model="activityForm.enddate" type="date" placeholder="输入结束日期" :style="{'width': '100%'}" ></DatePicker>
                 </FormItem>
                 <FormItem prop="universities" label="学校范围" :style="{'width': 'calc((100% - 20px)/2)'}">
                   <Transfer
@@ -40,33 +36,39 @@
                   :render-format="render1"
                   @on-change="handleChange1"></Transfer>
                 </FormItem>
-                <FormItem prop="shhoolClearanceThreshold" label="通关阈值(学校)" :style="{'width': 'calc((100% - 20px)/2)'}">
-                  <InputNumber :min="1" v-model="activityForm.shhoolClearanceThreshold"></InputNumber>
+                <FormItem prop="needschoolpass" label="通关阈值(学校)" :style="{'width': 'calc((100% - 20px)/2)'}">
+                  <InputNumber :min="1" v-model="activityForm.needschoolpass"></InputNumber>
                 </FormItem>
 
-                <FormItem prop="siteClearanceThreshold" label="通关阈值(景点)" :style="{'width': 'calc((100% - 20px)/2)'}">
-                  <InputNumber :min="1" v-model="activityForm.siteClearanceThreshold"></InputNumber>
+                <FormItem prop="needscenerypass" label="通关阈值(景点)" :style="{'width': 'calc((100% - 20px)/2)'}">
+                  <InputNumber :min="1" v-model="activityForm.needscenerypass"></InputNumber>
                 </FormItem>
                 <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
-                    <Checkbox v-model="single">是否设定起点</Checkbox>
-                    <Select v-model="activityForm.school">
+                    <Checkbox v-model="activityForm.settingstart">是否设定起点</Checkbox>
+                    <Select v-model="activityForm.startsceneryid">
                       <!-- <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option> -->
                     </Select>
                 </FormItem>
                 <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
-                    <Checkbox v-model="single">是否设定终点</Checkbox>
-                    <Select v-model="activityForm.school">
+                    <Checkbox v-model="activityForm.settingend">是否设定终点</Checkbox>
+                    <Select v-model="activityForm.endsceneryid">
                         <!-- <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option> -->
                       </Select>
                 </FormItem>
                 <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
-                    <Checkbox v-model="single">是否团队赛</Checkbox>
-                    <br/>组队人数：<InputNumber :min="1" v-model="activityForm.siteClearanceThreshold"></InputNumber>
+                    <Checkbox v-model="activityForm.isgroup">是否团队赛</Checkbox>
+                    <br/>组队人数：<InputNumber :min="1" v-model="activityForm.groupnum"></InputNumber>
                 </FormItem>
-                <FormItem prop="description" label="活动描述" :style="{'width': 'calc(100% - 10px)'}">
-                    <Input type="textarea" v-model="activityForm.description" placeholder="输入描述"></Input>
+                <FormItem prop="shdesc" label="活动描述" :style="{'width': 'calc(100% - 10px)'}">
+                    <Input type="textarea" v-model="activityForm.shdesc" placeholder="输入描述"></Input>
                 </FormItem>
-                <Row class="imgRow">
+                <FormItem
+                  style="width:100%;display: flex;justify-content: flex-end;padding-right: 10px;margin-bottom: 0;"
+                >
+                  <Button type="primary" >下一步</Button>
+                  <a @click="openImageDialog" type="text" class="setImage">设置图片</a>
+                </FormItem>
+                <!-- <Row class="imgRow">
                   <i-col span="20">
                     <span class="fromLabel">图片预览</span>
                     <div class="demo-upload-list" v-for="(item,index) in uploadList" :key="index">
@@ -81,51 +83,44 @@
                           <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
                       </template>
                     </div>
-                    <iframe src="http://hsyj.100eduonline.com/static/admin/uploadComponent/upload.html" height="120" width="100%" style="border: none;overflow:hidden"/>
-                    <!-- <Upload
-                      ref="upload"
-                      :show-upload-list="false"
-                      :default-file-list="defaultList"
-                      :on-success="handleSuccess"
-                      :format="['jpg','jpeg','png']"
-                      :max-size="2048"
-                      :on-format-error="handleFormatError"
-                      :on-exceeded-size="handleMaxSize"
-                      :before-upload="handleBeforeUpload"
-                      multiple
-                      type="drag"
-                      action="//jsonplaceholder.typicode.com/posts/"
-                      style="display: inline-block;width:142px;">
-                      <div style="width: 142px;height:80px;line-height: 80px;">
-                          <Icon type="ios-camera" size="30"></Icon>
-                      </div>
-                    </Upload> -->
+                    <iframe src="http://hsyj.100eduonline.com/static/images/admin/uploadComponent/upload.html" height="120" width="100%" style="border: none;overflow:hidden"/>
                   </i-col>
                   <i-col span="4">
                     <Button class="bottomRight" type="primary" >下一步</Button>
                   </i-col>
-                </Row>
+                </Row> -->
+                <!-- <Button class="bottomRight" type="primary" @click="addSchool">下一步</Button> -->
               </Form>
-            <!-- </Card> -->
         </TabPane>
         <TabPane label="新建答题" name="list">
           <Answer/>
-        </TabPane>
-    </Tabs>
+          </TabPane>
+        </Tabs>
     </Card>
+    <Modal v-model="editImage" width="60%">
+      <p slot="header">
+        <Icon type="ios-paper-outline"></Icon>
+        <span>图片编辑</span>
+      </p>
+      <Upload/>
+      <div slot="footer"> </div>
+    </Modal>
   </div>
 </template>
 
 <script>
 import Answer from '@/view/activity-add/answer-management/index'
+import Upload from '@/view/components/uploadImage/index'
 export default {
   name: 'directive_page',
   components: {
-    Answer
+    Answer,
+    Upload
   },
   data () {
     return {
       single: '',
+      editImage: false,
       defaultList: [
         {
           'name': 'a42bdcc1178e62b4694c830f028db5c0',
@@ -168,6 +163,9 @@ export default {
     this.uploadList = this.$refs.upload.fileList
   },
   methods: {
+    openImageDialog () {
+      this.editImage = true
+    },
     render1 (item) {
       return item.label
     },
@@ -278,12 +276,12 @@ export default {
       color: #515a6e;
       line-height: 1;
     }
-    /*  */
-    #upload-btn{
-    background-color: transparent;
-    border: 1px solid #2d8cf0;
+    .setImage{
+      font-size: 15px;
+      text-align: center;
+      padding: 2px;
+      position: absolute;
+      right: 70px;
+      width: 100px;
     }
-    body {
-    margin: 0;
-}
 </style>

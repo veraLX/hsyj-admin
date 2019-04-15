@@ -209,16 +209,6 @@ export default [
     component: Main,
     children: [
       {
-        path: 'activity_list',
-        name: 'activity_list',
-        meta: {
-          icon: 'md-ribbon',
-          title: '活动列表',
-          access: ['schoolAdministrator']
-        },
-        component: () => import('@/view/activity-management/index.vue')
-      },
-      {
         path: 'activity_add',
         name: 'activity_add',
         meta: {
@@ -227,6 +217,16 @@ export default [
           access: ['schoolAdministrator']
         },
         component: () => import('@/view/activity-add/index.vue')
+      },
+      {
+        path: 'activity_list',
+        name: 'activity_list',
+        meta: {
+          icon: 'md-ribbon',
+          title: '活动列表',
+          access: ['schoolAdministrator']
+        },
+        component: () => import('@/view/activity-management/index.vue')
       }
     ]
   },
