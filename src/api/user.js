@@ -20,10 +20,10 @@ export const getUserInfo = (sysuserid) => {
   })
 }
 
-export const logout = (token) => {
+export const logout = () => {
   return axios.request({
-    url: 'logout',
-    method: 'post'
+    url: '/auth/adminLogout',
+    method: 'get'
   })
 }
 

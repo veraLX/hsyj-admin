@@ -141,7 +141,7 @@ export default {
     // 退出登录
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
+        logout().then(() => {
           commit('setToken', '')
           commit('setAccess', [])
           resolve()
@@ -174,7 +174,6 @@ export default {
           commit('setHasGetInfo', true)
           resolve(user)
         } else {
-          debugger
           getUserInfo(state.user.sysUserID).then(res => {
             const data = res.data.data
             let userData = JSON.parse(JSON.stringify(res.data.data))
