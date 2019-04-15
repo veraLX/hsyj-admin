@@ -46,7 +46,7 @@
       </Form>
       <p class="littleTitle">管理员列表</p>
       <Table stripe :columns="AdministratorColumns" :data="administratorList"></Table>
-      <Page :total="100" />
+      <Page :total="administratorList.length" />
       <div slot="footer">
           <!-- <Button :size="buttonSize" type="primary" @click="groupUpdateMethod" >确定</Button> -->
       </div>
@@ -199,7 +199,6 @@ export default {
       console.log('1111', list.data.data)
     },
     async schoolDetail (school) {
-      debugger
       if (school.schoolID) {
         this.schoolModal = true
         this.currentSchool = school
@@ -208,19 +207,28 @@ export default {
       }
     },
     async addUser () {
-      await addUser(this.administrator)
-      this.getUserList(this.administrator.schoolid)
-      this.administrator = {
-        userName: '',
-        pwd: '',
-        usertype: 0,
-        schoolid: this.administrator.schoolid
+      if (this.administrator.userName !== '' && this.administrator.pwd !== '') {
+        await addUser(this.administrator)
+        this.getUserList(this.administrator.schoolid)
+        this.administrator = {
+          userName: '',
+          pwd: '',
+          usertype: 0,
+          schoolid: this.administrator.schoolid
+        }
+      } else if (this.administrator.userName === '') {
+        this.$Message.info('管理员账户不能为空')
+      } else {
+        this.$Message.info('管理员密码不能为空')
       }
     },
     async addSchool () {
-      console.log('formInline', this.formInline)
-      await addSchool(this.formInline)
-      this.getSchoolList()
+      if (this.formInline.schoolname !== '') {
+        await addSchool(this.formInline)
+        this.getSchoolList()
+      } else {
+        this.$Message.info('机构名称不能为空')
+      }
     }
   }
 }
