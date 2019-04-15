@@ -83,3 +83,48 @@ export const restoreTrash = msg_id => {
     }
   })
 }
+
+export const addUser = (obj) => {
+  const data = {
+    'userName': obj.userName,
+    'pwd': obj.pwd,
+    'usertype': obj.usertype,
+    'schoolid': obj.schoolid
+  }
+
+  return axios.request({
+    url: 'user/save',
+    data,
+    method: 'post'
+  })
+}
+
+export const getUserList = (data) => {
+  return axios.request({
+    url: 'user/getUserListBySchoolid?schoolid=' + data,
+    method: 'get'
+  })
+}
+
+export const editUser = (obj) => {
+  const data = {
+    'userName': obj.userName,
+    'pwd': obj.pwd,
+    'usertype': obj.usertype,
+    'schoolid': obj.schoolid
+  }
+
+  return axios.request({
+    url: 'user/save?userid=' + obj.sysUserID,
+    data,
+    method: 'post'
+  })
+}
+
+export const deleteUser = (data) => {
+  return axios.request({
+    url: 'user/delete?userid=' + data,
+    data,
+    method: 'get'
+  })
+}
