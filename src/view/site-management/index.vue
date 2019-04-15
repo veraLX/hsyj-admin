@@ -90,7 +90,7 @@ export default {
   data () {
     return {
       count: 0,
-      pageSize: 9,
+      pageSize: 5,
       totalPages: 1,
       currentPage: 1,
       siteForm: {
@@ -358,25 +358,27 @@ export default {
     // this.uploadList = this.$refs.upload.fileList
     let scene = await sceneryList(this.currentPage, this.pageSize)
     this.siteData = scene.data.data.data
-    this.totalPages = scene.data.totalPages
-    this.pageSize = scene.data.pageSize
-    this.currentPage = scene.data.currentPage
-    this.count = scene.data.count
+    this.totalPages = scene.data.data.totalPages
+    this.pageSize = scene.data.data.pageSize
+    this.currentPage = scene.data.data.currentPage
+    this.count = scene.data.data.count
     console.log('scene', scene)
   },
   methods: {
     async flashAllSiteData () {
       let scene = await sceneryList(this.currentPage, this.pageSize)
       this.siteData = scene.data.data.data
-      this.totalPages = scene.data.totalPages
-      this.pageSize = scene.data.pageSize
-      this.currentPage = scene.data.currentPage
-      this.count = scene.data.count
+      this.totalPages = scene.data.data.totalPages
+      this.pageSize = scene.data.data.pageSize
+      this.currentPage = scene.data.data.currentPage
+      this.count = scene.data.data.count
     },
     async addSite () {
-      let data = await addScenery(this.siteForm)
-      this.flashAllSiteData()
-      console.log('addSite', data)
+      if (!_.isEmpty(this.siteForm.scenerytitle)) {
+        let data = await addScenery(this.siteForm)
+        this.flashAllSiteData()
+        console.log('addSite', data)
+      }
     },
     // async editSite () {
     //   let data = await editScenery(this.siteForm)
