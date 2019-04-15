@@ -13,15 +13,12 @@ export const login = (username, pwd, captchacode) => {
   })
 }
 
-// export const getUserInfo = (token) => {
-//   return axios.request({
-//     url: 'get_info',
-//     params: {
-//       token
-//     },
-//     method: 'get'
-//   })
-// }
+export const getUserInfo = (sysuserid) => {
+  return axios.request({
+    url: `/auth/getUserInfo?sysuserid=${sysuserid}`,
+    method: 'get'
+  })
+}
 
 export const logout = (token) => {
   return axios.request({

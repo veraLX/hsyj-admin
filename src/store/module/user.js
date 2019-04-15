@@ -1,7 +1,7 @@
 import {
   login,
   logout,
-  // getUserInfo,
+  getUserInfo,
   getMessage,
   getContentByMsgId,
   hasRead,
@@ -40,6 +40,9 @@ export default {
     },
     setSchoolId (state, schoolId) {
       state.schoolId = schoolId
+    },
+    setSysUserID (state, sysUserID) {
+      state.sysUserID = sysUserID
     },
     setUserType (state, usertype) {
       state.usertype = usertype
@@ -119,6 +122,7 @@ export default {
             commit('setUserName', data.data.userData[0].userName)
             commit('setSchoolId', data.data.userData[0].schoolid)
             commit('setUserType', data.data.userData[0].usertype)
+            commit('setSysUserID', data.data.userData[0].sysUserID)
             let access = ''
             if (data.data.userData[0].usertype === 1) {
               access = 'systemAdministrator'
@@ -151,25 +155,56 @@ export default {
       })
     },
     // 获取用户相关信息
-    // getUserInfo ({ state, commit }) {
-    //   return new Promise((resolve, reject) => {
-    //     try {
-    //       getUserInfo(state.token).then(res => {
-    //         const data = res.data
-    //         commit('setAvatar', data.avatar)
-    //         commit('setUserName', data.name)
-    //         commit('setUserId', data.user_id)
-    //         commit('setAccess', data.access)
-    //         commit('setHasGetInfo', true)
-    //         resolve(data)
-    //       }).catch(err => {
-    //         reject(err)
-    //       })
-    //     } catch (error) {
-    //       reject(error)
-    //     }
-    //   })
-    // },
+    getUserInfo ({ state, commit }) {
+      return new Promise((resolve, reject) => {
+        const userString = sessionStorage.getItem('user')
+        const user = JSON.parse(userString)
+        if (!_.isEmpty(user)) {
+          commit('setUserName', user.userName)
+          commit('setSchoolId', user.schoolid)
+          commit('setUserType', user.usertype)
+          commit('setSysUserID', user.sysUserID)
+          let access = ''
+          if (user.usertype === 1) {
+            access = 'systemAdministrator'
+          } else {
+            access = 'schoolAdministrator'
+          }
+          commit('setAccess', [access])
+          commit('setHasGetInfo', true)
+          resolve(user)
+        } else {
+          debugger
+          getUserInfo(state.user.sysUserID).then(res => {
+            const data = res.data.data
+            let userData = JSON.parse(JSON.stringify(res.data.data))
+            delete (userData['pwd'])
+            commit('setUser', userData)
+            // commit('setToken', data.token)
+            commit('setUserName', data.userName)
+            commit('setSchoolId', data.schoolid)
+            commit('setUserType', data.usertype)
+            commit('setSysUserID', data.sysUserID)
+            let access = ''
+            if (data.usertype === 1) {
+              access = 'systemAdministrator'
+            } else {
+              access = 'schoolAdministrator'
+            }
+            commit('setAccess', [access])
+            commit('setHasGetInfo', true)
+            resolve(data)
+          }).catch(err => {
+            reject(err)
+          })
+        }
+        // try {
+
+        // } catch (error) {
+        //   reject(error)
+        // }
+      })
+    },
     // 此方法用来获取未读消息条数，接口只返回数值，不返回消息列表
     getUnreadMessageCount ({ state, commit }) {
       // getUnreadCount().then(res => {
