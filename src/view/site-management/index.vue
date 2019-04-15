@@ -109,14 +109,138 @@ export default {
       },
       siteColumns: [
         { title: ' ', type: 'index', width: 60, align: 'center' },
-        { title: '景点名称', key: 'sceneryTitle' },
-        { title: '地点', key: 'address' },
-        { title: '经度', key: 'longitude' },
-        { title: '纬度', key: 'latitude' },
-        { title: '描述', key: 'shdesc', width: '200px' },
+        { title: '景点名称',
+          key: 'sceneryTitle',
+          render: (h, params) => {
+            if (params.row.$isSiteEdit) {
+              return h('input', {
+                domProps: {
+                  value: params.row.sceneryTitle
+                },
+                on: {
+                  input: function (event) {
+                    params.row.sceneryTitle = event.target.value
+                  }
+                }
+              })
+            } else {
+              return h('div', params.row.sceneryTitle)
+            }
+          }
+        },
+        { title: '地点',
+          key: 'address',
+          render: (h, params) => {
+            if (params.row.$isSiteEdit) {
+              return h('input', {
+                domProps: {
+                  value: params.row.address
+                },
+                on: {
+                  input: function (event) {
+                    params.row.address = event.target.value
+                  }
+                }
+              })
+            } else {
+              return h('div', params.row.address)
+            }
+          }
+        },
+        { title: '经度',
+          key: 'longitude',
+          render: (h, params) => {
+            if (params.row.$isSiteEdit) {
+              return h('input', {
+                domProps: {
+                  value: params.row.longitude
+                },
+                on: {
+                  input: function (event) {
+                    params.row.longitude = event.target.value
+                  }
+                }
+              })
+            } else {
+              return h('div', params.row.longitude)
+            }
+          } },
+        { title: '纬度',
+          key: 'latitude',
+          render: (h, params) => {
+            if (params.row.$isSiteEdit) {
+              return h('input', {
+                domProps: {
+                  value: params.row.latitude
+                },
+                on: {
+                  input: function (event) {
+                    params.row.latitude = event.target.value
+                  }
+                }
+              })
+            } else {
+              return h('div', params.row.latitude)
+            }
+          } },
+        { title: '描述',
+          key: 'shdesc',
+          width: '200px',
+          render: (h, params) => {
+            if (params.row.$isSiteEdit) {
+              return h('input', {
+                domProps: {
+                  value: params.row.shdesc
+                },
+                on: {
+                  input: function (event) {
+                    params.row.shdesc = event.target.value
+                  }
+                }
+              })
+            } else {
+              return h('div', params.row.shdesc)
+            }
+          } },
         { title: '图片预览' },
-        { title: '音频URL地址', key: 'soundurl', width: '110px' },
-        { title: '视频URL地址', key: 'videourl', width: '110px' },
+        { title: '音频URL地址',
+          key: 'soundurl',
+          width: '110px',
+          render: (h, params) => {
+            if (params.row.$isSiteEdit) {
+              return h('input', {
+                domProps: {
+                  value: params.row.soundurl
+                },
+                on: {
+                  input: function (event) {
+                    params.row.soundurl = event.target.value
+                  }
+                }
+              })
+            } else {
+              return h('div', params.row.soundurl)
+            }
+          } },
+        { title: '视频URL地址',
+          key: 'videourl',
+          width: '110px',
+          render: (h, params) => {
+            if (params.row.$isSiteEdit) {
+              return h('input', {
+                domProps: {
+                  value: params.row.videourl
+                },
+                on: {
+                  input: function (event) {
+                    params.row.videourl = event.target.value
+                  }
+                }
+              })
+            } else {
+              return h('div', params.row.videourl)
+            }
+          } },
         {
           title: '操作',
           key: 'action',
