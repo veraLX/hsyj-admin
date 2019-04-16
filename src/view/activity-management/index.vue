@@ -5,16 +5,33 @@
         <Table stripe :columns="activityColumns" :data="activityData"></Table>
         <Page show-total :total="count" :current="currentPage" :page-size="pageSize" @on-change="handlePage"/>
     </Card>
+    <Modal v-model="editImage"  @on-cancel="childCloseModal" width="60%">
+      <p slot="header">
+        <Icon type="ios-paper-outline"></Icon>
+        <span>图片编辑</span>
+      </p>
+      <Upload v-if="updateModalShow" :parentId="currentParentId" :sourceType="2"/>
+      <div slot="footer">
+          <Button type="primary" @click="childCloseModal" >完成</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script>
 import { getActivity1List, addActivity } from '@/api/activity'
+import Upload from '@/view/components/uploadImage/index'
 // editActivity
 export default {
   name: 'directive_page',
+  components: {
+    Upload
+  },
   data () {
     return {
+      currentParentId: 0,
+      editImage: false,
+      updateModalShow: false,
       count: 0,
       pageSize: 5,
       totalPages: 1,
@@ -71,7 +88,27 @@ export default {
         { title: '题目数量', key: 'sceneryCount', width: 84 },
         { title: '通关阈值', key: 'clearanceThreshold', width: 84 },
         { title: '描述', key: 'describe' },
-        { title: '图片预览' },
+        { title: '图片',
+          key: 'action',
+          width: 200,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    // console.log(params)
+                    this.openModal()
+                  }
+                }
+              }, '编辑图片')
+            ])
+          }
+        },
         {
           title: '操作',
           key: 'action',
@@ -173,6 +210,14 @@ export default {
     // this.uploadList = this.$refs.upload.fileList
   },
   methods: {
+    openModal () {
+      this.editImage = true
+      this.updateModalShow = true
+    },
+    childCloseModal () {
+      this.editImage = false
+      this.updateModalShow = false
+    },
     async flashAllActivityData () {
       let activityList = await getActivity1List(this.currentPage, this.pageSize)
       this.activityData = activityList.data.data.data
@@ -185,48 +230,51 @@ export default {
       let addActivityItem = await addActivity(this.activityForm)
       console.log('addActivityItem', addActivityItem)
     },
-    render1 (item) {
-      return item.label
-    },
-    handleChange1 (newTargetKeys, direction, moveKeys) {
-      console.log(newTargetKeys)
-      console.log(direction)
-      console.log(moveKeys)
-      this.targetKeys1 = newTargetKeys
-    },
-    handleView (name) {
-      this.imgName = name
-      this.visible = true
-    },
-    handleRemove (file) {
-      const fileList = this.$refs.upload.fileList
-      this.$refs.upload.fileList.splice(fileList.indexOf(file), 1)
-    },
-    handleSuccess (res, file) {
-      file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar'
-      file.name = '7eb99afb9d5f317c912f08b5212fd69a'
-    },
-    handleFormatError (file) {
-      this.$Notice.warning({
-        title: 'The file format is incorrect',
-        desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
-      })
-    },
-    handleMaxSize (file) {
-      this.$Notice.warning({
-        title: 'Exceeding file size limit',
-        desc: 'File  ' + file.name + ' is too large, no more than 2M.'
-      })
-    },
-    handleBeforeUpload () {
-      const check = this.uploadList.length < 5
-      if (!check) {
-        this.$Notice.warning({
-          title: 'Up to five pictures can be uploaded.'
-        })
-      }
-      return check
+    handlePage () {
+
     }
+    // render1 (item) {
+    //   return item.label
+    // },
+    // handleChange (newTargetKeys, direction, moveKeys) {
+    //   console.log(newTargetKeys)
+    //   console.log(direction)
+    //   console.log(moveKeys)
+    //   this.targetKeys1 = newTargetKeys
+    // },
+    // handleView (name) {
+    //   this.imgName = name
+    //   this.visible = true
+    // },
+    // handleRemove (file) {
+    //   const fileList = this.$refs.upload.fileList
+    //   this.$refs.upload.fileList.splice(fileList.indexOf(file), 1)
+    // },
+    // handleSuccess (res, file) {
+    //   file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar'
+    //   file.name = '7eb99afb9d5f317c912f08b5212fd69a'
+    // },
+    // handleFormatError (file) {
+    //   this.$Notice.warning({
+    //     title: 'The file format is incorrect',
+    //     desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
+    //   })
+    // },
+    // handleMaxSize (file) {
+    //   this.$Notice.warning({
+    //     title: 'Exceeding file size limit',
+    //     desc: 'File  ' + file.name + ' is too large, no more than 2M.'
+    //   })
+    // },
+    // handleBeforeUpload () {
+    //   const check = this.uploadList.length < 5
+    //   if (!check) {
+    //     this.$Notice.warning({
+    //       title: 'Up to five pictures can be uploaded.'
+    //     })
+    //   }
+    //   return check
+    // }
   }
 }
 </script>

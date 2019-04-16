@@ -5,16 +5,81 @@
             <img :src="item.url">
         </div> -->
         <p class="subTitle">上传图片</p>
-        <iframe src="http://hsyj.100eduonline.com/static/images/admin/uploadComponent/upload.html" height="120" width="100%" style="border: none;overflow:hidden"/>
+        <iframe ref="iframe" @load="finish" src="http://hsyj.100eduonline.com/static/images/admin/uploadComponent/upload.html" height="120" width="100%" style="border: none;overflow:hidden"/>
+        <!-- <Button @click="sendMessage">向iframe发送信息</Button> -->
     </div>
 </template>
 <script>
 export default {
   name: 'upload_page',
+  props: {
+    // isEdit: Boolean
+    parentId: Number,
+    sourceType: Number
+  },
   components: {
   },
   data () {
+    return {
+      iframeWin: {}
+    }
+  },
+  mounted () {
+    // 这里就拿到了iframe的对象
+    console.log(this.$refs.iframe)
+    // 这里就拿到了iframe的window对象
+    console.log(this.$refs.iframe.contentWindow)
+    // 在外部vue的window上添加postMessage的监听，并且绑定处理函数handleMessage
+    window.addEventListener('message', this.handleMessage)
+    this.iframeWin = this.$refs.iframe.contentWindow
+  },
+  methods: {
+    finish () {
+      console.log('this.iframeWin', this.iframeWin)
+      console.log('res', '111')
+      this.$refs.iframe.contentWindow.postMessage({
+        cmd: 'getFormJson',
+        params: {},
+        info: {
+          parentId: this.parentId,
+          sourceType: this.sourceType
+        }
+      }, '*')
+    }
+    // sendMessage () {
+    //   // 外部vue向iframe内部传数据
+    // //   console.log('this.iframeWin', this.iframeWin)
+    // //   console.log('res', '111')
+    // //   this.iframeWin.postMessage({
+    // //     cmd: 'getFormJson',
+    // //     params: {},
+    // //     info: {// 做一下数据处理 然后存到自定义的info字段里方便获取,
+    // //       parentId: 1,
+    // //       sourceType: 1
+    // //     }
+    // //   }, '*')
+    // }
+  },
+  handleMessage (event) {
+    // 根据上面制定的结构来解析iframe内部发回来的数据
+    debugger
+    const data = event.data
+    console.log('vue文件接收的数据', data)
+    // const data = event.data
+    // switch (data.cmd) {
+    //   case 'returnFormJson':
+    //     // 业务逻辑
+    //     break
+    //   case 'returnHeight':
+    //     // 业务逻辑
+    //     break
+    // }
   }
+//   watch: {
+//     iframeWin () {
+//       return this.$refs.iframe.contentWindow
+//     }
+//   }
 }
 </script>
 <style>
