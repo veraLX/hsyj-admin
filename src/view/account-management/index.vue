@@ -190,13 +190,13 @@ export default {
   },
   methods: {
     async getSchoolList () {
-      const list = await getSchoolList()
+      const list = await getSchoolList({ page: 1, pageSize: 100 })
       this.schoolList = list.data.data.data ? list.data.data.data : []
     },
     async getUserList (id) {
       const list = await getUserList(id)
       this.administratorList = list.data.data ? list.data.data : []
-      console.log('1111', list.data.data)
+      console.log('1111', list)
     },
     async schoolDetail (school) {
       if (school.schoolID) {

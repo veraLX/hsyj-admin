@@ -264,10 +264,32 @@ export default [
         name: 'message_management',
         meta: {
           icon: 'ios-send',
-          title: '账户与留言',
+          title: '留言管理',
           access: ['schoolAdministrator']
         },
         component: () => import('@/view/message-management/index.vue')
+      }
+    ]
+  },
+  {
+    path: '/studentManagement',
+    name: 'studentManagement',
+    meta: {
+      icon: 'ios-send',
+      hideInBread: true,
+      access: ['schoolAdministrator']
+    },
+    component: Main,
+    children: [
+      {
+        path: 'student_management',
+        name: 'student_management',
+        meta: {
+          icon: 'ios-send',
+          title: '学生管理',
+          access: ['schoolAdministrator']
+        },
+        component: () => import('@/view/student-management/index.vue')
       }
     ]
   },
