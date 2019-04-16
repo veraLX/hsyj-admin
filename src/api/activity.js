@@ -3,7 +3,7 @@ import axios from '@/libs/api.request'
 // 44、后台活动列表1,get
 export const getActivity1List = (page, size) => {
   return axios.request({
-    url: `/activity/list?page=${page}&size=${size}`,
+    url: `activity/list?page=${page}&size=${size}`,
     method: 'get'
   })
 }
@@ -17,7 +17,7 @@ export const getActivity1List = (page, size) => {
 // }
 
 // 18、添加修改活动1,post
-export const addActivity = (obj, id) => {
+export const addActivity = (obj) => {
   const data = {
     'activityname': obj.activityname,
     'sponsor': obj.sponsor,

@@ -3,7 +3,7 @@
     <Card>
       <p slot="title">活动列表</p>
         <Table stripe :columns="activityColumns" :data="activityData"></Table>
-        <Page :total="100" />
+        <Page show-total :total="count" :current="currentPage" :page-size="pageSize" @on-change="handlePage"/>
     </Card>
   </div>
 </template>
@@ -15,6 +15,10 @@ export default {
   name: 'directive_page',
   data () {
     return {
+      count: 0,
+      pageSize: 5,
+      totalPages: 1,
+      currentPage: 1,
       single: '',
       defaultList: [
         {
@@ -54,24 +58,24 @@ export default {
       },
       activityColumns: [
         { title: ' ', type: 'index', width: 20, align: 'center' },
-        { title: '活动名称', key: 'name' },
+        { title: '活动名称', key: 'activityName' },
         { title: '主办方', key: 'sponsor' },
-        { title: '协办方', key: 'coSponsor' },
-        { title: '主会场', key: 'mainVenue' },
-        { title: '活动模式', key: 'activityMode' },
+        { title: '协办方', key: 'secondSponsor' },
+        { title: '主会场', key: 'meetingplace' },
+        { title: '活动模式', key: 'needschoolrang' },
         { title: '开始日期', key: 'startDate' },
         { title: '结束日期', key: 'endDate' },
-        { title: '涉及高校', key: 'universities' },
-        { title: '学校数', key: 'universitiesNumber', width: 72 },
-        { title: '景点数量', key: 'scenicNumber', width: 84 },
-        { title: '题目数量', key: 'questionsNumber', width: 84 },
+        { title: '涉及高校', key: 'shdesc' },
+        { title: '学校数', key: 'shstate', width: 72 },
+        { title: '景点数量', key: 'sceneryCount', width: 84 },
+        { title: '题目数量', key: 'sceneryCount', width: 84 },
         { title: '通关阈值', key: 'clearanceThreshold', width: 84 },
         { title: '描述', key: 'describe' },
         { title: '图片预览' },
         {
           title: '操作',
           key: 'action',
-          width: 140,
+          width: 200,
           align: 'center',
           options: ['delete'],
           render: (h, params) => {
@@ -100,13 +104,26 @@ export default {
                 }
               }, [
                 h('Button', {
+                  style: { 'margin-right': '8px' },
                   props: {
                     type: 'error',
                     size: 'small',
                     disabled: params.row.isOriginal
                   }
                 }, '删除')
-              ])
+              ]),
+              h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small',
+                  disabled: params.row.isOriginal
+                },
+                on: {
+                  click: () => {
+                    console.log(params)
+                  }
+                }
+              }, '答题')
             ])
           }
         }
@@ -142,17 +159,28 @@ export default {
           clearanceThreshold: '3+18',
           description: '50年代师生义务劳动建成，取名三好，寓意学生做“三好学生”。由陈从周设计、题/n三好坞/n 三好坞(4张)/n 名。其下淌的水叫做同心河。都说这里是中国高校百大最美地方之一，建于1956年。1987年为迎接80周年校庆，全面整顿“三好坞”。三好坞有三座亭子，湖心亭和两个在山上的，成为聚友、约会、休闲的好地方。'
         }
-      ],
-      currentPage: 1
-
+      ]
     }
   },
   async mounted () {
-    let activityList = await getActivity1List(this.currentPage, 5)
+    let activityList = await getActivity1List(this.currentPage, this.pageSize)
+    this.activityData = activityList.data.data.data
+    this.totalPages = activityList.data.data.totalPages
+    this.pageSize = activityList.data.data.pageSize
+    this.currentPage = activityList.data.data.currentPage
+    this.count = activityList.data.data.count
     console.log('activityList', activityList)
     // this.uploadList = this.$refs.upload.fileList
   },
   methods: {
+    async flashAllActivityData () {
+      let activityList = await getActivity1List(this.currentPage, this.pageSize)
+      this.activityData = activityList.data.data.data
+      this.totalPages = activityList.data.data.totalPages
+      this.pageSize = activityList.data.data.pageSize
+      this.currentPage = activityList.data.data.currentPage
+      this.count = activityList.data.data.count
+    },
     async addActivity () {
       let addActivityItem = await addActivity(this.activityForm)
       console.log('addActivityItem', addActivityItem)
