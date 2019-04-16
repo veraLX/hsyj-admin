@@ -1,64 +1,39 @@
 <template>
   <div>
-    <Card >
+    <Card>
       <div slot="title">
         <p style="display:inline">留言</p>&nbsp;&nbsp;
         <Tag color="red">待审批留言数量 99 条</Tag>
       </div>
-      <Table stripe :columns="MessageColumns" :data="MessageList"></Table>
-      <Page :total="10" />
-    </Card>
-    <Card :style="{'margin-top': '10px'}">
-      <p slot="title">学生账户</p>
-      <Form ref="formInline" :model="formInline" inline :label-width="100">
-        <FormItem prop="stuno" label="学生学籍号码" :style="{'width': '400px'}">
-            <Input  v-model="formInline.stuno" placeholder="输入学生学籍号码"/>
-        </FormItem>
-        <Button type="primary">查询</Button>
-        <Table stripe :columns="StudentColumns" :data="studentList"></Table>
-        <Page :total="100" />
-      </Form>
+      <Tabs value="app">
+        <TabPane label="首页留言" name="app">
+          <Table :columns="appMessageColumns" :data="appMessageList"></Table>
+          <Page :total="appCount"  @on-change="appChange"/>
+        </TabPane>
+        <TabPane label="景点留言" name="sight">
+          <Table stripe :columns="sightMessageColumns" :data="sightMessageList"></Table>
+          <Page :total="sightCount"  @on-change="sightChange"/>
+        </TabPane>
+        <TabPane label="活动留言" name="activity">
+          <Table stripe :columns="activityMessageColumns" :data="activityMessageList"></Table>
+          <Page :total="activityCount"  @on-change="activityChange"/>
+        </TabPane>
+      </Tabs>
     </Card>
   </div>
 </template>
 
 <script>
-import {
-  getMessageList,
-  acceptMessage
-} from '@/api/message'
-import {
-  getStudentList
-} from '@/api/student'
+import { getMessageList, acceptMessage } from '@/api/message'
 export default {
   name: 'directive_page',
   data () {
     return {
-      formInline: {
-        stuno: '',
-        studentname: '',
-        tel: '',
-        wxchat: ''
-      },
-      StudentColumns: [
+      appMessageColumns: [
+        { type: 'selection', width: 60, align: 'center' },
+        // { title: ' ', type: 'index', width: 60, align: 'center' },
         { title: '学生姓名', key: 'studentName' },
         { title: '学籍号', key: 'studentid' },
-        { title: '手机号码', key: 'phone' },
-        { title: '微信号码', key: 'weixin' }
-      ],
-      studentList: [
-        {
-          studentName: ' 万苏文',
-          studentid: '1111111111',
-          phone: '1302589758',
-          weixin: '123123'
-        }
-      ],
-      MessageColumns: [
-        { title: ' ', type: 'index', width: 60, align: 'center' },
-        { title: '学生姓名', key: 'studentName' },
-        { title: '学籍号', key: 'studentid' },
-        { title: '分类', key: 'distype' },
         { title: '留言日期', key: 'time' },
         { title: '留言内容', key: 'content', width: 300 },
         {
@@ -68,9 +43,10 @@ export default {
           align: 'center',
           options: ['delete'],
           render: (h, params) => {
-            if (params.row.targetaddress != null) {
-              return h('div', [
-                h('Button', {
+            return h('div', [
+              h(
+                'Button',
+                {
                   style: { 'margin-right': '8px' },
                   props: {
                     type: 'primary',
@@ -78,81 +54,195 @@ export default {
                   },
                   on: {
                     click: async () => {
-                      await acceptMessage({ id: 1, shstate: 1 })
+                      await acceptMessage({ id: 1, shstate: 3 })
                       this.getMessageList()
                     }
                   }
-                }, '受理'),
-                h('Button', {
+                },
+                '受理'
+              ),
+              h(
+                'Poptip',
+                {
                   props: {
-                    type: 'error',
-                    size: 'small'
-                  }
-                }, '拒绝')
-              ])
-            } else {
-              return h('div', [
-                h('Button', {
-                  style: { 'margin-right': '8px' },
-                  props: {
-                    type: 'primary',
-                    size: 'small'
+                    confirm: true,
+                    title: '你确定要拒绝吗?'
                   },
                   on: {
-                    click: async () => {
-                      await acceptMessage({ id: 1, shstate: 1 })
+                    'on-ok': async () => {
+                      await acceptMessage({ id: 1, shstate: 4 })
                       this.getMessageList()
                     }
                   }
-                }, '通过'),
-                h('Button', {
-                  props: {
-                    type: 'error',
-                    size: 'small'
-                  }
-                }, '删除')
-              ])
-            }
+                },
+                [
+                  h(
+                    'Button',
+                    {
+                      props: {
+                        type: 'error',
+                        size: 'small',
+                        disabled: params.row.isOriginal
+                      }
+                    },
+                    '拒绝'
+                  )
+                ]
+              )
+            ])
           }
         }
       ],
-      MessageList: [
+      sightMessageColumns: [
+        { type: 'selection', width: 60, align: 'center' },
+        // { title: ' ', type: 'index', width: 60, align: 'center' },
+        { title: '学生姓名', key: 'studentName' },
+        { title: '学籍号', key: 'studentid' },
+        { title: '留言日期', key: 'time' },
+        { title: '留言内容', key: 'content', width: 300 },
         {
-          studentName: ' 王毅王',
-          studentid: '1111111111',
-          site: '财大老门',
-          time: '2019-05-01',
-          content: '三好坞有三座亭子，湖心亭和两个在山上的，成为聚友、约会、休闲的好地方。',
-          $isLogin: false
-        },
-        {
-          studentName: '苏毅王',
-          studentid: '1111111111',
-          site: 'APP首页',
-          time: '2019-05-01',
-          content: '更换手机号码，申请解绑',
-          $isLogin: true
+          title: '操作',
+          key: 'action',
+          width: 140,
+          align: 'center',
+          options: ['delete'],
+          render: (h, params) => {
+            return h('div', [
+              h(
+                'Button',
+                {
+                  style: { 'margin-right': '8px' },
+                  props: {
+                    type: 'primary',
+                    size: 'small'
+                  },
+                  on: {
+                    click: async () => {
+                      await acceptMessage({ id: 1, shstate: 1 })
+                      this.getMessageList()
+                    }
+                  }
+                },
+                '通过'
+              ),
+              h(
+                'Poptip',
+                {
+                  props: {
+                    confirm: true,
+                    title: '你确定要删除吗?'
+                  },
+                  on: {
+                    'on-ok': async () => {
+                      await acceptMessage({ id: 1, shstate: 2 })
+                      this.getMessageList()
+                    }
+                  }
+                },
+                [
+                  h(
+                    'Button',
+                    {
+                      props: {
+                        type: 'error',
+                        size: 'small',
+                        disabled: params.row.isOriginal
+                      }
+                    },
+                    '删除'
+                  )
+                ]
+              )
+            ])
+          }
         }
-      ]
+      ],
+      activityMessageColumns: [
+        { type: 'selection', width: 60, align: 'center' },
+        // { title: ' ', type: 'index', width: 60, align: 'center' },
+        { title: '学生姓名', key: 'studentName' },
+        { title: '学籍号', key: 'studentid' },
+        { title: '留言日期', key: 'time' },
+        { title: '留言内容', key: 'content', width: 300 },
+        {
+          title: '操作',
+          key: 'action',
+          width: 140,
+          align: 'center',
+          options: ['delete'],
+          render: (h, params) => {
+            return h('div', [
+              h(
+                'Button',
+                {
+                  style: { 'margin-right': '8px' },
+                  props: {
+                    type: 'primary',
+                    size: 'small'
+                  },
+                  on: {
+                    click: async () => {
+                      await acceptMessage({ id: 1, shstate: 1 })
+                      this.getMessageList()
+                    }
+                  }
+                },
+                '通过'
+              ),
+              h(
+                'Poptip',
+                {
+                  props: {
+                    confirm: true,
+                    title: '你确定要删除吗?'
+                  },
+                  on: {
+                    'on-ok': async () => {
+                      await acceptMessage({ id: 1, shstate: 2 })
+                      this.getMessageList()
+                    }
+                  }
+                },
+                [
+                  h(
+                    'Button',
+                    {
+                      props: {
+                        type: 'error',
+                        size: 'small',
+                        disabled: params.row.isOriginal
+                      }
+                    },
+                    '删除'
+                  )
+                ]
+              )
+            ])
+          }
+        }
+      ],
+      appMessageList: [],
+      sightMessageList: [],
+      activityMessageList: [],
+      sightCount: 0,
+      appCount: 0,
+      activityCount: 0
     }
   },
   mounted () {
     this.getMessageList()
-    this.getStudentList()
   },
   methods: {
     async getMessageList () {
-      const list = await getMessageList()
-      this.MessageList = list.data.data.data ? list.data.data.data : []
-      if (this.MessageList !== []) {
-        this.MessageList.forEach((item) => {
-          item.distype = this.getDistype(item.distype)
-        })
-      }
-    },
-    async getStudentList () {
-      const list = await getStudentList(this.formInline)
-      this.studentList = list.data.data.data ? list.data.data.data : []
+      const sightList = await getMessageList({ page: 1, pagesize: 10, distype: 0 })
+      this.sightMessageList = sightList.data.data.data ? sightList.data.data.data : []
+      this.sightCount = sightList.data.data.count ? sightList.data.data.count : 0
+      const appList = await getMessageList({ page: 1, pagesize: 10, distype: 3 })
+      this.appMessageList = appList.data.data.data ? appList.data.data.data : []
+      this.appCount = appList.data.data.count ? appList.data.data.count : 0
+      const activityList = await getMessageList({ page: 1, pagesize: 10, distype: 1 })
+      this.activityMessageList = activityList.data.data.data ? activityList.data.data.data : []
+      this.activityCount = activityList.data.data.count ? activityList.data.data.count : 0
     },
     getDistype (id) {
       // distype：留言类型0,景点; 1,活动,2 学校,3首页
@@ -166,11 +256,22 @@ export default {
         case 3:
           return '首页'
       }
+    },
+    async appChange (e) {
+      const appList = await getMessageList({ page: e, pagesize: 10, distype: 3 })
+      this.appMessageList = appList.data.data.data ? appList.data.data.data : []
+    },
+    async sightChange (e) {
+      const sightList = await getMessageList({ page: e, pagesize: 10, distype: 0 })
+      this.sightMessageList = sightList.data.data.data ? sightList.data.data.data : []
+    },
+    async activityChange (e) {
+      const activityList = await getMessageList({ page: e, pagesize: 10, distype: 1 })
+      this.activityMessageList = activityList.data.data.data ? activityList.data.data.data : []
     }
   }
 }
 </script>
 
 <style>
-
 </style>

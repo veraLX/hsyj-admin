@@ -358,11 +358,8 @@ export default {
       }
     },
     async changePage (e) {
-      debugger
-      console.log('123', e)
       const list = await getSchoolList({ page: e })
       this.schoolList = list.data.data.data ? list.data.data.data : []
-      console.log(this.schoolList)
     },
     getPoint () {
       window.open('https://lbs.qq.com/tool/getpoint/')

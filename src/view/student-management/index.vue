@@ -1,14 +1,14 @@
 <template>
   <div>
-    <Card >
+    <!-- <Card >
       <div slot="title">
         <p style="display:inline">留言</p>&nbsp;&nbsp;
         <Tag color="red">待审批留言数量 99 条</Tag>
       </div>
       <Table stripe :columns="MessageColumns" :data="MessageList"></Table>
       <Page :total="10" />
-    </Card>
-    <Card :style="{'margin-top': '10px'}">
+    </Card> -->
+    <Card>
       <p slot="title">学生账户</p>
       <Form ref="formInline" :model="formInline" inline :label-width="100">
         <FormItem prop="stuno" label="学生学籍号码" :style="{'width': '400px'}">
