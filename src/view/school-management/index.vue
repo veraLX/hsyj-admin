@@ -42,7 +42,7 @@
           <Icon type="ios-paper-outline"></Icon>
           <span>图片编辑</span>
         </p>
-        <Upload v-if="updateModalShow" :parentId="currentParentId" :sourceType="2"/>
+        <Upload v-if="updateModalShow" :parentId="currentParentId" :sourceType="0"/>
         <div slot="footer">
           <Button type="primary" @click="childCloseModal">完成</Button>
         </div>
@@ -81,6 +81,7 @@ export default {
         schooldesc: ''
       },
       uploadList: [],
+      currentParentId: 0,
       editImage: false,
       updateModalShow: false,
       areaList: [],
