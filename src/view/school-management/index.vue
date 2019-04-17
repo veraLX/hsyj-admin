@@ -343,6 +343,10 @@ export default {
       this.areaList = list.data.data ? list.data.data : []
       console.log(this.areaList)
     },
+    childCloseModal () {
+      this.editImage = false
+      this.updateModalShow = false
+    },
     async addSchool () {
       debugger
       if (this.schoolForm.schoolname === '') {
