@@ -5,18 +5,42 @@
         <p style="display:inline">留言</p>&nbsp;&nbsp;
         <Tag color="red">待审批留言数量 99 条</Tag>
       </div>
-      <Tabs value="app">
+      <Tabs value="app" @on-click="tabsChange">
         <TabPane label="首页留言" name="app">
-          <Table :columns="appMessageColumns" :data="appMessageList"></Table>
+          <Table :columns="appMessageColumns" :data="appMessageList" @on-selection-change="onAppSelectionChange"></Table>
           <Page :total="appCount"  @on-change="appChange"/>
+          <Row>
+          <Col span="2" offset="19">
+          <Button  @click="acceptance" type='primary'>一键受理</Button>
+          </Col>
+          <Col span="2" offset="1">
+          <Button  @click="refuse" type='error'>一键拒绝</Button>
+          </Col>
+          </Row>
         </TabPane>
         <TabPane label="景点留言" name="sight">
-          <Table stripe :columns="sightMessageColumns" :data="sightMessageList"></Table>
+          <Table stripe :columns="sightMessageColumns" :data="sightMessageList"  @on-selection-change="onSightSelectionChange"></Table>
           <Page :total="sightCount"  @on-change="sightChange"/>
+          <Row>
+          <Col span="2" offset="19">
+          <Button  @click="sightPass" type='primary'>一键通过</Button>
+          </Col>
+          <Col span="2" offset="1">
+          <Button  @click="sightDeleteFun" type='error'>一键删除</Button>
+          </Col>
+          </Row>
         </TabPane>
         <TabPane label="活动留言" name="activity">
-          <Table stripe :columns="activityMessageColumns" :data="activityMessageList"></Table>
+          <Table stripe :columns="activityMessageColumns" :data="activityMessageList"  @on-selection-change="onActivitySelectionChange"></Table>
           <Page :total="activityCount"  @on-change="activityChange"/>
+          <Row>
+          <Col span="2" offset="19">
+          <Button  @click="activityPass" type='primary'>一键通过</Button>
+          </Col>
+          <Col span="2" offset="1">
+          <Button  @click="activityDeleteFun" type='error'>一键删除</Button>
+          </Col>
+          </Row>
         </TabPane>
       </Tabs>
     </Card>
@@ -30,7 +54,7 @@ export default {
   data () {
     return {
       appMessageColumns: [
-        { type: 'selection', width: 60, align: 'center' },
+        { type: 'selection', width: 60, align: 'center', key: 'isCkeck' },
         // { title: ' ', type: 'index', width: 60, align: 'center' },
         { title: '学生姓名', key: 'studentName' },
         { title: '学籍号', key: 'studentid' },
@@ -54,7 +78,8 @@ export default {
                   },
                   on: {
                     click: async () => {
-                      await acceptMessage({ id: 1, shstate: 3 })
+                      console.log('params.row', params.row)
+                      await acceptMessage({ id: params.row.discussID, shstate: 3 })
                       this.getMessageList()
                     }
                   }
@@ -70,7 +95,7 @@ export default {
                   },
                   on: {
                     'on-ok': async () => {
-                      await acceptMessage({ id: 1, shstate: 4 })
+                      await acceptMessage({ id: params.row.discussID, shstate: 4 })
                       this.getMessageList()
                     }
                   }
@@ -118,7 +143,7 @@ export default {
                   },
                   on: {
                     click: async () => {
-                      await acceptMessage({ id: 1, shstate: 1 })
+                      await acceptMessage({ id: params.row.discussID, shstate: 1 })
                       this.getMessageList()
                     }
                   }
@@ -134,7 +159,7 @@ export default {
                   },
                   on: {
                     'on-ok': async () => {
-                      await acceptMessage({ id: 1, shstate: 2 })
+                      await acceptMessage({ id: params.row.discussID, shstate: 2 })
                       this.getMessageList()
                     }
                   }
@@ -182,7 +207,7 @@ export default {
                   },
                   on: {
                     click: async () => {
-                      await acceptMessage({ id: 1, shstate: 1 })
+                      await acceptMessage({ id: params.row.discussID, shstate: 1 })
                       this.getMessageList()
                     }
                   }
@@ -198,7 +223,7 @@ export default {
                   },
                   on: {
                     'on-ok': async () => {
-                      await acceptMessage({ id: 1, shstate: 2 })
+                      await acceptMessage({ id: params.row.discussID, shstate: 2 })
                       this.getMessageList()
                     }
                   }
@@ -226,7 +251,10 @@ export default {
       activityMessageList: [],
       sightCount: 0,
       appCount: 0,
-      activityCount: 0
+      activityCount: 0,
+      appMessageSelectedList: [],
+      sightMessageSelectedList: [],
+      activityMessageSelectedList: []
     }
   },
   mounted () {
@@ -268,6 +296,93 @@ export default {
     async activityChange (e) {
       const activityList = await getMessageList({ page: e, pagesize: 10, distype: 1 })
       this.activityMessageList = activityList.data.data.data ? activityList.data.data.data : []
+    },
+    tabsChange () {
+      console.log('change')
+      this.activityMessageSelectedList = []
+      this.sightMessageSelectedList = []
+      this.activityMessageSelectedList = []
+    },
+    async acceptance () {
+      debugger
+      if (this.appMessageSelectedList.length !== 0) {
+        for (const item of this.appMessageSelectedList) {
+          console.log(item)
+          await acceptMessage({ id: item.discussID, shstate: 3 })
+        }
+        this.getMessageList()
+      } else {
+        this.$Message.info('请选择要通过的留言')
+      }
+    },
+    async refuse () {
+      if (this.appMessageSelectedList.length !== 0) {
+        for (const item of this.appMessageSelectedList) {
+          console.log(item)
+          await acceptMessage({ id: item.discussID, shstate: 4 })
+        }
+        this.getMessageList()
+      } else {
+        this.$Message.info('请选择要拒绝的留言')
+      }
+    },
+    async sightPass () {
+      if (this.sightMessageSelectedList.length !== 0) {
+        for (const item of this.sightMessageSelectedList) {
+          await acceptMessage({ id: item.discussID, shstate: 1 })
+        }
+        this.getMessageList()
+      } else {
+        this.$Message.info('请选择要通过的留言')
+      }
+    },
+    async sightDeleteFun () {
+      if (this.sightMessageSelectedList.length !== 0) {
+        for (const item of this.sightMessageSelectedList) {
+          await acceptMessage({ id: item.discussID, shstate: 2 })
+        }
+        this.getMessageList()
+      } else {
+        this.$Message.info('请选择要删除的留言')
+      }
+    },
+    async activityPass () {
+      if (this.activityMessageSelectedList.length !== 0) {
+        for (const item of this.activityMessageSelectedList) {
+          await acceptMessage({ id: item.discussID, shstate: 1 })
+        }
+        this.getMessageList()
+      } else {
+        this.$Message.info('请选择要通过的留言')
+      }
+    },
+    async activityDeleteFun () {
+      if (this.activityMessageSelectedList.length !== 0) {
+        for (const item of this.activityMessageSelectedList) {
+          await acceptMessage({ id: item.discussID, shstate: 2 })
+        }
+        this.getMessageList()
+      } else {
+        this.$Message.info('请选择要删除的留言')
+      }
+    },
+    onSelect (e) {
+      console.log('onSelect', e)
+    },
+    onAppSelectionChange (list) {
+      this.appMessageSelectedList = list
+      console.log('onAppSelectionChange', this.appMessageSelectedList)
+    },
+    onSightSelectionChange (list) {
+      this.sightMessageSelectedList = list
+      console.log('onSightSelectionChange', this.sightMessageSelectedList)
+    },
+    onActivitySelectionChange (list) {
+      this.activityMessageSelectedList = list
+      console.log('onActivitySelectionChange', this.activityMessageSelectedList)
+    },
+    onSelectAll (e) {
+      console.log('onSelectAll', e)
     }
   }
 }
