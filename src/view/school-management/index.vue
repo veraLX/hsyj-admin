@@ -2,16 +2,18 @@
   <div>
     <Card>
       <p slot="title">新增校区</p>
-      <span slot="extra" @click="getPoint">
-        经纬度查询 >
-      </span>
+      <span slot="extra" @click="getPoint">经纬度查询 ></span>
       <Form ref="formInline" :model="schoolForm" :rules="ruleInline" inline :label-width="80">
         <FormItem prop="schoolname" label="校区名称" :style="{'width': 'calc((100% - 30px)/3)'}">
           <Input v-model="schoolForm.schoolname" placeholder="输入校区名称"/>
         </FormItem>
         <FormItem prop="city" label="所属区县" :style="{'width': 'calc((100% - 30px)/3)'}">
           <Select v-model="schoolForm.city">
-            <Option v-for="(item,index) in areaList"  :value="item.areaid" :key="'search-col-'+index">{{ item.areaname }}</Option>
+            <Option
+              v-for="(item,index) in areaList"
+              :value="item.areaid"
+              :key="'search-col-'+index"
+            >{{ item.areaname }}</Option>
           </Select>
         </FormItem>
         <FormItem prop="longitude" label="经度" :style="{'width': 'calc((100% - 30px)/3)'}">
@@ -26,28 +28,8 @@
         <FormItem prop="schooldesc" label="描述" :style="{'width': 'calc(100% - 10px)'}">
           <Input type="textarea" v-model="schoolForm.schooldesc" placeholder="输入描述"/>
         </FormItem>
-        <FormItem prop="image" label="图片预览" style="width:100%;">
-          <Row class="imgRow">
-            <i-col span="20">
-              <div class="demo-upload-list" v-for="(item,index) in uploadList" :key="index">
-                <template v-if="item.status === 'finished'">
-                  <img :src="item.url">
-                  <div class="demo-upload-list-cover">
-                    <Icon size="40px" type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                    <Icon size="40px" type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                  </div>
-                </template>
-                <template v-else>
-                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                </template>
-              </div>
-              <iframe
-                src="http://hsyj.100eduonline.com/static/admin/uploadComponent/upload.html"
-                height="auto"
-                style="border: none;"
-              />
-            </i-col>
-          </Row>
+        <FormItem prop="image" style="width:100%;">
+         <Button type="primary" @click="openModal">图片编辑</Button>
         </FormItem>
         <FormItem
           style="width:100%;display: flex;justify-content: flex-end;padding-right: 10px;margin-bottom: 0;"
@@ -55,6 +37,16 @@
           <Button class="bottomRight" type="primary" @click="addSchool">增加</Button>
         </FormItem>
       </Form>
+      <Modal v-model="editImage" @on-cancel="childCloseModal" width="60%">
+        <p slot="header">
+          <Icon type="ios-paper-outline"></Icon>
+          <span>图片编辑</span>
+        </p>
+        <Upload v-if="updateModalShow" :parentId="currentParentId" :sourceType="2"/>
+        <div slot="footer">
+          <Button type="primary" @click="childCloseModal">完成</Button>
+        </div>
+      </Modal>
     </Card>
     <Card :style="{'margin-top': '20px'}">
       <p slot="title">校区列表</p>
@@ -72,8 +64,12 @@ import {
   editSchool,
   getArea
 } from '@/api/school'
+import Upload from '@/view/components/uploadImage/index'
 export default {
   name: 'directive_page',
+  components: {
+    Upload
+  },
   data () {
     return {
       schoolForm: {
@@ -85,6 +81,8 @@ export default {
         schooldesc: ''
       },
       uploadList: [],
+      editImage: false,
+      updateModalShow: false,
       areaList: [],
       count: 0,
       ruleInline: {
@@ -119,24 +117,28 @@ export default {
           key: 'city',
           render: (h, params) => {
             if (params.row.$isEdit) {
-              return h('Select', {
-                domProps: {
-                  value: params.row.city
+              return h(
+                'Select',
+                {
+                  domProps: {
+                    value: params.row.city
+                  },
+                  on: {
+                    'on-change': function (event) {
+                      console.log('event', event)
+                      params.row.city = event
+                    }
+                  }
                 },
-                on: {
-                  'on-change': function (event) {
-                    console.log('event', event)
-                    params.row.city = event
-                  }
-                }
-              }, this.areaList.map((item) => {
-                return h('Option', {
-                  props: {
-                    value: item.areaid,
-                    label: item.areaname
-                  }
+                this.areaList.map(item => {
+                  return h('Option', {
+                    props: {
+                      value: item.areaid,
+                      label: item.areaname
+                    }
+                  })
                 })
-              }))
+              )
             } else {
               return h('div', this.getAreaName(params.row.city))
             }
@@ -360,6 +362,10 @@ export default {
     async changePage (e) {
       const list = await getSchoolList({ page: e })
       this.schoolList = list.data.data.data ? list.data.data.data : []
+    },
+    openModal () {
+      this.editImage = true
+      this.updateModalShow = true
     },
     getPoint () {
       window.open('https://lbs.qq.com/tool/getpoint/')
