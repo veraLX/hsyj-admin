@@ -29,44 +29,6 @@
         </FormItem>
         <Row class="imgRow">
           <i-col span="20">
-            <span class="fromLabel">图片预览</span>
-            <div class="demo-upload-list" v-for="(item,index) in uploadList" :key="index">
-              <template v-if="item.status === 'finished'">
-                  <img :src="item.url">
-                  <div class="demo-upload-list-cover">
-                      <Icon size="40px" type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                      <Icon size="40px" type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                  </div>
-              </template>
-              <template v-else>
-                  <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-              </template>
-            </div>
-            <iframe
-                src="http://hsyj.100eduonline.com/static/admin/uploadComponent/upload.html"
-                height="auto"
-                style="border: none;"
-            />
-            <!-- <Upload
-              ref="upload"
-              :show-upload-list="false"
-              :default-file-list="defaultList"
-              :on-success="handleSuccess"
-              :format="['jpg','jpeg','png']"
-              :max-size="2048"
-              :on-format-error="handleFormatError"
-              :on-exceeded-size="handleMaxSize"
-              :before-upload="handleBeforeUpload"
-              multiple
-              type="drag"
-              action="//jsonplaceholder.typicode.com/posts/"
-              style="display: inline-block;width:142px;">
-              <div style="width: 142px;height:80px;line-height: 80px;">
-                  <Icon type="ios-camera" size="30"></Icon>
-              </div>
-            </Upload> -->
-          </i-col>
-          <i-col span="4">
             <Button class="bottomRight" type="primary" @click="addSite">增加</Button>
           </i-col>
         </Row>
@@ -80,15 +42,33 @@
       <Table stripe :columns="siteColumns" :data="siteData"></Table>
       <Page show-total :total="count" :current="currentPage" :page-size="pageSize" @on-change="handlePage"/>
     </Card>
+    <Modal v-model="editSiteImage"  @on-cancel="siteCloseModal" width="60%">
+      <p slot="header">
+        <Icon type="ios-paper-outline"></Icon>
+        <span>图片编辑</span>
+      </p>
+      <Upload v-if="siteModalShow" :parentId="currentParentId" :sourceType="2"/>
+      <div slot="footer">
+          <Button type="primary" @click="siteCloseModal" >完成</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script>
 import { addScenery, sceneryList, sceneryDelete, editScenery } from '@/api/scenery'
+import Upload from '@/view/components/uploadImage/index'
+
 export default {
   name: 'directive_page',
+  components: {
+    Upload
+  },
   data () {
     return {
+      currentParentId: 0,
+      editSiteImage: false,
+      siteModalShow: false,
       count: 0,
       pageSize: 5,
       totalPages: 1,
@@ -202,7 +182,27 @@ export default {
               return h('div', params.row.shdesc)
             }
           } },
-        { title: '图片预览' },
+        { title: '图片',
+          key: 'action',
+          width: 200,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    // console.log(params)
+                    this.openModal()
+                  }
+                }
+              }, '编辑图片')
+            ])
+          }
+        },
         { title: '音频URL地址',
           key: 'soundurl',
           width: '110px',
@@ -365,6 +365,14 @@ export default {
     console.log('scene', scene)
   },
   methods: {
+    openModal () {
+      this.editSiteImage = true
+      this.siteModalShow = true
+    },
+    siteCloseModal () {
+      this.editSiteImage = false
+      this.siteModalShow = false
+    },
     async flashAllSiteData () {
       let scene = await sceneryList(this.currentPage, this.pageSize)
       this.siteData = scene.data.data.data
@@ -475,7 +483,7 @@ export default {
     }
     .imgRow{
       display: flex;
-      padding: 0 10px;
+      padding: 30px 0px;
       justify-content: space-around;
       align-items: flex-end;
     }
