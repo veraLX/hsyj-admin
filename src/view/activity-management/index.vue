@@ -15,16 +15,28 @@
           <Button type="primary" @click="childCloseModal" >完成</Button>
       </div>
     </Modal>
+    <Modal v-model="editAnswer"  width="60%">
+      <p slot="header">
+        <Icon type="ios-paper-outline"></Icon>
+        <span> 答题编辑</span>
+      </p>
+      <Answer/>
+      <div slot="footer">
+          <Button type="primary" >确认</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script>
 import { getActivity1List, addActivity } from '@/api/activity'
 import Upload from '@/view/components/uploadImage/index'
+import Answer from '@/view/activity-add/answer-management/index'
 // editActivity
 export default {
   name: 'directive_page',
   components: {
+    Answer,
     Upload
   },
   data () {
@@ -32,6 +44,7 @@ export default {
       currentParentId: 0,
       editImage: false,
       updateModalShow: false,
+      editAnswer: false,
       count: 0,
       pageSize: 5,
       totalPages: 1,
@@ -157,6 +170,7 @@ export default {
                 },
                 on: {
                   click: () => {
+                    this.openAnswerModal()
                     console.log(params)
                   }
                 }
@@ -210,6 +224,9 @@ export default {
     // this.uploadList = this.$refs.upload.fileList
   },
   methods: {
+    openAnswerModal () {
+      this.editAnswer = true
+    },
     openModal () {
       this.editImage = true
       this.updateModalShow = true
