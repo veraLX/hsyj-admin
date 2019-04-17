@@ -5,102 +5,74 @@
         <Step title="新增活动"></Step>
         <Step title="新建答题"></Step>
     </Steps>
-    <!-- <Tabs value="new">
-        <TabPane label="新增活动" name="new"> -->
-              <Form :model="activityForm" inline label-position="right" :label-width="100" v-if="currentStep == 0">
-                <FormItem prop="activityname" label="活动名称" :style="{'width': 'calc((100% - 30px)/3)'}">
-                    <Input v-model="activityForm.activityname" placeholder="输入活动名称"></Input>
-                </FormItem>
-                <FormItem prop="meetingplace" label="主会场" :style="{'width': 'calc((100% - 30px)/3)'}">
-                    <Input v-model="activityForm.meetingplace" placeholder="输入主会场"></Input>
-                </FormItem>
-                <FormItem prop="sponsor" label="主办方" :style="{'width': 'calc((100% - 30px)/3)'}">
-                    <Input v-model="activityForm.sponsor" placeholder="输入主办方"></Input>
-                </FormItem>
-                <FormItem prop="secondsponsor" label="协办方" :style="{'width': 'calc((100% - 30px)/3)'}">
-                    <Input v-model="activityForm.secondsponsor" placeholder="输入协办方"></Input>
-                </FormItem>
-                <FormItem prop="startdate" label="开始日期" :style="{'width': 'calc((100% - 30px)/3)'}">
-                    <DatePicker v-model="activityForm.startdateAll" type="date" placeholder="输入开始日期" :style="{'width': '100%'}" ></DatePicker>
-                </FormItem>
-                <FormItem prop="enddate" label="结束日期" :style="{'width': 'calc((100% - 30px)/3)'}">
-                    <DatePicker v-model="activityForm.enddateAll" type="date" placeholder="输入结束日期" :style="{'width': '100%'}" ></DatePicker>
-                </FormItem>
-                <FormItem prop="universities" label="学校范围" :style="{'width': 'calc((100% - 20px)/2)'}">
-                  <Transfer
-                  :data="data1"
-                  :target-keys="targetKeys1"
-                  :render-format="render1"
-                  @on-change="handleChange1"></Transfer>
-                </FormItem>
-                <FormItem prop="scenic" label="景点选择" :style="{'width': 'calc((100% - 20px)/2)'}">
-                  <Transfer
-                  :data="data2"
-                  :target-keys="targetKeys2"
-                  :render-format="render1"
-                  @on-change="handleChange1"></Transfer>
-                </FormItem>
-                <FormItem prop="needschoolpass" label="通关阈值(学校)" :style="{'width': 'calc((100% - 20px)/2)'}">
-                  <InputNumber :min="1" v-model="activityForm.needschoolpass"></InputNumber>
-                </FormItem>
+        <Form :model="activityForm" inline label-position="right" :label-width="100" v-if="currentStep == 0">
+          <FormItem prop="activityname" label="活动名称" :style="{'width': 'calc((100% - 30px)/3)'}">
+              <Input v-model="activityForm.activityname" placeholder="输入活动名称"></Input>
+          </FormItem>
+          <FormItem prop="meetingplace" label="主会场" :style="{'width': 'calc((100% - 30px)/3)'}">
+              <Input v-model="activityForm.meetingplace" placeholder="输入主会场"></Input>
+          </FormItem>
+          <FormItem prop="sponsor" label="主办方" :style="{'width': 'calc((100% - 30px)/3)'}">
+              <Input v-model="activityForm.sponsor" placeholder="输入主办方"></Input>
+          </FormItem>
+          <FormItem prop="secondsponsor" label="协办方" :style="{'width': 'calc((100% - 30px)/3)'}">
+              <Input v-model="activityForm.secondsponsor" placeholder="输入协办方"></Input>
+          </FormItem>
+          <FormItem prop="startdate" label="开始日期" :style="{'width': 'calc((100% - 30px)/3)'}">
+              <DatePicker v-model="activityForm.startdateAll" type="date" placeholder="输入开始日期" :style="{'width': '100%'}" ></DatePicker>
+          </FormItem>
+          <FormItem prop="enddate" label="结束日期" :style="{'width': 'calc((100% - 30px)/3)'}">
+              <DatePicker v-model="activityForm.enddateAll" type="date" placeholder="输入结束日期" :style="{'width': '100%'}" ></DatePicker>
+          </FormItem>
+          <FormItem prop="universities" label="学校范围" :style="{'width': 'calc((100% - 20px)/2)'}">
+            <Transfer
+            :data="data1"
+            :target-keys="targetKeys1"
+            :render-format="render1"
+            @on-change="handleChange1"></Transfer>
+          </FormItem>
+          <FormItem prop="scenic" label="景点选择" :style="{'width': 'calc((100% - 20px)/2)'}">
+            <Transfer
+            :data="data2"
+            :target-keys="targetKeys2"
+            :render-format="render1"
+            @on-change="handleChange2"></Transfer>
+          </FormItem>
+          <FormItem prop="needschoolpass" label="通关阈值(学校)" :style="{'width': 'calc((100% - 20px)/2)'}">
+            <InputNumber :min="1" v-model="activityForm.needschoolpass"></InputNumber>
+          </FormItem>
 
-                <FormItem prop="needscenerypass" label="通关阈值(景点)" :style="{'width': 'calc((100% - 20px)/2)'}">
-                  <InputNumber :min="1" v-model="activityForm.needscenerypass"></InputNumber>
-                </FormItem>
-                <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
-                    <Checkbox v-model="activityForm.settingstart">是否设定起点</Checkbox>
-                    <Select v-model="activityForm.startsceneryid">
-                      <!-- <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option> -->
-                    </Select>
-                </FormItem>
-                <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
-                    <Checkbox v-model="activityForm.settingend">是否设定终点</Checkbox>
-                    <Select v-model="activityForm.endsceneryid">
-                        <!-- <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option> -->
-                      </Select>
-                </FormItem>
-                <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
-                    <Checkbox v-model="activityForm.isgroupBoolean">是否团队赛</Checkbox>
-                    <br/>组队人数：<InputNumber :min="1" v-model="activityForm.groupnum"></InputNumber>
-                </FormItem>
-                <FormItem prop="shdesc" label="活动描述" :style="{'width': 'calc(100% - 10px)'}">
-                    <Input type="textarea" v-model="activityForm.shdesc" placeholder="输入描述"></Input>
-                </FormItem>
-                <FormItem
-                  style="width:100%;display: flex;justify-content: flex-end;padding-right: 10px;margin-bottom: 0;"
-                >
-                  <Button type="primary" v-if="!this.addActivitySuccess" @click="addActivityMethod">增加</Button>
-                  <Button type="primary" v-if="this.addActivitySuccess" @click="nextStep">下一步</Button>
-                  <a v-if="this.addActivitySuccess" @click="openImageDialog" type="text" class="setImage">设置图片</a>
-                </FormItem>
-                <!-- <Row class="imgRow">
-                  <i-col span="20">
-                    <span class="fromLabel">图片预览</span>
-                    <div class="demo-upload-list" v-for="(item,index) in uploadList" :key="index">
-                      <template v-if="item.status === 'finished'">
-                          <img :src="item.url">
-                          <div class="demo-upload-list-cover">
-                              <Icon size="40px" type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                              <Icon size="40px" type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                          </div>
-                      </template>
-                      <template v-else>
-                          <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                      </template>
-                    </div>
-                    <iframe src="http://hsyj.100eduonline.com/static/images/admin/uploadComponent/upload.html" height="120" width="100%" style="border: none;overflow:hidden"/>
-                  </i-col>
-                  <i-col span="4">
-                    <Button class="bottomRight" type="primary" >下一步</Button>
-                  </i-col>
-                </Row> -->
-                <!-- <Button class="bottomRight" type="primary" @click="addSchool">下一步</Button> -->
-              </Form>
-        <!-- </TabPane>
-        <TabPane label="新建答题" name="list"> -->
-          <Answer v-if="currentStep == 1"/>
-          <!-- </TabPane>
-        </Tabs> -->
+          <FormItem prop="needscenerypass" label="通关阈值(景点)" :style="{'width': 'calc((100% - 20px)/2)'}">
+            <InputNumber :min="1" v-model="activityForm.needscenerypass"></InputNumber>
+          </FormItem>
+          <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
+              <Checkbox v-model="activityForm.settingstartBoolean">是否设定起点</Checkbox>
+              <Select v-model="activityForm.startsceneryid" :disabled="!activityForm.settingstartBoolean">
+                <Option v-for="item in data2" :value="item.key" :key="item.key">{{ item.label }}</Option>
+              </Select>
+          </FormItem>
+          <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
+              <Checkbox v-model="activityForm.settingendBoolean">是否设定终点</Checkbox>
+              <Select v-model="activityForm.endsceneryid" :disabled="!activityForm.settingendBoolean">
+                <Option v-for="item in data2" :value="item.key" :key="item.key">{{ item.label }}</Option>
+              </Select>
+          </FormItem>
+          <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
+              <Checkbox v-model="activityForm.isgroupBoolean">是否团队赛</Checkbox>
+              <br/>组队人数：<InputNumber :min="1" v-model="activityForm.groupnum" :disabled="!activityForm.isgroupBoolean"></InputNumber>
+          </FormItem>
+          <FormItem prop="shdesc" label="活动描述" :style="{'width': 'calc(100% - 10px)'}">
+              <Input type="textarea" v-model="activityForm.shdesc" placeholder="输入描述"></Input>
+          </FormItem>
+          <FormItem
+            style="width:100%;display: flex;justify-content: flex-end;padding-right: 10px;margin-bottom: 0;"
+          >
+            <Button type="primary" v-if="!this.addActivitySuccess" @click="addActivityMethod">增加</Button>
+            <Button type="primary" v-if="this.addActivitySuccess" @click="nextStep">下一步</Button>
+            <a v-if="this.addActivitySuccess" @click="openImageDialog" type="text" class="setImage">设置图片</a>
+          </FormItem>
+        </Form>
+        <Answer v-if="currentStep == 1"/>
     </Card>
     <Modal v-model="editImage"  @on-cancel="childCloseModal" width="60%">
       <p slot="header">
@@ -119,6 +91,8 @@
 import Answer from '@/view/activity-add/answer-management/index'
 import Upload from '@/view/components/uploadImage/index'
 import { addActivity } from '@/api/activity'
+import { getSchoolList } from '@/api/school'
+import { getSceneryFromSchool } from '@/api/scenery'
 import moment from 'moment'
 export default {
   name: 'directive_page',
@@ -134,6 +108,7 @@ export default {
       single: '',
       editImage: false,
       updateModalShow: false,
+      schoolList: [],
       // defaultList: [
       //   {
       //     'name': 'a42bdcc1178e62b4694c830f028db5c0',
@@ -147,42 +122,63 @@ export default {
       imgName: '',
       visible: false,
       uploadList: [],
-      data1: [{ key: '1', label: '复旦大学' },
-        { key: '2', label: '上海交通大学' },
-        { key: '3 ', label: '杨浦区教育局 ' },
-        { key: '4 ', label: '上海财经大学 ' },
-        { key: '5 ', label: '同济大学 ' },
-        { key: '6 ', label: '杨浦区教育局 ' },
-        { key: '7 ', label: '上海财经大学 ' },
-        { key: '8 ', label: '同济大学 ' }],
-      targetKeys1: ['1', '2'],
-      data2: [{ key: '1', label: '三好坞' },
-        { key: '2', label: '同济大学' },
-        { key: '3 ', label: '财大老门 ' },
-        { key: '4 ', label: '同济二食堂 ' }],
-      targetKeys2: ['1', '2', '3', '4'],
+      data1: [],
+      targetKeys1: [],
+      data2: [],
+      targetKeys2: [],
       activityForm: {
+        needschoolpass: 1,
+        needscenerypass: 1
       }
     }
   },
   mounted () {
     // this.uploadList = this.$refs.upload.fileList
+    this.getSchoolList()
   },
   methods: {
+    async getSchoolList () {
+      const list = await getSchoolList({ page: 1, pageSize: 100 })
+      console.log('schoolList', list)
+      this.schoolList = list.data.data.data ? list.data.data.data : []
+      _.each(this.schoolList, (schoolItem) => {
+        this.data1.push({ key: schoolItem.schoolID, label: schoolItem.schoolName })
+      })
+      console.log('this.data1', this.data1)
+    },
     async addActivityMethod () {
+      // 开始时间
       if (this.activityForm.startdateAll) {
         let startdate = moment(this.activityForm.startdateAll).format('YYYY-MM-DD')
         this.$set(this.activityForm, 'startdate', startdate)
       }
+      // 结束时间
       if (this.activityForm.enddateAll) {
         let enddate = moment(this.activityForm.enddateAll).format('YYYY-MM-DD')
         this.$set(this.activityForm, 'enddate', enddate)
       }
+      // 是否团体赛
       if (this.activityForm.isgroupBoolean) {
         this.$set(this.activityForm, 'isgroup', 1)
       } else {
         this.$set(this.activityForm, 'isgroup', 0)
+        this.$set(this.activityForm, 'groupnum', null)
       }
+      // 是否起点
+      if (this.activityForm.settingstartBoolean) {
+        this.$set(this.activityForm, 'settingstart', 1)
+      } else {
+        this.$set(this.activityForm, 'settingstart', 0)
+        this.$set(this.activityForm, 'startsceneryid', null)
+      }
+      // 是否终点
+      if (this.activityForm.settingendBoolean) {
+        this.$set(this.activityForm, 'settingend', 1)
+      } else {
+        this.$set(this.activityForm, 'settingend', 0)
+        this.$set(this.activityForm, 'endsceneryid', null)
+      }
+
       console.log('this.activityForm', this.activityForm)
       let addReturn = await addActivity(this.activityForm)
       debugger
@@ -205,11 +201,45 @@ export default {
     render1 (item) {
       return item.label
     },
-    handleChange1 (newTargetKeys, direction, moveKeys) {
+    async handleChange1 (newTargetKeys, direction, moveKeys) {
+      this.targetKeys1 = newTargetKeys
+      console.log('this.targetKeys1', this.targetKeys1)
+      let schoolIdString = ''
+      _.each(this.targetKeys1, (schoolId) => {
+        schoolIdString = schoolIdString + schoolId + ','
+      })
+      if (schoolIdString.length > 0) {
+        schoolIdString = schoolIdString.substr(0, schoolIdString.length - 1)
+      }
+      this.$set(this.activityForm, 'needschoolrang', schoolIdString)
+      console.log('schoolIdString', schoolIdString)
+      let getSceneryFromSchoolList = await getSceneryFromSchool(schoolIdString)
+      _.each((getSceneryFromSchoolList.data.data), schoolSceneryItem => {
+        this.data2.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
+        this.targetKeys2.push(schoolSceneryItem.sceneryID)
+      })
+      let sceneryIdString = ''
+      _.each(this.targetKeys2, (sceneryId) => {
+        sceneryIdString = sceneryIdString + sceneryId + ','
+      })
+      if (sceneryIdString.length > 0) {
+        sceneryIdString = sceneryIdString.substr(0, sceneryIdString.length - 1)
+      }
+      this.$set(this.activityForm, 'needsceneryrang', sceneryIdString)
+    },
+    handleChange2 (newTargetKeys, direction, moveKeys) {
       console.log(newTargetKeys)
       console.log(direction)
       console.log(moveKeys)
-      this.targetKeys1 = newTargetKeys
+      this.targetKeys2 = newTargetKeys
+      let sceneryIdString = ''
+      _.each(this.targetKeys2, (sceneryId) => {
+        sceneryIdString = sceneryIdString + sceneryId + ','
+      })
+      if (sceneryIdString.length > 0) {
+        sceneryIdString = sceneryIdString.substr(0, sceneryIdString.length - 1)
+      }
+      this.$set(this.activityForm, 'needsceneryrang', sceneryIdString)
     }
     // handleView (name) {
     //   this.imgName = name

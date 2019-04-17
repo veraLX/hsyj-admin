@@ -7,10 +7,10 @@
             <Input v-model="siteForm.scenerytitle" placeholder="输入景点名称"></Input>
         </FormItem>
          <FormItem prop="school" label="校区" :style="{'width': 'calc((100% - 30px)/3)'}">
-            <Input v-model="siteForm.address" placeholder="输入景点名称"></Input>
-            <!-- <Select v-model="siteForm.address">
-             <Option v-for="item in columns" v-if="item.key !== 'handle'" :value="item.key" :key="`search-col-${item.key}`">{{ item.title }}</Option>
-            </Select> -->
+            <!-- <Input v-model="siteForm.address" placeholder="输入景点名称"></Input> -->
+            <Select v-model="siteForm.schoolid" :label-in-value="true" @on-change="handleChange">
+                <Option v-for="item in schoolList" :value="item.schoolID" :label="item.address" :key="item.schoolID">{{ item.schoolName }}</Option>
+            </Select>
         </FormItem>
         <FormItem prop="audioURL" label="音频URL地址" :style="{'width': 'calc((100% - 30px)/3)'}">
             <Input v-model="siteForm.soundurl" placeholder="输入音频URL地址"></Input>
@@ -27,11 +27,15 @@
         <FormItem prop="description" label="描述" :style="{'width': 'calc(100% - 10px)'}">
             <Input type="textarea" v-model="siteForm.shdesc" placeholder="输入描述"></Input>
         </FormItem>
-        <Row class="imgRow">
-          <i-col span="20">
-            <Button class="bottomRight" type="primary" @click="addSite">增加</Button>
-          </i-col>
-        </Row>
+        <!-- <Row class="imgRow">
+          <i-col span="20"> -->
+        <FormItem
+            style="width:100%;display: flex;justify-content: flex-end;padding-right: 10px;margin-bottom: 0;"
+          >
+            <Button type="primary" @click="addSite">增加</Button>
+        </FormItem>
+          <!-- </i-col>
+        </Row> -->
         <Modal title="View Image" v-model="visible">
           <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
         </Modal>
@@ -58,7 +62,7 @@
 <script>
 import { addScenery, sceneryList, sceneryDelete, editScenery } from '@/api/scenery'
 import Upload from '@/view/components/uploadImage/index'
-
+import { getSchoolList } from '@/api/school'
 export default {
   name: 'directive_page',
   components: {
@@ -351,10 +355,12 @@ export default {
       ],
       imgName: '',
       visible: false,
-      uploadList: []
+      uploadList: [],
+      schoolList: []
     }
   },
   async mounted () {
+    this.getSchoolList()
     // this.uploadList = this.$refs.upload.fileList
     let scene = await sceneryList(this.currentPage, this.pageSize)
     this.siteData = scene.data.data.data
@@ -365,6 +371,18 @@ export default {
     console.log('scene', scene)
   },
   methods: {
+    handleChange (value) {
+      console.log('value', value)
+      console.log('siteForm.schoolid', this.siteForm.schoolid)
+      this.$set(this.siteForm, 'schoolid', value.value)
+      this.$set(this.siteForm, 'address', value.label)
+      console.log('siteForm', this.siteForm)
+    },
+    async getSchoolList () {
+      const list = await getSchoolList({ page: 1, pageSize: 100 })
+      console.log('schoolList', list)
+      this.schoolList = list.data.data.data ? list.data.data.data : []
+    },
     openModal () {
       this.editSiteImage = true
       this.siteModalShow = true
@@ -383,6 +401,7 @@ export default {
     },
     async addSite () {
       if (!_.isEmpty(this.siteForm.scenerytitle)) {
+        console.log('this.siteForm', this.siteForm)
         let data = await addScenery(this.siteForm)
         this.flashAllSiteData()
         console.log('addSite', data)

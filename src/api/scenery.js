@@ -4,6 +4,7 @@ export const addScenery = (obj) => {
   const data = {
     'scenerytitle': obj.scenerytitle,
     'address': obj.address,
+    'schoolid': obj.schoolid,
     'shdesc': obj.shdesc,
     'sourceaddress': obj.sourceaddress,
     'longitude': obj.longitude,
@@ -21,6 +22,7 @@ export const addScenery = (obj) => {
 export const editScenery = (obj) => {
   const data = {
     'scenerytitle': obj.scenerytitle,
+    'schoolid': obj.schoolid,
     'address': obj.address,
     'shdesc': obj.shdesc,
     'sourceaddress': obj.sourceaddress,
@@ -46,6 +48,13 @@ export const sceneryList = (currentPage, pageSize) => {
 export const sceneryDelete = (id) => {
   return axios.request({
     url: 'scenery/delete?id=' + id,
+    method: 'get'
+  })
+}
+
+export const getSceneryFromSchool = (idArray) => {
+  return axios.request({
+    url: '/scenery/getSceneryListBySchoolids?schoolids=' + idArray,
     method: 'get'
   })
 }
