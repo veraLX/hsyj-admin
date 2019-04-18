@@ -29,7 +29,7 @@
           <Input type="textarea" v-model="schoolForm.schooldesc" placeholder="输入描述"/>
         </FormItem>
         <FormItem prop="image" style="width:100%;">
-         <Button type="primary" @click="openModal">图片编辑</Button>
+         <!--<Button type="primary" @click="openModal">图片编辑</Button>-->
         </FormItem>
         <FormItem
           style="width:100%;display: flex;justify-content: flex-end;padding-right: 10px;margin-bottom: 0;"
@@ -223,6 +223,30 @@ export default {
             } else {
               return h('div', params.row.schooldesc)
             }
+          }
+        },
+        { title: '图片',
+          key: 'action',
+          width: 200,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small',
+                  sourceType: 0,
+                  parentId: this.currentParentId
+                },
+                on: {
+                  click: () => {
+                    console.log('params', params.row.schoolID)
+                    this.currentParentId = params.row.schoolID
+                    this.openModal()
+                  }
+                }
+              }, '编辑图片')
+            ])
           }
         },
         {
