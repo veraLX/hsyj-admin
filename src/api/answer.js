@@ -13,3 +13,20 @@ export const getAnswerList = (page, size) => {
     method: 'get'
   })
 }
+
+export const addAnswer = (obj, activityid) => {
+  const data = {
+    sceneryid: obj.sceneryid,
+    questiontitle: obj.questiontitle,
+    answera: obj.answera,
+    answerb: obj.answerb,
+    answerc: obj.answerc,
+    answerd: obj.answerd,
+    rightanswer: obj.rightanswer
+  }
+  return axios.request({
+    url: `activity/addEdit2?activityid=${activityid}`,
+    data,
+    method: 'post'
+  })
+}

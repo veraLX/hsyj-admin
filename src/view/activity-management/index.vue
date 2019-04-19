@@ -25,12 +25,12 @@
           <!-- <Button type="primary" >确认</Button> -->
       </div>
     </Modal>
-    <Modal v-model="editAnswer"  width="80%">
+    <Modal v-model="editAnswer"  width="80%" v-if="isAnswer">
       <p slot="header">
         <Icon type="ios-paper-outline"></Icon>
         <span> 答题编辑</span>
       </p>
-      <Answer/>
+      <Answer :objectList="answerAllList" :totalPages='totalAnswerPages' :count='countAnswer' :activityId='activityIdEach' :siteList='siteData'/>
       <div slot="footer">
           <!-- <Button type="primary" >确认</Button> -->
       </div>
@@ -40,8 +40,10 @@
 
 <script>
 import { getActivity1List, addActivity, deleteActivity1 } from '@/api/activity'
+import { getAnswerList } from '@/api/answer'
+import { sceneryList } from '@/api/scenery'
 import Upload from '@/view/components/uploadImage/index'
-import Answer from '@/view/activity-add/answer-management/index'
+import Answer from '@/view/activity-add/answer-management/indexModel'
 import Activity from '@/view/activity-management/activity-edit/index'
 // editActivity
 export default {
@@ -59,13 +61,21 @@ export default {
       editAnswer: false,
       editActivity: false,
       updateActivityModalShow: false,
+      isAnswer: false,
       currentImageArray: [],
       currentActivity: {},
       count: 0,
       pageSize: 5,
       totalPages: 1,
       currentPage: 1,
+      currentAnswerPage: 1,
+      pageAnswerSize: 5,
+      totalAnswerPages: 1,
+      countAnswer: 0,
       single: '',
+      activityIdEach: null,
+      answerAllList: [],
+      siteData: [],
       defaultList: [
         {
           'name': 'a42bdcc1178e62b4694c830f028db5c0',
@@ -246,14 +256,21 @@ export default {
     openActivityModal (params) {
       this.editActivity = true
       this.updateActivityModalShow = true
-      debugger
       this.currentActivity = params.row
     },
-    openAnswerModal (params) {
+    async openAnswerModal (params) {
+      let answerList = await getAnswerList(this.currentAnswerPage, this.pageAnswerSize)
+      this.answerAllList = answerList.data.data.data
+      this.totalAnswerPages = answerList.data.data.totalPages
+      this.countAnswer = answerList.data.data.count
+      this.activityIdEach = params.row.activityID
+      let siteList = await sceneryList()
+      this.siteData = siteList.data.data.data
       this.editAnswer = true
+      this.isAnswer = true
+      console.log('answerList', this.siteData)
     },
     openModal (params) {
-      debugger
       this.editImage = true
       this.updateModalShow = true
       this.currentImageArray = params.row.pics
@@ -275,8 +292,9 @@ export default {
       let addActivityItem = await addActivity(this.activityForm)
       console.log('addActivityItem', addActivityItem)
     },
-    handlePage () {
-
+    handlePage (value) {
+      this.currentPage = value
+      this.flashAllActivityData()
     }
     // render1 (item) {
     //   return item.label
