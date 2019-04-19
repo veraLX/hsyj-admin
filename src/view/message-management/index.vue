@@ -10,7 +10,7 @@
           <Table :columns="appMessageColumns" :data="appMessageList" @on-selection-change="onAppSelectionChange"></Table>
           <Page :total="appCount"  @on-change="appChange"/>
           <Row>
-          <Col span="2" offset="19">
+          <Col span="2">
           <Button  @click="acceptance" type='primary'>一键受理</Button>
           </Col>
           <Col span="2" offset="1">

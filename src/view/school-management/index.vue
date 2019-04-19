@@ -37,16 +37,16 @@
           <Button class="bottomRight" type="primary" @click="addSchool">增加</Button>
         </FormItem>
       </Form>
-      <Modal v-model="editImage" @on-cancel="childCloseModal" width="60%">
-        <p slot="header">
-          <Icon type="ios-paper-outline"></Icon>
-          <span>图片编辑</span>
-        </p>
-        <Upload v-if="updateModalShow" :parentId="currentParentId" :sourceType="0"/>
-        <div slot="footer">
+    <Modal v-model="editImage" @on-cancel="childCloseModal" width="60%">
+      <p slot="header">
+        <Icon type="ios-paper-outline"></Icon>
+        <span>图片编辑</span>
+      </p>
+      <Upload v-if="updateModalShow" :parentId="currentParentId" :sourceType="0" :currentImageArray="currentImageArray"/>
+      <div slot="footer">
           <Button type="primary" @click="childCloseModal">完成</Button>
-        </div>
-      </Modal>
+      </div>
+    </Modal>
     </Card>
     <Card :style="{'margin-top': '20px'}">
       <p slot="title">校区列表</p>
@@ -81,6 +81,7 @@ export default {
         schooldesc: ''
       },
       uploadList: [],
+      currentImageArray: [],
       currentParentId: 0,
       editImage: false,
       updateModalShow: false,
@@ -235,17 +236,15 @@ export default {
                 props: {
                   type: 'primary',
                   size: 'small',
-                  sourceType: 0,
-                  parentId: this.currentParentId
+                  ghost: true
                 },
                 on: {
                   click: () => {
-                    console.log('params', params.row.schoolID)
-                    this.currentParentId = params.row.schoolID
-                    this.openModal()
+                    console.log(params)
+                    this.openModal(params)
                   }
                 }
-              }, '编辑图片')
+              }, '编辑/查看图片')
             ])
           }
         },
@@ -392,9 +391,11 @@ export default {
       const list = await getSchoolList({ page: e })
       this.schoolList = list.data.data.data ? list.data.data.data : []
     },
-    openModal () {
+    openModal (params) {
+      console.log('123456', params)
       this.editImage = true
       this.updateModalShow = true
+      this.currentImageArray = params.row.pics
     },
     getPoint () {
       window.open('https://lbs.qq.com/tool/getpoint/')
