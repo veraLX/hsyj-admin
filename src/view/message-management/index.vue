@@ -13,7 +13,7 @@
           <Col span="2">
           <Button  @click="acceptance" type='primary'>一键受理</Button>
           </Col>
-          <Col span="2" offset="1">
+          <Col span="2" style="margin-left:50px">
           <Button  @click="refuse" type='error'>一键拒绝</Button>
           </Col>
           </Row>
