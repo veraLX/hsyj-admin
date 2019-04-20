@@ -186,27 +186,6 @@ export default {
               return h('div', params.row.shdesc)
             }
           } },
-        { title: '图片',
-          key: 'action',
-          width: 200,
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                on: {
-                  click: () => {
-                    // console.log(params)
-                    this.openModal()
-                  }
-                }
-              }, '编辑图片')
-            ])
-          }
-        },
         { title: '音频URL地址',
           key: 'soundurl',
           width: '110px',
@@ -245,6 +224,27 @@ export default {
               return h('div', params.row.videourl)
             }
           } },
+        { title: '图片',
+          key: 'action',
+          width: 200,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    // console.log(params)
+                    this.openModal()
+                  }
+                }
+              }, '编辑图片')
+            ])
+          }
+        },
         {
           title: '操作',
           key: 'action',
