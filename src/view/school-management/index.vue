@@ -388,7 +388,7 @@ export default {
       }
     },
     async changePage (e) {
-      const list = await getSchoolList({ page: e })
+      const list = await getSchoolList({ page: e, pageSize: 10 })
       this.schoolList = list.data.data.data ? list.data.data.data : []
     },
     openModal (params) {
