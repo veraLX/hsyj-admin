@@ -72,7 +72,7 @@
             <a v-if="this.addActivitySuccess" @click="openImageDialog" type="text" class="setImage">设置图片</a>
           </FormItem>
         </Form>
-        <Answer v-if="currentStep == 1"/>
+        <Answer v-if="currentStep == 1" :objectList="answerAllList" :totalPages='totalAnswerPages' :count='countAnswer' :activityId='activityIdEach' :siteList='siteData'/>
     </Card>
     <Modal v-model="editImage"  @on-cancel="childCloseModal" width="60%">
       <p slot="header">
@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import Answer from '@/view/activity-add/answer-management/index'
+import Answer from '@/view/activity-add/answer-management/indexModel'
 import Upload from '@/view/components/uploadImage/index'
 import { addActivity } from '@/api/activity'
 import { getSchoolList } from '@/api/school'
@@ -109,6 +109,11 @@ export default {
       editImage: false,
       updateModalShow: false,
       schoolList: [],
+      answerAllList: [],
+      totalAnswerPages: 1,
+      countAnswer: 0,
+      activityIdEach: null,
+      siteData: [],
       // defaultList: [
       //   {
       //     'name': 'a42bdcc1178e62b4694c830f028db5c0',
@@ -187,7 +192,14 @@ export default {
         this.parentId = addReturn.data.insertid
       }
     },
-    nextStep () {
+    async nextStep () {
+      let answerList = await getAnswerList(this.currentAnswerPage, this.pageAnswerSize)
+      this.answerAllList = answerList.data.data.data
+      this.totalAnswerPages = answerList.data.data.totalPages
+      this.countAnswer = answerList.data.data.count
+      this.activityIdEach = this.parentId
+      let siteList = await sceneryList()
+      this.siteData = siteList.data.data.data
       this.currentStep = 1
     },
     childCloseModal () {
