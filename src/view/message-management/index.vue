@@ -22,10 +22,10 @@
           <Table stripe :columns="sightMessageColumns" :data="sightMessageList"  @on-selection-change="onSightSelectionChange"></Table>
           <Page :total="sightCount"  @on-change="sightChange"/>
           <Row>
-          <Col span="2" offset="19">
+          <Col span="2">
           <Button  @click="sightPass" type='primary'>一键通过</Button>
           </Col>
-          <Col span="2" offset="1">
+          <Col span="2" style="margin-left:50px">
           <Button  @click="sightDeleteFun" type='error'>一键删除</Button>
           </Col>
           </Row>
@@ -34,10 +34,10 @@
           <Table stripe :columns="activityMessageColumns" :data="activityMessageList"  @on-selection-change="onActivitySelectionChange"></Table>
           <Page :total="activityCount"  @on-change="activityChange"/>
           <Row>
-          <Col span="2" offset="19">
+          <Col span="2">
           <Button  @click="activityPass" type='primary'>一键通过</Button>
           </Col>
-          <Col span="2" offset="1">
+          <Col span="2" style="margin-left:50px">
           <Button  @click="activityDeleteFun" type='error'>一键删除</Button>
           </Col>
           </Row>
@@ -60,6 +60,12 @@ export default {
         { title: '学籍号', key: 'studentid' },
         { title: '留言日期', key: 'time' },
         { title: '留言内容', key: 'content', width: 300 },
+        { title: '状态',
+          key: 'shstate',
+          width: 100,
+          render: (h, params) => {
+            return h('div', params.row.shstate ? params.row.shstate === 3 ? '已受理' : '已拒绝' : '')
+          } },
         {
           title: '操作',
           key: 'action',
@@ -125,6 +131,12 @@ export default {
         { title: '学籍号', key: 'studentid' },
         { title: '留言日期', key: 'time' },
         { title: '留言内容', key: 'content', width: 300 },
+        { title: '状态',
+          key: 'shstate',
+          width: 100,
+          render: (h, params) => {
+            return h('div', params.row.shstate ? params.row.shstate === 1 ? '已通过' : '已删除' : '')
+          } },
         {
           title: '操作',
           key: 'action',
@@ -189,6 +201,12 @@ export default {
         { title: '学籍号', key: 'studentid' },
         { title: '留言日期', key: 'time' },
         { title: '留言内容', key: 'content', width: 300 },
+        { title: '状态',
+          key: 'shstate',
+          width: 100,
+          render: (h, params) => {
+            return h('div', params.row.shstate ? params.row.shstate === 1 ? '已通过' : '已删除' : '')
+          } },
         {
           title: '操作',
           key: 'action',
