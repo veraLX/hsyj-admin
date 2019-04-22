@@ -2,6 +2,7 @@
   <div>
     <Card>
       <p slot="title">新增景点</p>
+      <span slot="extra" :style="{ 'cursor':'pointer'}" @click="getPoint">经纬度查询 ></span>
       <Form :model="siteForm" :rules="ruleInline" inline label-position="right" :label-width="90">
         <FormItem prop="name" label="景点名称" :style="{'width': 'calc((100% - 30px)/3)'}">
             <Input v-model="siteForm.scenerytitle" placeholder="输入景点名称"></Input>
@@ -224,31 +225,10 @@ export default {
               return h('div', params.row.videourl)
             }
           } },
-        { title: '图片',
-          key: 'action',
-          width: 200,
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                on: {
-                  click: () => {
-                    // console.log(params)
-                    this.openModal()
-                  }
-                }
-              }, '编辑图片')
-            ])
-          }
-        },
         {
           title: '操作',
           key: 'action',
-          width: 140,
+          width: 240,
           align: 'center',
           options: ['delete'],
           render: (h, params) => {
@@ -266,6 +246,24 @@ export default {
               //     }
               //   }
               // }, '修改'),
+              h(
+                'Button',
+                {
+                  style: { 'margin-right': '8px' },
+                  props: {
+                    type: 'primary',
+                    size: 'small',
+                    ghost: true
+                  },
+                  on: {
+                    click: () => {
+                      console.log(params)
+                      this.openModal(params)
+                    }
+                  }
+                },
+                '编辑/查看图片'
+              ),
               h(
                 'Button',
                 {
@@ -377,6 +375,9 @@ export default {
       this.$set(this.siteForm, 'schoolid', value.value)
       this.$set(this.siteForm, 'address', value.label)
       console.log('siteForm', this.siteForm)
+    },
+    getPoint () {
+      window.open('https://lbs.qq.com/tool/getpoint/')
     },
     async getSchoolList () {
       const list = await getSchoolList({ page: 1, pageSize: 100 })

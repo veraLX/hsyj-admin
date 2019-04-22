@@ -152,36 +152,32 @@ export default {
         // { title: '题目数量', key: 'sceneryCount', width: 84 },
         // { title: '通关阈值', key: 'clearanceThreshold', width: 84 },
         // { title: '描述', key: 'describe' },
-        { title: '图片',
-          key: 'action',
-          width: 110,
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small',
-                  ghost: true
-                },
-                on: {
-                  click: () => {
-                    console.log(params)
-                    this.openModal(params)
-                  }
-                }
-              }, '编辑/查看图片')
-            ])
-          }
-        },
         {
           title: '操作',
           key: 'action',
-          width: 200,
+          width: 300,
           align: 'center',
           options: ['delete'],
           render: (h, params) => {
             return h('div', [
+              h(
+                'Button',
+                {
+                  style: { 'margin-right': '8px' },
+                  props: {
+                    type: 'primary',
+                    size: 'small',
+                    ghost: true
+                  },
+                  on: {
+                    click: () => {
+                      console.log(params)
+                      this.openModal(params)
+                    }
+                  }
+                },
+                '编辑/查看图片'
+              ),
               h('Button', {
                 style: { 'margin-right': '8px' },
                 props: {
@@ -195,7 +191,7 @@ export default {
                     this.openActivityModal(params)
                   }
                 }
-              }, '修改/查看'),
+              }, '编辑'),
               h('Poptip', {
                 props: {
                   confirm: true,
