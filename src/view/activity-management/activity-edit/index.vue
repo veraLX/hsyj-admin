@@ -242,10 +242,11 @@ export default {
     justify-content: center;
     padding: 20px 0 30px 0;
 }
-.activitySrep > .ivu-steps-item:first-child{
-    width: 40%!important;
-}
+.activitySrep > .ivu-steps-item:first-child,
 .activitySrep > .ivu-steps-item:nth-child(2){
+    width: 30%!important;
+}
+.activitySrep > .ivu-steps-item:nth-child(3){
     width: 100px!important;
 }
 .checkboxForm > .ivu-form-item-content{

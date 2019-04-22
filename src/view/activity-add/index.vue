@@ -3,6 +3,7 @@
     <Card>
     <Steps :current="currentStep" class="activitySrep">
         <Step title="新增活动"></Step>
+        <Step title="活动图片编辑"></Step>
         <Step title="新建答题"></Step>
     </Steps>
         <Form :model="activityForm" inline label-position="right" :label-width="100" v-if="currentStep == 0">
@@ -67,23 +68,28 @@
           <FormItem
             style="width:100%;display: flex;justify-content: flex-end;padding-right: 10px;margin-bottom: 0;"
           >
-            <Button type="primary" v-if="!this.addActivitySuccess" @click="addActivityMethod">增加</Button>
-            <Button type="primary" v-if="this.addActivitySuccess" @click="nextStep">下一步</Button>
-            <a v-if="this.addActivitySuccess" @click="openImageDialog" type="text" class="setImage">设置图片</a>
+            <!-- <Button type="primary" v-if="!this.addActivitySuccess" @click="addActivityMethod">增加</Button> -->
+            <Button type="primary" @click="nextImageStep">下一步</Button>
+            <!-- <a v-if="this.addActivitySuccess" @click="openImageStep" type="text" class="setImage">设置图片</a> -->
           </FormItem>
         </Form>
-        <Answer v-if="currentStep == 1" :objectList="answerAllList" :totalPages='totalAnswerPages' :count='countAnswer' :activityId='activityIdEach' :siteList='siteData'/>
+        <div v-if="currentStep == 1">
+            <Upload  v-show="updateModalShow" :parentId="parentId" :sourceType="2"/>
+            <div class="rightButton">
+              <Button type="primary" @click="nextAnsewerStep">下一步</Button>
+            </div>
+        </div>
+        <Answer v-if="currentStep == 2" :objectList="answerAllList" :totalPages='totalAnswerPages' :count='countAnswer' :activityId='activityIdEach' :siteList='siteData'/>
     </Card>
-    <Modal v-model="editImage"  @on-cancel="childCloseModal" width="60%">
+    <!-- <Modal v-model="editImage"  @on-cancel="nextAnsewerStep" width="60%">
       <p slot="header">
         <Icon type="ios-paper-outline"></Icon>
         <span>图片编辑</span>
       </p>
-      <Upload v-if="updateModalShow" :parentId="parentId" :sourceType="2"/>
       <div slot="footer">
-          <Button type="primary" @click="childCloseModal" >完成</Button>
+          <Button type="primary" @click="nextAnsewerStep" >完成</Button>
       </div>
-    </Modal>
+    </Modal> -->
   </div>
 </template>
 
@@ -106,7 +112,7 @@ export default {
       currentStep: 0,
       addActivitySuccess: false,
       single: '',
-      editImage: false,
+      // editImage: false,
       updateModalShow: false,
       schoolList: [],
       answerAllList: [],
@@ -151,7 +157,7 @@ export default {
       })
       console.log('this.data1', this.data1)
     },
-    async addActivityMethod () {
+    async nextImageStep () {
       // 开始时间
       if (this.activityForm.startdateAll) {
         let startdate = moment(this.activityForm.startdateAll).format('YYYY-MM-DD')
@@ -183,16 +189,25 @@ export default {
         this.$set(this.activityForm, 'settingend', 0)
         this.$set(this.activityForm, 'endsceneryid', null)
       }
-
       console.log('this.activityForm', this.activityForm)
       let addReturn = await addActivity(this.activityForm)
-      debugger
       if (addReturn.data.insertid) {
         this.addActivitySuccess = true
+        this.$Notice.success({
+          title: '活动添加成功'
+        })
         this.parentId = addReturn.data.insertid
+        this.updateModalShow = true
+        this.currentStep = 1
       }
     },
-    async nextStep () {
+    // nextImageStep () {
+    //   debugger
+    //   this.addActivityMethod()
+    //   this.updateModalShow = true
+    //   this.currentStep = 1
+    // },
+    async nextAnsewerStep () {
       let answerList = await getAnswerList(this.currentAnswerPage, this.pageAnswerSize)
       this.answerAllList = answerList.data.data.data
       this.totalAnswerPages = answerList.data.data.totalPages
@@ -200,16 +215,12 @@ export default {
       this.activityIdEach = this.parentId
       let siteList = await sceneryList()
       this.siteData = siteList.data.data.data
-      this.currentStep = 1
+      this.currentStep = 2
     },
-    childCloseModal () {
-      this.editImage = false
-      this.updateModalShow = false
-    },
-    openImageDialog () {
-      this.editImage = true
-      this.updateModalShow = true
-    },
+    // openImageStep () {
+    //   this.editImage = true
+    //   this.updateModalShow = true
+    // },
     render1 (item) {
       return item.label
     },
@@ -296,10 +307,11 @@ export default {
     justify-content: center;
     padding: 20px 0 30px 0;
 }
-.activitySrep > .ivu-steps-item:first-child{
-    width: 40%!important;
-}
+.activitySrep > .ivu-steps-item:first-child,
 .activitySrep > .ivu-steps-item:nth-child(2){
+    width: 30%!important;
+}
+.activitySrep > .ivu-steps-item:nth-child(3){
     width: 100px!important;
 }
 .checkboxForm > .ivu-form-item-content{
@@ -372,5 +384,10 @@ export default {
       position: absolute;
       right: 70px;
       width: 100px;
+    }
+    .rightButton{
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 10px;
     }
 </style>

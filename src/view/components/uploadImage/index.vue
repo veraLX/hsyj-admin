@@ -21,7 +21,7 @@
     </div>
 </template>
 <script>
-import { deleteOneImage } from '@/api/data'
+import { deleteOneImage, getImageList } from '@/api/data'
 export default {
   name: 'upload_page',
   props: {
@@ -35,18 +35,29 @@ export default {
   data () {
     return {
       iframeWin: {},
-      currentImage: []
+      currentImage: [],
+      returnIframe: ''
     }
   },
-  mounted () {
+  async mounted () {
     // 这里就拿到了iframe的对象
     console.log(this.$refs.iframe)
     // 这里就拿到了iframe的window对象
     console.log(this.$refs.iframe.contentWindow)
     // 在外部vue的window上添加postMessage的监听，并且绑定处理函数handleMessage
-    window.addEventListener('message', this.handleMessage)
+    window.addEventListener('message', async (event) => {
+      let imageList = await getImageList(this.parentId, this.sourceType)
+      this.currentImage = imageList.data.data.data
+      console.log('vue文件接收的数据,接收的数据', event)
+    })
+    // window.addEventListener('message', this.handleMessage())
     this.iframeWin = this.$refs.iframe.contentWindow
-    this.currentImage = this.currentImageArray
+    // if (this.currentImageArray) {
+    //   this.currentImage = this.currentImageArray
+    // }
+    let imageList = await getImageList(this.parentId, this.sourceType)
+    this.currentImage = imageList.data.data.data
+    console.log('imageLIst', imageList)
     console.log('currentImage.length > 0', this.currentImage)
   },
   methods: {
@@ -80,21 +91,6 @@ export default {
     // //       sourceType: 1
     // //     }
     // //   }, '*')
-    // }
-  },
-  handleMessage (event) {
-    // 根据上面制定的结构来解析iframe内部发回来的数据
-    debugger
-    const data = event.data
-    console.log('vue文件接收的数据', data)
-    // const data = event.data
-    // switch (data.cmd) {
-    //   case 'returnFormJson':
-    //     // 业务逻辑
-    //     break
-    //   case 'returnHeight':
-    //     // 业务逻辑
-    //     break
     // }
   }
 //   watch: {

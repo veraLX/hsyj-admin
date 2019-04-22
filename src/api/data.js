@@ -56,3 +56,10 @@ export const deleteOneImage = (sourceid) => {
     method: 'get'
   })
 }
+
+export const getImageList = (targetid, sourcetype) => {
+  return axios.request({
+    url: `/source/getListBytargetidAndSourceType?targetid=${targetid}&sourcetype=${sourcetype}`,
+    method: 'get'
+  })
+}
