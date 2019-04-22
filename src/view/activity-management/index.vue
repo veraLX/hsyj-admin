@@ -183,6 +183,21 @@ export default {
                 props: {
                   type: 'primary',
                   size: 'small',
+                  ghost: true,
+                  disabled: params.row.isOriginal
+                },
+                on: {
+                  click: () => {
+                    this.openAnswerModal(params)
+                    console.log(params)
+                  }
+                }
+              }, '答题'),
+              h('Button', {
+                style: { 'margin-right': '8px' },
+                props: {
+                  type: 'primary',
+                  size: 'small',
                   disabled: params.row.isOriginal
                 },
                 on: {
@@ -208,28 +223,13 @@ export default {
                 }
               }, [
                 h('Button', {
-                  style: { 'margin-right': '8px' },
                   props: {
                     type: 'error',
                     size: 'small',
                     disabled: params.row.isOriginal
                   }
                 }, '删除')
-              ]),
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small',
-                  ghost: true,
-                  disabled: params.row.isOriginal
-                },
-                on: {
-                  click: () => {
-                    this.openAnswerModal(params)
-                    console.log(params)
-                  }
-                }
-              }, '答题')
+              ])
             ])
           }
         }
