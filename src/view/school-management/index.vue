@@ -2,7 +2,7 @@
   <div>
     <Card>
       <p slot="title">新增校区</p>
-      <span slot="extra" @click="getPoint">经纬度查询 ></span>
+      <span slot="extra" :style="{ 'cursor':'pointer'}" @click="getPoint">经纬度查询 ></span>
       <Form ref="formInline" :model="schoolForm" :rules="ruleInline" inline :label-width="80">
         <FormItem prop="schoolname" label="校区名称" :style="{'width': 'calc((100% - 30px)/3)'}">
           <Input v-model="schoolForm.schoolname" placeholder="输入校区名称"/>
@@ -29,7 +29,7 @@
           <Input type="textarea" v-model="schoolForm.schooldesc" placeholder="输入描述"/>
         </FormItem>
         <FormItem prop="image" style="width:100%;">
-         <!--<Button type="primary" @click="openModal">图片编辑</Button>-->
+          <!--<Button type="primary" @click="openModal">图片编辑</Button>-->
         </FormItem>
         <FormItem
           style="width:100%;display: flex;justify-content: flex-end;padding-right: 10px;margin-bottom: 0;"
@@ -37,16 +37,21 @@
           <Button class="bottomRight" type="primary" @click="addSchool">增加</Button>
         </FormItem>
       </Form>
-    <Modal v-model="editImage" @on-cancel="childCloseModal" width="60%">
-      <p slot="header">
-        <Icon type="ios-paper-outline"></Icon>
-        <span>图片编辑</span>
-      </p>
-      <Upload v-if="updateModalShow" :parentId="currentParentId" :sourceType="0" :currentImageArray="currentImageArray"/>
-      <div slot="footer">
+      <Modal v-model="editImage" @on-cancel="childCloseModal" width="60%">
+        <p slot="header">
+          <Icon type="ios-paper-outline"></Icon>
+          <span>图片编辑</span>
+        </p>
+        <Upload
+          v-if="updateModalShow"
+          :parentId="currentParentId"
+          :sourceType="0"
+          :currentImageArray="currentImageArray"
+        />
+        <div slot="footer">
           <Button type="primary" @click="childCloseModal">完成</Button>
-      </div>
-    </Modal>
+        </div>
+      </Modal>
     </Card>
     <Card :style="{'margin-top': '20px'}">
       <p slot="title">校区列表</p>
@@ -226,32 +231,20 @@ export default {
             }
           }
         },
-        { title: '图片',
-          key: 'action',
-          width: 200,
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small',
-                  ghost: true
-                },
-                on: {
-                  click: () => {
-                    console.log(params)
-                    this.openModal(params)
-                  }
-                }
-              }, '编辑/查看图片')
-            ])
-          }
-        },
+        // { title: '图片',
+        //   key: 'action',
+        //   width: 200,
+        //   align: 'center',
+        //   render: (h, params) => {
+        //     return h('div', [
+
+        //     ])
+        //   }
+        // },
         {
           title: '操作',
           key: 'action',
-          width: 140,
+          width: 240,
           align: 'center',
           options: ['delete'],
           render: (h, params) => {
@@ -269,6 +262,24 @@ export default {
               //     }
               //   }
               // }, '修改'),
+              h(
+                'Button',
+                {
+                  style: { 'margin-right': '8px' },
+                  props: {
+                    type: 'primary',
+                    size: 'small',
+                    ghost: true
+                  },
+                  on: {
+                    click: () => {
+                      console.log(params)
+                      this.openModal(params)
+                    }
+                  }
+                },
+                '编辑/查看图片'
+              ),
               h(
                 'Button',
                 {

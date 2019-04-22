@@ -13,7 +13,7 @@
           <Col span="2">
           <Button  @click="acceptance" type='primary'>一键受理</Button>
           </Col>
-          <Col span="2" style="margin-left:50px">
+          <Col span="2" style="margin-left:10px">
           <Button  @click="refuse" type='error'>一键拒绝</Button>
           </Col>
           </Row>
@@ -25,7 +25,7 @@
           <Col span="2">
           <Button  @click="sightPass" type='primary'>一键通过</Button>
           </Col>
-          <Col span="2" style="margin-left:50px">
+          <Col span="2" style="margin-left:10px">
           <Button  @click="sightDeleteFun" type='error'>一键删除</Button>
           </Col>
           </Row>
@@ -37,7 +37,7 @@
           <Col span="2">
           <Button  @click="activityPass" type='primary'>一键通过</Button>
           </Col>
-          <Col span="2" style="margin-left:50px">
+          <Col span="2" style="margin-left:10px">
           <Button  @click="activityDeleteFun" type='error'>一键删除</Button>
           </Col>
           </Row>
