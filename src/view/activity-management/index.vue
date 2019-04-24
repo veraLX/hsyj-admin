@@ -15,7 +15,7 @@
           <Button type="primary" @click="childCloseModal" >完成</Button>
       </div>
     </Modal>
-    <Modal v-model="editActivity"  width="80%">
+    <Modal v-model="editActivity"  width="80%" @on-cancel="editActivityModalCancel">
       <p slot="header">
         <Icon type="ios-paper-outline"></Icon>
         <span> 活动编辑</span>
@@ -249,6 +249,10 @@ export default {
     // this.uploadList = this.$refs.upload.fileList
   },
   methods: {
+    editActivityModalCancel () {
+      this.editActivity = false
+      this.updateActivityModalShow = false
+    },
     openActivityModal (params) {
       this.editActivity = true
       this.updateActivityModalShow = true

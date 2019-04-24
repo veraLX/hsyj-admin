@@ -77,6 +77,8 @@ export default {
       let deleteImage = await deleteOneImage(item.sourceID)
       if (!deleteImage.data.errno) {
         this.$Message.warning('删除成功')
+        let imageList = await getImageList(this.parentId, this.sourceType)
+        this.currentImage = imageList.data.data.data
       }
     }
     // sendMessage () {
