@@ -2,18 +2,31 @@
   <div>
     <Card class="schoolInfo">
       <div class="schoolData">当前学校数据{{schoolListNumber}}条</div>
-      <Button size="large" type="primary" >导入学校数据</Button>
+      <ExcelUpload />
+      <!-- <Button size="large" type="primary" >导入学校数据</Button> -->
     </Card>
   </div>
 </template>
 
 <script>
+
+import { getSchoolList } from '@/api/school'
+import ExcelUpload from '@/view/components/excel-upload/index'
 export default {
   name: 'directive_page',
+  components: {
+    ExcelUpload
+  },
   data () {
     return {
       schoolListNumber: 1
     }
+  },
+  async mounted () {
+    debugger
+    const list = await getSchoolList({})
+    this.schoolListNumber = list.data.data.totalPages ? list.data.data.totalPages : 1
+    console.log(list)
   },
   methods: {
   }

@@ -70,7 +70,7 @@
 
 <script>
 import Upload from '@/view/components/uploadImage/index'
-import { addActivity } from '@/api/activity'
+// import { addActivity } from '@/api/activity'
 import { getSchoolList } from '@/api/school'
 import { getSceneryFromSchool } from '@/api/scenery'
 import moment from 'moment'
