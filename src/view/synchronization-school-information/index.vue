@@ -25,7 +25,7 @@ export default {
   async mounted () {
     debugger
     const list = await getSchoolList({})
-    this.schoolListNumber = list.data.data.totalPages ? list.data.data.totalPages : 1
+    this.schoolListNumber = list.data.data.count ? list.data.data.count : 1
     console.log(list)
   },
   methods: {
