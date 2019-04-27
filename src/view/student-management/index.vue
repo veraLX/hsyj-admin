@@ -16,17 +16,13 @@
         </FormItem>
         <Button type="primary">查询</Button>
         <Table stripe :columns="StudentColumns" :data="studentList"></Table>
-        <Page :total="100" />
+        <Page :total="0" />
       </Form>
     </Card>
   </div>
 </template>
 
 <script>
-import {
-  getMessageList,
-  acceptMessage
-} from '@/api/message'
 import {
   getStudentList
 } from '@/api/student'
@@ -53,103 +49,14 @@ export default {
           phone: '1302589758',
           weixin: '123123'
         }
-      ],
-      MessageColumns: [
-        { title: ' ', type: 'index', width: 60, align: 'center' },
-        { title: '学生姓名', key: 'studentName' },
-        { title: '学籍号', key: 'studentid' },
-        { title: '分类', key: 'distype' },
-        { title: '留言日期', key: 'time' },
-        { title: '留言内容', key: 'content', width: 300 },
-        {
-          title: '操作',
-          key: 'action',
-          width: 140,
-          align: 'center',
-          options: ['delete'],
-          render: (h, params) => {
-            if (params.row.targetaddress != null) {
-              return h('div', [
-                h('Button', {
-                  style: { 'margin-right': '8px' },
-                  props: {
-                    type: 'primary',
-                    size: 'small'
-                  },
-                  on: {
-                    click: async () => {
-                      await acceptMessage({ id: 1, shstate: 1 })
-                      this.getMessageList()
-                    }
-                  }
-                }, '受理'),
-                h('Button', {
-                  props: {
-                    type: 'error',
-                    size: 'small'
-                  }
-                }, '拒绝')
-              ])
-            } else {
-              return h('div', [
-                h('Button', {
-                  style: { 'margin-right': '8px' },
-                  props: {
-                    type: 'primary',
-                    size: 'small'
-                  },
-                  on: {
-                    click: async () => {
-                      await acceptMessage({ id: 1, shstate: 1 })
-                      this.getMessageList()
-                    }
-                  }
-                }, '通过'),
-                h('Button', {
-                  props: {
-                    type: 'error',
-                    size: 'small'
-                  }
-                }, '删除')
-              ])
-            }
-          }
-        }
-      ],
-      MessageList: [
-        {
-          studentName: ' 王毅王',
-          studentid: '1111111111',
-          site: '财大老门',
-          time: '2019-05-01',
-          content: '三好坞有三座亭子，湖心亭和两个在山上的，成为聚友、约会、休闲的好地方。',
-          $isLogin: false
-        },
-        {
-          studentName: '苏毅王',
-          studentid: '1111111111',
-          site: 'APP首页',
-          time: '2019-05-01',
-          content: '更换手机号码，申请解绑',
-          $isLogin: true
-        }
       ]
     }
   },
   mounted () {
-    this.getMessageList()
     this.getStudentList()
   },
   methods: {
-    async getMessageList () {
-      const list = await getMessageList()
-      this.MessageList = list.data.data.data ? list.data.data.data : []
-      if (this.MessageList !== []) {
-        this.MessageList.forEach((item) => {
-          item.distype = this.getDistype(item.distype)
-        })
-      }
-    },
+
     async getStudentList () {
       const list = await getStudentList(this.formInline)
       this.studentList = list.data.data.data ? list.data.data.data : []

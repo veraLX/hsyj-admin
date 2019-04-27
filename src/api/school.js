@@ -17,7 +17,7 @@ export const addSchool = (obj) => {
   }
 
   return axios.request({
-    url: 'api/admin/school/addEdit',
+    url: 'admin/school/addEdit',
     data,
     method: 'post'
   })
@@ -32,14 +32,14 @@ export const getSchoolList = (data) => {
 
 export const getArea = () => {
   return axios.request({
-    url: 'api/admin/school/getArea',
+    url: 'api/school/getArea',
     method: 'get'
   })
 }
 
 export const deleteSchool = (data) => {
   return axios.request({
-    url: 'api/admin/school/delete?id=' + data,
+    url: 'admin/school/delete?id=' + data,
     method: 'get'
   })
 }
@@ -60,7 +60,7 @@ export const editSchool = (obj) => {
     'parentid': obj.parentid // 本条是分校区
   }
   return axios.request({
-    url: 'api/admin/school/addEdit?id=' + obj.schoolID,
+    url: 'admin/school/addEdit?id=' + obj.schoolID,
     data,
     method: 'post'
   })

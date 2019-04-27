@@ -9,7 +9,7 @@ export const getMessageList = (data) => {
 
 export const acceptMessage = (obj) => {
   return axios.request({
-    url: 'api/admin/discuss/update?id=' + obj.id + '&shstate=' + obj.shstate,
+    url: 'admin/discuss/update?id=' + obj.id + '&shstate=' + obj.shstate,
     method: 'get'
   })
 }
