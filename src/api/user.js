@@ -15,7 +15,7 @@ export const login = (username, pwd, captchacode) => {
 
 export const getUserInfo = (sysuserid) => {
   return axios.request({
-    url: `admin/auth/getUserInfo?sysuserid=${sysuserid}`,
+    url: `api/admin/auth/getUserInfo?sysuserid=${sysuserid}`,
     method: 'get'
   })
 }
