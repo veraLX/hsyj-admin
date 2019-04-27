@@ -13,7 +13,7 @@
       <i-col :xs="8" :md="8" :lg="4" class="schoolItem" v-for="(school, index) in schoolList" :key="index" @click="schoolDetail">
         <Card @click.native="schoolDetail(school)">
           <span>{{school.schoolName}}</span>
-          <span :class="school.totalPeople == 0 ? 'zeroTip' : ''">{{school.totalPeople}}<span :style="{'color': '#000'}">人</span></span>
+          <!-- <span :class="school.totalPeople == 0 ? 'zeroTip' : ''">{{school.totalPeople}}<span :style="{'color': '#000'}">人</span></span> -->
         </Card>
       </i-col>
     </Row>
