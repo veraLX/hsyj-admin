@@ -90,7 +90,7 @@ export const addUser = (obj) => {
   }
 
   return axios.request({
-    url: 'api/admin/user/save',
+    url: 'admin/user/save',
     data,
     method: 'post'
   })
@@ -112,7 +112,7 @@ export const editUser = (obj) => {
   }
 
   return axios.request({
-    url: 'api/admin/user/save?userid=' + obj.sysUserID,
+    url: 'admin/user/save?userid=' + obj.sysUserID,
     data,
     method: 'post'
   })
@@ -120,7 +120,7 @@ export const editUser = (obj) => {
 
 export const deleteUser = (data) => {
   return axios.request({
-    url: 'api/admin/user/delete?userid=' + data,
+    url: 'admin/user/delete?userid=' + data,
     data,
     method: 'get'
   })
