@@ -9,7 +9,7 @@ export const getQuestionbyActid = (id) => {
 
 export const getAnswerList = (page, size) => {
   return axios.request({
-    url: 'api/admin/activity/list2?pageindex=' + page + '&pagesize=' + size,
+    url: 'admin/activity/list2?pageindex=' + page + '&pagesize=' + size,
     method: 'get'
   })
 }
@@ -25,7 +25,7 @@ export const addAnswer = (obj, activityid) => {
     rightanswer: obj.rightanswer
   }
   return axios.request({
-    url: `api/admin/activity/addEdit2?activityid=${activityid}`,
+    url: `admin/activity/addEdit2?activityid=${activityid}`,
     data,
     method: 'post'
   })
