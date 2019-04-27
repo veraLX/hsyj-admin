@@ -7,7 +7,7 @@ export const login = (username, pwd, captchacode) => {
     captchacode
   }
   return axios.request({
-    url: 'api/admin/auth/adminLogin',
+    url: 'admin/auth/adminLogin',
     data,
     method: 'post'
   })
@@ -15,14 +15,14 @@ export const login = (username, pwd, captchacode) => {
 
 export const getUserInfo = (sysuserid) => {
   return axios.request({
-    url: `api/admin/auth/getUserInfo?sysuserid=${sysuserid}`,
+    url: `admin/auth/getUserInfo?sysuserid=${sysuserid}`,
     method: 'get'
   })
 }
 
 export const logout = () => {
   return axios.request({
-    url: 'api/admin/auth/adminLogout',
+    url: 'admin/auth/adminLogout',
     method: 'get'
   })
 }
