@@ -134,7 +134,7 @@ export default {
           key: 'startDate',
           render: (h, params) => {
             let startDateString = params.row.startDate
-            let startDate = startDateString.split(' ')[0]
+            let startDate = startDateString.split('T')[0]
             return h('div', startDate)
           }
         },
@@ -142,7 +142,7 @@ export default {
           key: 'endDate',
           render: (h, params) => {
             let endDateString = params.row.endDate
-            let endDate = endDateString.split(' ')[0]
+            let endDate = endDateString.split('T')[0]
             return h('div', endDate)
           }
         },

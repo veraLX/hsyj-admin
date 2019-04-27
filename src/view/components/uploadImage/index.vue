@@ -22,6 +22,8 @@
 </template>
 <script>
 import { deleteOneImage, getImageList } from '@/api/data'
+import Cookies from 'js-cookie'
+import { TOKEN_KEY } from '@/libs/util'
 export default {
   name: 'upload_page',
   props: {
@@ -68,7 +70,8 @@ export default {
         params: {},
         info: {
           parentId: this.parentId,
-          sourceType: this.sourceType
+          sourceType: this.sourceType,
+          token: Cookies.get(TOKEN_KEY)
         }
       }, '*')
     },
