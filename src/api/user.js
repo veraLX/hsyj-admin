@@ -7,7 +7,7 @@ export const login = (username, pwd, captchacode) => {
     captchacode
   }
   return axios.request({
-    url: '/auth/adminLogin',
+    url: 'api/admin/auth/adminLogin',
     data,
     method: 'post'
   })
@@ -15,14 +15,14 @@ export const login = (username, pwd, captchacode) => {
 
 export const getUserInfo = (sysuserid) => {
   return axios.request({
-    url: `/auth/getUserInfo?sysuserid=${sysuserid}`,
+    url: `api/admin/auth/getUserInfo?sysuserid=${sysuserid}`,
     method: 'get'
   })
 }
 
 export const logout = () => {
   return axios.request({
-    url: '/auth/adminLogout',
+    url: 'api/admin/auth/adminLogout',
     method: 'get'
   })
 }
@@ -90,7 +90,7 @@ export const addUser = (obj) => {
   }
 
   return axios.request({
-    url: 'user/save',
+    url: 'api/admin/user/save',
     data,
     method: 'post'
   })
@@ -98,7 +98,7 @@ export const addUser = (obj) => {
 
 export const getUserList = (data) => {
   return axios.request({
-    url: 'user/getUserListBySchoolid?schoolid=' + data,
+    url: 'api/user/getUserListBySchoolid?schoolid=' + data,
     method: 'get'
   })
 }
@@ -112,7 +112,7 @@ export const editUser = (obj) => {
   }
 
   return axios.request({
-    url: 'user/save?userid=' + obj.sysUserID,
+    url: 'api/admin/user/save?userid=' + obj.sysUserID,
     data,
     method: 'post'
   })
@@ -120,7 +120,7 @@ export const editUser = (obj) => {
 
 export const deleteUser = (data) => {
   return axios.request({
-    url: 'user/delete?userid=' + data,
+    url: 'api/admin/user/delete?userid=' + data,
     data,
     method: 'get'
   })

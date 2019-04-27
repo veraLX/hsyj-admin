@@ -2,14 +2,14 @@ import axios from '@/libs/api.request'
 
 export const getQuestionbyActid = (id) => {
   return axios.request({
-    url: 'question/getQuestionbyActid?id=' + id,
+    url: 'api/question/getQuestionbyActid?id=' + id,
     method: 'get'
   })
 }
 
 export const getAnswerList = (page, size) => {
   return axios.request({
-    url: 'activity/list2?pageindex=' + page + '&pagesize=' + size,
+    url: 'api/activity/list2?pageindex=' + page + '&pagesize=' + size,
     method: 'get'
   })
 }
@@ -25,7 +25,7 @@ export const addAnswer = (obj, activityid) => {
     rightanswer: obj.rightanswer
   }
   return axios.request({
-    url: `activity/addEdit2?activityid=${activityid}`,
+    url: `api/admin/activity/addEdit2?activityid=${activityid}`,
     data,
     method: 'post'
   })

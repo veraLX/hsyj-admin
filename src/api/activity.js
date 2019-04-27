@@ -3,7 +3,7 @@ import axios from '@/libs/api.request'
 // 44、后台活动列表1,get
 export const getActivity1List = (page, size) => {
   return axios.request({
-    url: `activity/list?pageindex=${page}&pagesize=${size}`,
+    url: `api/activity/list?pageindex=${page}&pagesize=${size}`,
     method: 'get'
   })
 }
@@ -31,7 +31,7 @@ export const addActivity = (obj) => {
     'groupnum': obj.groupnum
   }
   return axios.request({
-    url: `/activity/addEdit1`,
+    url: `api/admin/activity/addEdit1`,
     data,
     method: 'post'
   })
@@ -60,7 +60,7 @@ export const editActivity = (obj, id) => {
     'groupnum': obj.groupnum
   }
   return axios.request({
-    url: `/activity/addEdit1?id=${id}`,
+    url: `api/admin/activity/addEdit1?id=${id}`,
     data,
     method: 'post'
   })
@@ -69,7 +69,7 @@ export const editActivity = (obj, id) => {
 // 21、删除/解绑活动,get
 export const deleteActivity1 = (id) => {
   return axios.request({
-    url: `/activity/delete?id=${id}`,
+    url: `api/admin/activity/delete?id=${id}`,
     method: 'get'
   })
 }

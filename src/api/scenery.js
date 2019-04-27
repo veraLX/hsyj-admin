@@ -13,7 +13,7 @@ export const addScenery = (obj) => {
     'videourl': obj.videourl
   }
   return axios.request({
-    url: 'scenery/addEdit',
+    url: 'api/admin/scenery/addEdit',
     data,
     method: 'post'
   })
@@ -32,7 +32,7 @@ export const editScenery = (obj) => {
     'videourl': obj.videourl
   }
   return axios.request({
-    url: 'scenery/addEdit?id=' + obj.sceneryID,
+    url: 'api/admin/scenery/addEdit?id=' + obj.sceneryID,
     data,
     method: 'post'
   })
@@ -40,14 +40,14 @@ export const editScenery = (obj) => {
 
 export const sceneryList = (currentPage, pageSize) => {
   return axios.request({
-    url: 'scenery/index?pageindex=' + currentPage + '&pagesize=' + pageSize,
+    url: 'api/scenery/index?pageindex=' + currentPage + '&pagesize=' + pageSize,
     method: 'get'
   })
 }
 
 export const sceneryDelete = (id) => {
   return axios.request({
-    url: 'scenery/delete?id=' + id,
+    url: 'api/admin/scenery/delete?id=' + id,
     method: 'get'
   })
 }

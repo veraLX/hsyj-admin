@@ -78,12 +78,12 @@ export default {
   },
   mounted () {
     this.currentRandom = Math.random()
-    this.codeImg = `http://hsyj.100eduonline.com/api/auth/createCaptcha?v=${this.currentRandom}`
+    this.codeImg = `http://hsyj.100eduonline.com/api/admin/auth/createCaptcha?v=${this.currentRandom}`
   },
   methods: {
     codeChange () {
       this.currentRandom = Math.random()
-      this.codeImg = `http://hsyj.100eduonline.com/api/auth/createCaptcha?v=${this.currentRandom}`
+      this.codeImg = `http://hsyj.100eduonline.com/api/admin/auth/createCaptcha?v=${this.currentRandom}`
     },
     Clear () {
       this.form.userName = ''

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
+import Cookies from 'js-cookie'
 // import { Spin } from 'iview'
 const addErrorLog = errorInfo => {
   const { statusText, status, request: { responseURL } } = errorInfo
@@ -35,6 +36,10 @@ class HttpRequest {
   interceptors (instance, url) {
     // 请求拦截
     instance.interceptors.request.use(config => {
+      debugger
+      if (config.url.includes('admin/') && !config.url.includes('admin/auth/adminLogin')) {
+        config.headers['x-hsyj-token'] = Cookies.get(TOKEN_KEY)
+      }
       // 添加全局的loading...
       if (!Object.keys(this.queue).length) {
         // Spin.show() // 不建议开启，因为界面不友好
