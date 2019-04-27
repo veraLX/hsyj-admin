@@ -1,6 +1,7 @@
 import axios from 'axios'
 import store from '@/store'
 import Cookies from 'js-cookie'
+import { TOKEN_KEY } from '@/libs/util'
 // import { Spin } from 'iview'
 const addErrorLog = errorInfo => {
   const { statusText, status, request: { responseURL } } = errorInfo
@@ -51,10 +52,12 @@ class HttpRequest {
     })
     // 响应拦截
     instance.interceptors.response.use(res => {
+      debugger
       this.destroy(url)
       const { data, status } = res
       return { data, status }
     }, error => {
+      debugger
       this.destroy(url)
       let errorInfo = error.response
       if (!errorInfo) {

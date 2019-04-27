@@ -9,7 +9,7 @@ export const getQuestionbyActid = (id) => {
 
 export const getAnswerList = (page, size) => {
   return axios.request({
-    url: 'api/activity/list2?pageindex=' + page + '&pagesize=' + size,
+    url: 'api/admin/activity/list2?pageindex=' + page + '&pagesize=' + size,
     method: 'get'
   })
 }
