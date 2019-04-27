@@ -37,7 +37,6 @@ class HttpRequest {
   interceptors (instance, url) {
     // 请求拦截
     instance.interceptors.request.use(config => {
-      debugger
       if (config.url.includes('admin/') && !config.url.includes('admin/auth/adminLogin')) {
         config.headers['x-hsyj-token'] = Cookies.get(TOKEN_KEY)
       }
@@ -52,12 +51,10 @@ class HttpRequest {
     })
     // 响应拦截
     instance.interceptors.response.use(res => {
-      debugger
       this.destroy(url)
       const { data, status } = res
       return { data, status }
     }, error => {
-      debugger
       this.destroy(url)
       let errorInfo = error.response
       if (!errorInfo) {

@@ -54,7 +54,7 @@ export const sceneryDelete = (id) => {
 
 export const getSceneryFromSchool = (idArray) => {
   return axios.request({
-    url: '/scenery/getSceneryListBySchoolids?schoolids=' + idArray,
+    url: 'api/scenery/getSceneryListBySchoolids?schoolids=' + idArray,
     method: 'get'
   })
 }

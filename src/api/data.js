@@ -52,7 +52,7 @@ export const getTreeSelectData = () => {
 
 export const deleteOneImage = (sourceid) => {
   return axios.request({
-    url: `api/admin/source/delete?sourceid=${sourceid}`,
+    url: `admin/source/delete?sourceid=${sourceid}`,
     method: 'get'
   })
 }
