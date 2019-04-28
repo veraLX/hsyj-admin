@@ -25,12 +25,12 @@
           <!-- <Button type="primary" >确认</Button> -->
       </div>
     </Modal>
-    <Modal v-model="editAnswer"  width="80%" v-if="isAnswer">
+    <Modal v-model="editAnswer"  width="80%">
       <p slot="header">
         <Icon type="ios-paper-outline"></Icon>
         <span> 答题编辑</span>
       </p>
-      <Answer :objectList="answerAllList" :totalPages='totalAnswerPages' :count='countAnswer' :activityId='activityIdEach' :siteList='siteData'/>
+      <Answer v-if="isAnswer" :objectList="answerAllList" :totalPages='totalAnswerPages' :count='countAnswer' :activityId='activityIdEach' :siteList='siteData'/>
       <div slot="footer">
           <!-- <Button type="primary" >确认</Button> -->
       </div>
@@ -271,10 +271,11 @@ export default {
       console.log('answerList', this.siteData)
     },
     openModal (params) {
+      console.log('params', params)
       this.editImage = true
       this.updateModalShow = true
-      this.currentImageArray = params.row.pics
-      // this.currentParentId
+      // this.currentImageArray = params.row.pics
+      this.currentParentId = params.row.activityID
     },
     childCloseModal () {
       this.editImage = false

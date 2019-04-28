@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Form :model="activityForm" inline label-position="right" :label-width="100" >
+    <Form ref="formInline" :model="activityForm" inline label-position="right" :label-width="110" :rules="ruleInline">
         <FormItem prop="activityName" label="活动名称" :style="{'width': 'calc((100% - 30px)/3)'}">
             <Input v-model="activityForm.activityName" placeholder="输入活动名称"></Input>
         </FormItem>
@@ -13,23 +13,23 @@
         <FormItem prop="secondSponsor" label="协办方" :style="{'width': 'calc((100% - 30px)/3)'}">
             <Input v-model="activityForm.secondSponsor" placeholder="输入协办方"></Input>
         </FormItem>
-        <FormItem prop="startdate" label="开始日期" :style="{'width': 'calc((100% - 30px)/3)'}">
-            <DatePicker v-model="activityForm.startdateAll" type="date" placeholder="输入开始日期" :style="{'width': '100%'}" ></DatePicker>
+        <FormItem prop="startdateAll" label="开始日期" :style="{'width': 'calc((100% - 30px)/3)'}">
+            <DatePicker v-model="activityForm.startdateAll" type="date" placeholder="输入开始日期" :style="{'width': '100%'}" @on-change="timeCheck"></DatePicker>
         </FormItem>
-        <FormItem prop="enddate" label="结束日期" :style="{'width': 'calc((100% - 30px)/3)'}">
-            <DatePicker v-model="activityForm.enddateAll" type="date" placeholder="输入结束日期" :style="{'width': '100%'}" ></DatePicker>
+        <FormItem prop="enddateAll" label="结束日期" :style="{'width': 'calc((100% - 30px)/3)'}">
+            <DatePicker v-model="activityForm.enddateAll" type="date" placeholder="输入结束日期" :style="{'width': '100%'}" @on-change="timeCheck"></DatePicker>
         </FormItem>
-        <FormItem prop="universities" label="学校范围" :style="{'width': 'calc((100% - 20px)/2)'}">
+        <FormItem prop="universities" :required='true' label="学校范围" :style="{'width': 'calc((100% - 20px)/2)'}">
         <Transfer
         :data="data1"
-        :target-keys="targetKeys1"
+        :target-keys="activityForm.targetKeys1"
         :render-format="render1"
         @on-change="handleChange1"></Transfer>
         </FormItem>
-        <FormItem prop="scenic" label="景点选择" :style="{'width': 'calc((100% - 20px)/2)'}">
+        <FormItem prop="scenic" :required='true' label="景点选择" :style="{'width': 'calc((100% - 20px)/2)'}">
         <Transfer
         :data="data2"
-        :target-keys="targetKeys2"
+        :target-keys="activityForm.targetKeys2"
         :render-format="render1"
         @on-change="handleChange2"></Transfer>
         </FormItem>
@@ -99,7 +99,35 @@ export default {
       targetKeys2: [],
       activityForm: {
         needSchoolPass: 1,
-        needSceneryPass: 1
+        needSceneryPass: 1,
+        targetKeys1: [],
+        targetKeys2: []
+      },
+      ruleInline: {
+        activityName: [
+          { required: true, message: '请输入活动名称', trigger: 'blur' }
+        ],
+        meetingPlace: [
+          { required: true, message: '请输入主会场', trigger: 'blur' }
+        ],
+        sponsor: [
+          { required: true, message: '请输入主办方', trigger: 'blur' }
+        ],
+        secondSponsor: [
+          { required: true, message: '请输入协办方', trigger: 'blur' }
+        ],
+        startdateAll: [
+          { required: true, type: 'date', message: '请输入开始日期', trigger: 'change' }
+        ],
+        enddateAll: [
+          { required: true, type: 'date', message: '请输入结束日期', trigger: 'change' }
+        ],
+        needSchoolPass: [
+          { required: true, message: '请输入通关阈值(学校)', trigger: 'change', type: 'number' }
+        ],
+        needSceneryPass: [
+          { required: true, message: '请输入通关阈值(景点)', trigger: 'change', type: 'number' }
+        ]
       }
     }
   },
@@ -108,6 +136,15 @@ export default {
     this.getCurrentActivity()
   },
   methods: {
+    timeCheck () {
+      if (this.activityForm.startdateAll && this.activityForm.enddateAll) {
+        if (this.activityForm.startdateAll > this.activityForm.enddateAll) {
+          this.$Notice.error({
+            title: '开始日期不能大于结束日期'
+          })
+        }
+      }
+    },
     async getSchoolList () {
       const list = await getSchoolList({ page: 1, pageSize: 100 })
       this.schoolList = list.data.data.data ? list.data.data.data : []
@@ -155,37 +192,50 @@ export default {
     //   console.log('this.data1', this.data1)
     },
     async editComfirm () {
-      // 开始时间
-      if (this.activityForm.startdateAll) {
-        let startdate = moment(this.activityForm.startdateAll).format('YYYY-MM-DD')
-        this.$set(this.activityForm, 'startdate', startdate)
-      }
-      // 结束时间
-      if (this.activityForm.enddateAll) {
-        let enddate = moment(this.activityForm.enddateAll).format('YYYY-MM-DD')
-        this.$set(this.activityForm, 'enddate', enddate)
-      }
-      // 是否团体赛
-      if (this.activityForm.isgroupBoolean) {
-        this.$set(this.activityForm, 'isgroup', 1)
-      } else {
-        this.$set(this.activityForm, 'isgroup', 0)
-        this.$set(this.activityForm, 'groupnum', null)
-      }
-      // 是否起点
-      if (this.activityForm.settingStartBoolean) {
-        this.$set(this.activityForm, 'settingstart', 1)
-      } else {
-        this.$set(this.activityForm, 'settingstart', 0)
-        this.$set(this.activityForm, 'startSceneryid', null)
-      }
-      // 是否终点
-      if (this.activityForm.settingEndBoolean) {
-        this.$set(this.activityForm, 'settingend', 1)
-      } else {
-        this.$set(this.activityForm, 'settingend', 0)
-        this.$set(this.activityForm, 'endSceneryid', null)
-      }
+      this.$refs['formInline'].validate(async (valid) => {
+        if (this.activityForm.enddateAll < this.activityForm.startdateAll) {
+          this.$Notice.error({
+            title: '开始日期不能大于结束日期'
+          })
+        } else if (valid && this.activityForm.targetKeys1.length > 0 && this.activityForm.targetKeys2.length > 0) {
+          // 开始时间
+          if (this.activityForm.startdateAll) {
+            let startdate = moment(this.activityForm.startdateAll).format('YYYY-MM-DD')
+            this.$set(this.activityForm, 'startdate', startdate)
+          }
+          // 结束时间
+          if (this.activityForm.enddateAll) {
+            let enddate = moment(this.activityForm.enddateAll).format('YYYY-MM-DD')
+            this.$set(this.activityForm, 'enddate', enddate)
+          }
+          // 是否团体赛
+          if (this.activityForm.isgroupBoolean) {
+            this.$set(this.activityForm, 'isgroup', 1)
+          } else {
+            this.$set(this.activityForm, 'isgroup', 0)
+            this.$set(this.activityForm, 'groupnum', null)
+          }
+          // 是否起点
+          if (this.activityForm.settingStartBoolean) {
+            this.$set(this.activityForm, 'settingstart', 1)
+          } else {
+            this.$set(this.activityForm, 'settingstart', 0)
+            this.$set(this.activityForm, 'startSceneryid', null)
+          }
+          // 是否终点
+          if (this.activityForm.settingEndBoolean) {
+            this.$set(this.activityForm, 'settingend', 1)
+          } else {
+            this.$set(this.activityForm, 'settingend', 0)
+            this.$set(this.activityForm, 'endSceneryid', null)
+          }
+        } else {
+          this.$Notice.error({
+            title: '请填写完整必填字段'
+          })
+        }
+      })
+    // }
     //   console.log('this.activityForm', this.activityForm)
     //   let addReturn = await addActivity(this.activityForm)
     //   if (addReturn.data.insertid) {
@@ -200,9 +250,9 @@ export default {
       return item.label
     },
     async handleChange1 (newTargetKeys, direction, moveKeys) {
-      this.targetKeys1 = newTargetKeys
+      this.activityForm.targetKeys1 = newTargetKeys
       let schoolIdString = ''
-      _.each(this.targetKeys1, (schoolId) => {
+      _.each(this.activityForm.targetKeys1, (schoolId) => {
         schoolIdString = schoolIdString + schoolId + ','
       })
       if (schoolIdString.length > 0) {
@@ -215,7 +265,7 @@ export default {
         this.targetKeys2.push(schoolSceneryItem.sceneryID)
       })
       let sceneryIdString = ''
-      _.each(this.targetKeys2, (sceneryId) => {
+      _.each(this.activityForm.targetKeys2, (sceneryId) => {
         sceneryIdString = sceneryIdString + sceneryId + ','
       })
       if (sceneryIdString.length > 0) {
@@ -224,9 +274,9 @@ export default {
       this.$set(this.activityForm, 'needsceneryrang', sceneryIdString)
     },
     handleChange2 (newTargetKeys, direction, moveKeys) {
-      this.targetKeys2 = newTargetKeys
+      this.activityForm.targetKeys2 = newTargetKeys
       let sceneryIdString = ''
-      _.each(this.targetKeys2, (sceneryId) => {
+      _.each(this.activityForm.targetKeys2, (sceneryId) => {
         sceneryIdString = sceneryIdString + sceneryId + ','
       })
       if (sceneryIdString.length > 0) {

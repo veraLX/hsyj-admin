@@ -6,7 +6,7 @@
         <Step title="活动图片编辑"></Step>
         <Step title="新建答题"></Step>
     </Steps>
-        <Form :model="activityForm" inline label-position="right" :label-width="100" v-if="currentStep == 0">
+        <Form ref="formInline" :model="activityForm" inline label-position="right" :label-width="110" v-if="currentStep == 0" :rules="ruleInline" >
           <FormItem prop="activityname" label="活动名称" :style="{'width': 'calc((100% - 30px)/3)'}">
               <Input v-model="activityForm.activityname" placeholder="输入活动名称"></Input>
           </FormItem>
@@ -19,23 +19,24 @@
           <FormItem prop="secondsponsor" label="协办方" :style="{'width': 'calc((100% - 30px)/3)'}">
               <Input v-model="activityForm.secondsponsor" placeholder="输入协办方"></Input>
           </FormItem>
-          <FormItem prop="startdate" label="开始日期" :style="{'width': 'calc((100% - 30px)/3)'}">
-              <DatePicker v-model="activityForm.startdateAll" type="date" placeholder="输入开始日期" :style="{'width': '100%'}" ></DatePicker>
+          <FormItem prop="startdateAll" label="开始日期" :style="{'width': 'calc((100% - 30px)/3)'}">
+              <DatePicker v-model="activityForm.startdateAll" type="date" placeholder="输入开始日期" :style="{'width': '100%'}" @on-change="timeCheck"></DatePicker>
           </FormItem>
-          <FormItem prop="enddate" label="结束日期" :style="{'width': 'calc((100% - 30px)/3)'}">
-              <DatePicker v-model="activityForm.enddateAll" type="date" placeholder="输入结束日期" :style="{'width': '100%'}" ></DatePicker>
+          <FormItem prop="enddateAll" label="结束日期" :style="{'width': 'calc((100% - 30px)/3)'}">
+              <DatePicker v-model="activityForm.enddateAll" type="date" placeholder="输入结束日期" :style="{'width': '100%'}" @on-change="timeCheck"></DatePicker>
           </FormItem>
-          <FormItem prop="universities" label="学校范围" :style="{'width': 'calc((100% - 20px)/2)'}">
+          <FormItem prop="targetKeys1" :required='true' label="学校范围" :style="{'width': 'calc((100% - 20px)/2)'}">
             <Transfer
             :data="data1"
-            :target-keys="targetKeys1"
+            :target-keys="activityForm.targetKeys1"
             :render-format="render1"
-            @on-change="handleChange1"></Transfer>
+            @on-change="handleChange1"
+            required='true'></Transfer>
           </FormItem>
-          <FormItem prop="scenic" label="景点选择" :style="{'width': 'calc((100% - 20px)/2)'}">
+          <FormItem prop="targetKeys2" :required='true' label="景点选择" :style="{'width': 'calc((100% - 20px)/2)'}">
             <Transfer
             :data="data2"
-            :target-keys="targetKeys2"
+            :target-keys="activityForm.targetKeys2"
             :render-format="render1"
             @on-change="handleChange2"></Transfer>
           </FormItem>
@@ -100,6 +101,7 @@ import { addActivity } from '@/api/activity'
 import { getSchoolList } from '@/api/school'
 import { getAnswerList } from '@/api/answer'
 import { getSceneryFromSchool, sceneryList } from '@/api/scenery'
+// import { getAnswerList } from '@/api/answer'
 import moment from 'moment'
 export default {
   name: 'directive_page',
@@ -121,27 +123,47 @@ export default {
       countAnswer: 0,
       activityIdEach: null,
       siteData: [],
-      // defaultList: [
-      //   {
-      //     'name': 'a42bdcc1178e62b4694c830f028db5c0',
-      //     'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
-      //   },
-      //   {
-      //     'name': 'bc7521e033abdd1e92222d733590f104',
-      //     'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
-      //   }
-      // ],
+      ruleInline: {
+        activityname: [
+          { required: true, message: '请输入活动名称', trigger: 'blur' }
+        ],
+        meetingplace: [
+          { required: true, message: '请输入主会场', trigger: 'blur' }
+        ],
+        sponsor: [
+          { required: true, message: '请输入主办方', trigger: 'blur' }
+        ],
+        secondsponsor: [
+          { required: true, message: '请输入协办方', trigger: 'blur' }
+        ],
+        startdateAll: [
+          { required: true, type: 'date', message: '请输入开始日期', trigger: 'change' }
+        ],
+        enddateAll: [
+          { required: true, type: 'date', message: '请输入结束日期', trigger: 'change' }
+        ],
+        needschoolpass: [
+          { required: true, message: '请输入通关阈值(学校)', trigger: 'change', type: 'number' }
+        ],
+        needscenerypass: [
+          { required: true, message: '请输入通关阈值(景点)', trigger: 'change', type: 'number' }
+        ]
+      },
       imgName: '',
       visible: false,
       uploadList: [],
       data1: [],
-      targetKeys1: [],
+      // targetKeys1: [],
       data2: [],
-      targetKeys2: [],
+      // targetKeys2: [],
       activityForm: {
         needschoolpass: 1,
-        needscenerypass: 1
-      }
+        needscenerypass: 1,
+        targetKeys1: [],
+        targetKeys2: []
+      },
+      currentAnswerPage: 5,
+      pageAnswerSize: 1
     }
   },
   mounted () {
@@ -149,6 +171,15 @@ export default {
     this.getSchoolList()
   },
   methods: {
+    timeCheck () {
+      if (this.activityForm.startdateAll && this.activityForm.enddateAll) {
+        if (this.activityForm.startdateAll > this.activityForm.enddateAll) {
+          this.$Notice.error({
+            title: '开始日期不能大于结束日期'
+          })
+        }
+      }
+    },
     async getSchoolList () {
       const list = await getSchoolList({ page: 1, pageSize: 100 })
       console.log('schoolList', list)
@@ -159,48 +190,60 @@ export default {
       console.log('this.data1', this.data1)
     },
     async nextImageStep () {
-      // 开始时间
-      if (this.activityForm.startdateAll) {
-        let startdate = moment(this.activityForm.startdateAll).format('YYYY-MM-DD')
-        this.$set(this.activityForm, 'startdate', startdate)
-      }
-      // 结束时间
-      if (this.activityForm.enddateAll) {
-        let enddate = moment(this.activityForm.enddateAll).format('YYYY-MM-DD')
-        this.$set(this.activityForm, 'enddate', enddate)
-      }
-      // 是否团体赛
-      if (this.activityForm.isgroupBoolean) {
-        this.$set(this.activityForm, 'isgroup', 1)
-      } else {
-        this.$set(this.activityForm, 'isgroup', 0)
-        this.$set(this.activityForm, 'groupnum', null)
-      }
-      // 是否起点
-      if (this.activityForm.settingstartBoolean) {
-        this.$set(this.activityForm, 'settingstart', 1)
-      } else {
-        this.$set(this.activityForm, 'settingstart', 0)
-        this.$set(this.activityForm, 'startsceneryid', null)
-      }
-      // 是否终点
-      if (this.activityForm.settingendBoolean) {
-        this.$set(this.activityForm, 'settingend', 1)
-      } else {
-        this.$set(this.activityForm, 'settingend', 0)
-        this.$set(this.activityForm, 'endsceneryid', null)
-      }
-      console.log('this.activityForm', this.activityForm)
-      let addReturn = await addActivity(this.activityForm)
-      if (addReturn.data.insertid) {
-        this.addActivitySuccess = true
-        this.$Notice.success({
-          title: '活动添加成功'
-        })
-        this.parentId = addReturn.data.insertid
-        this.updateModalShow = true
-        this.currentStep = 1
-      }
+      this.$refs['formInline'].validate(async (valid) => {
+        if (this.activityForm.enddateAll < this.activityForm.startdateAll) {
+          this.$Notice.error({
+            title: '开始日期不能大于结束日期'
+          })
+        } else if (valid && this.activityForm.targetKeys1.length > 0 && this.activityForm.targetKeys2.length > 0) {
+          // 开始时间
+          if (this.activityForm.startdateAll) {
+            let startdate = moment(this.activityForm.startdateAll).format('YYYY-MM-DD')
+            this.$set(this.activityForm, 'startdate', startdate)
+          }
+          // 结束时间
+          if (this.activityForm.enddateAll) {
+            let enddate = moment(this.activityForm.enddateAll).format('YYYY-MM-DD')
+            this.$set(this.activityForm, 'enddate', enddate)
+          }
+          // 是否团体赛
+          if (this.activityForm.isgroupBoolean) {
+            this.$set(this.activityForm, 'isgroup', 1)
+          } else {
+            this.$set(this.activityForm, 'isgroup', 0)
+            this.$set(this.activityForm, 'groupnum', null)
+          }
+          // 是否起点
+          if (this.activityForm.settingstartBoolean) {
+            this.$set(this.activityForm, 'settingstart', 1)
+          } else {
+            this.$set(this.activityForm, 'settingstart', 0)
+            this.$set(this.activityForm, 'startsceneryid', null)
+          }
+          // 是否终点
+          if (this.activityForm.settingendBoolean) {
+            this.$set(this.activityForm, 'settingend', 1)
+          } else {
+            this.$set(this.activityForm, 'settingend', 0)
+            this.$set(this.activityForm, 'endsceneryid', null)
+          }
+          console.log('this.activityForm', this.activityForm)
+          let addReturn = await addActivity(this.activityForm)
+          if (addReturn.data.insertid) {
+            this.addActivitySuccess = true
+            this.$Notice.success({
+              title: '活动添加成功'
+            })
+            this.parentId = addReturn.data.insertid
+            this.updateModalShow = true
+            this.currentStep = 1
+          }
+        } else {
+          this.$Notice.error({
+            title: '请填写完整必填字段'
+          })
+        }
+      })
     },
     // nextImageStep () {
     //   debugger
@@ -214,6 +257,8 @@ export default {
       this.totalAnswerPages = answerList.data.data.totalPages
       this.countAnswer = answerList.data.data.count
       this.activityIdEach = this.parentId
+      this.pageAnswerSize = answerList.data.data.pageSize
+      this.currentAnswerPage = answerList.data.data.currentPage
       let siteList = await sceneryList()
       this.siteData = siteList.data.data.data
       this.currentStep = 2
@@ -226,10 +271,11 @@ export default {
       return item.label
     },
     async handleChange1 (newTargetKeys, direction, moveKeys) {
-      this.targetKeys1 = newTargetKeys
-      console.log('this.targetKeys1', this.targetKeys1)
+      this.activityForm.targetKeys1 = newTargetKeys
+      // this.targetKeys1 = newTargetKeys
+      console.log('this.targetKeys1', this.activityForm.targetKeys1)
       let schoolIdString = ''
-      _.each(this.targetKeys1, (schoolId) => {
+      _.each(this.activityForm.targetKeys1, (schoolId) => {
         schoolIdString = schoolIdString + schoolId + ','
       })
       if (schoolIdString.length > 0) {
@@ -238,12 +284,14 @@ export default {
       this.$set(this.activityForm, 'needschoolrang', schoolIdString)
       console.log('schoolIdString', schoolIdString)
       let getSceneryFromSchoolList = await getSceneryFromSchool(schoolIdString)
+      this.data2 = []
+      this.activityForm.targetKeys2 = []
       _.each((getSceneryFromSchoolList.data.data), schoolSceneryItem => {
         this.data2.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
-        this.targetKeys2.push(schoolSceneryItem.sceneryID)
+        this.activityForm.targetKeys2.push(schoolSceneryItem.sceneryID)
       })
       let sceneryIdString = ''
-      _.each(this.targetKeys2, (sceneryId) => {
+      _.each(this.activityForm.targetKeys2, (sceneryId) => {
         sceneryIdString = sceneryIdString + sceneryId + ','
       })
       if (sceneryIdString.length > 0) {
@@ -255,9 +303,9 @@ export default {
       console.log(newTargetKeys)
       console.log(direction)
       console.log(moveKeys)
-      this.targetKeys2 = newTargetKeys
+      this.activityForm.targetKeys2 = newTargetKeys
       let sceneryIdString = ''
-      _.each(this.targetKeys2, (sceneryId) => {
+      _.each(this.activityForm.targetKeys2, (sceneryId) => {
         sceneryIdString = sceneryIdString + sceneryId + ','
       })
       if (sceneryIdString.length > 0) {

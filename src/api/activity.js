@@ -11,7 +11,7 @@ export const getActivity1List = (page, size) => {
 // 18、添加修改活动1,post
 export const addActivity = (obj) => {
   const data = {
-    'activityName': obj.activityName,
+    'activityname': obj.activityname,
     'sponsor': obj.sponsor,
     'meetingplace': obj.meetingplace,
     'secondsponsor': obj.secondsponsor,
