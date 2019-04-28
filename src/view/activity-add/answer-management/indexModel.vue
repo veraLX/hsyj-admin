@@ -169,7 +169,7 @@ export default {
       }
     },
     async flashAllAnswerData () {
-      let answerList = await getAnswerList(this.currentPage, this.pageSize)
+      let answerList = await getAnswerList(this.currentPage, this.pageSize, this.activityId)
       this.AnswerData = answerList.data.data.data
       this.totalPages = answerList.data.data.totalPages
       this.pageSize = answerList.data.data.pageSize

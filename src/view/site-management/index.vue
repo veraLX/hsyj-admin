@@ -402,10 +402,10 @@ export default {
     },
     async addSite () {
       if (!_.isEmpty(this.siteForm.scenerytitle)) {
-        console.log('this.siteForm', this.siteForm)
-        let data = await addScenery(this.siteForm)
+        await addScenery(this.siteForm)
         this.flashAllSiteData()
-        console.log('addSite', data)
+        this.siteForm = {}
+        // console.log('addSite', data)
       }
     },
     // async editSite () {

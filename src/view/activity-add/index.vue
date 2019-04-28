@@ -98,7 +98,8 @@ import Answer from '@/view/activity-add/answer-management/indexModel'
 import Upload from '@/view/components/uploadImage/index'
 import { addActivity } from '@/api/activity'
 import { getSchoolList } from '@/api/school'
-import { getSceneryFromSchool } from '@/api/scenery'
+import { getAnswerList } from '@/api/answer'
+import { getSceneryFromSchool, sceneryList } from '@/api/scenery'
 import moment from 'moment'
 export default {
   name: 'directive_page',
@@ -208,7 +209,7 @@ export default {
     //   this.currentStep = 1
     // },
     async nextAnsewerStep () {
-      let answerList = await getAnswerList(this.currentAnswerPage, this.pageAnswerSize)
+      let answerList = await getAnswerList(this.currentAnswerPage, this.pageAnswerSize, this.parentId)
       this.answerAllList = answerList.data.data.data
       this.totalAnswerPages = answerList.data.data.totalPages
       this.countAnswer = answerList.data.data.count
