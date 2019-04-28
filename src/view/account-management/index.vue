@@ -2,11 +2,11 @@
   <div>
     <Card >
       <p slot="title">新增机构</p>
-      <Form ref="formInline" :model="formInline" inline :label-width="80">
+      <Form ref="formInline" :model="formInline"  :rules="addSchoolRule" inline :label-width="80">
         <FormItem prop="name" label="机构名称:" :style="{'width': '400px'}">
             <Input v-model="formInline.schoolname" placeholder="输入机构名称"/>
         </FormItem>
-        <Button type="primary" @click="addSchool">增加</Button>
+        <Button type="primary" @click="addSchool('formInline')">增加</Button>
       </Form>
     </Card>
     <Row :gutter="20" :style="{'margin-top': '10px'}">
@@ -42,7 +42,7 @@
         <FormItem prop="pwd" label="管理员密码" :style="{'width': '40%'}">
             <Input v-model="administrator.pwd" placeholder="输入管理员密码"/>
         </FormItem>
-        <Button type="primary" @click='addUser'>增加</Button>
+        <Button type="primary" @click="addUser('administrator')">增加</Button>
       </Form>
       <p class="littleTitle">管理员列表</p>
       <Table stripe :columns="AdministratorColumns" :data="administratorList"></Table>
@@ -77,8 +77,13 @@ export default {
         usertype: 0,
         schoolid: ''
       },
+      addSchoolRule: {
+        name: [
+          { required: true, message: '请输入机构名称', trigger: 'blur' }
+        ]
+      },
       administratorRule: {
-        userName: [
+        name: [
           { required: true, message: '请输入管理员账户', trigger: 'blur' }
         ],
         pwd: [
@@ -206,29 +211,44 @@ export default {
         this.getUserList(school.schoolID)
       }
     },
-    async addUser () {
-      if (this.administrator.userName !== '' && this.administrator.pwd !== '') {
-        await addUser(this.administrator)
-        this.getUserList(this.administrator.schoolid)
-        this.administrator = {
-          userName: '',
-          pwd: '',
-          usertype: 0,
-          schoolid: this.administrator.schoolid
+    addUser (name) {
+      // if (this.administrator.userName !== '' && this.administrator.pwd !== '') {
+      this.$refs[name].validate(async (valid) => {
+        if (valid) {
+          await addUser(this.administrator)
+          this.getUserList(this.administrator.schoolid)
+          this.$Message.success('Success!')
+        } else {
+          this.$Message.error('Fail!')
         }
-      } else if (this.administrator.userName === '') {
-        this.$Message.info('管理员账户不能为空')
-      } else {
-        this.$Message.info('管理员密码不能为空')
+      })
+
+      this.administrator = {
+        userName: '',
+        pwd: '',
+        usertype: 0,
+        schoolid: this.administrator.schoolid
       }
+      // } else if (this.administrator.userName === '') {
+      //   this.$Message.info('管理员账户不能为空')
+      // } else {
+      //   this.$Message.info('管理员密码不能为空')
+      // }
     },
-    async addSchool () {
-      if (this.formInline.schoolname !== '') {
-        await addSchool(this.formInline)
-        this.getSchoolList()
-      } else {
-        this.$Message.info('机构名称不能为空')
-      }
+    addSchool (name) {
+      this.$refs[name].validate(async (valid) => {
+        if (valid) {
+          this.$Message.success('Success!')
+          await addSchool(this.formInline)
+          this.getSchoolList()
+        } else {
+          this.$Message.error('Fail!')
+        }
+      })
+      // if (this.formInline.schoolname !== '') {
+      // } else {
+      // this.$Message.info('机构名称不能为空')
+      // }
     }
   }
 }

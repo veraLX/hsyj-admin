@@ -34,7 +34,7 @@
         <FormItem
           style="width:100%;display: flex;justify-content: flex-end;padding-right: 10px;margin-bottom: 0;"
         >
-          <Button class="bottomRight" type="primary" @click="addSchool">增加</Button>
+          <Button class="bottomRight" type="primary" @click="addSchool('formInline')">增加</Button>
         </FormItem>
       </Form>
       <Modal v-model="editImage" @on-cancel="childCloseModal" width="60%">
@@ -93,9 +93,24 @@ export default {
       areaList: [],
       count: 0,
       ruleInline: {
-        // password: [
-        //   { required: true, message: '请输入景点名称', trigger: 'blur' }
-        // ]
+        schoolname: [
+          { required: true, message: '请输入学校名称', trigger: 'blur' }
+        ],
+        city: [
+          { required: true, message: '请选择所属区域', trigger: 'blur' }
+        ],
+        longitude: [
+          { required: true, message: '请输入经度', trigger: 'blur' }
+        ],
+        address: [
+          { required: true, message: '请输入地址', trigger: 'blur' }
+        ],
+        latitude: [
+          { required: true, message: '请输入纬度', trigger: 'blur' }
+        ],
+        schooldesc: [
+          { required: true, message: '请输入学校描述', trigger: 'blur' }
+        ]
       },
       schoolColumns: [
         { title: ' ', type: 'index', width: 60, align: 'center' },
@@ -381,22 +396,31 @@ export default {
       this.editImage = false
       this.updateModalShow = false
     },
-    async addSchool () {
+    addSchool (name) {
       debugger
-      if (this.schoolForm.schoolname === '') {
-        this.$Message.info('学校名称不能为空')
-      } else if (this.schoolForm.city === '') {
-        this.$Message.info('所属区县不能为空')
-      } else if (this.schoolForm.address === '') {
-        this.$Message.info('地址不能为空')
-      } else if (this.schoolForm.longitude === '') {
-        this.$Message.info('经度不能为空')
-      } else if (this.schoolForm.latitude === '') {
-        this.$Message.info('纬度不能为空')
-      } else {
-        await addSchool(this.schoolForm)
-        this.getSchoolList()
-      }
+      this.$refs[name].validate(async (valid) => {
+        if (valid) {
+          this.$Message.success('Success!')
+          await addSchool(this.schoolForm)
+          this.getSchoolList()
+        } else {
+          this.$Message.error('Fail!')
+        }
+      })
+
+      // if (this.schoolForm.schoolname === '') {
+      //   this.$Message.info('学校名称不能为空')
+      // } else if (this.schoolForm.city === '') {
+      //   this.$Message.info('所属区县不能为空')
+      // } else if (this.schoolForm.address === '') {
+      //   this.$Message.info('地址不能为空')
+      // } else if (this.schoolForm.longitude === '') {
+      //   this.$Message.info('经度不能为空')
+      // } else if (this.schoolForm.latitude === '') {
+      //   this.$Message.info('纬度不能为空')
+      // } else {
+
+      // }
     },
     async changePage (e) {
       const list = await getSchoolList({ page: e, pageSize: 10 })
