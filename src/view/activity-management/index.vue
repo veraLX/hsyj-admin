@@ -25,14 +25,14 @@
           <!-- <Button type="primary" >确认</Button> -->
       </div>
     </Modal>
-    <Modal v-model="editAnswer"  width="80%">
+    <Modal v-model="editAnswer" @on-cancel="answerCloseModal" width="80%">
       <p slot="header">
         <Icon type="ios-paper-outline"></Icon>
         <span> 答题编辑</span>
       </p>
       <Answer v-if="isAnswer" :objectList="answerAllList" :totalPages='totalAnswerPages' :count='countAnswer' :activityId='activityIdEach' :siteList='siteData'/>
       <div slot="footer">
-          <!-- <Button type="primary" >确认</Button> -->
+          <Button type="primary"  @click="answerCloseModal">完成</Button>
       </div>
     </Modal>
   </div>
@@ -259,7 +259,7 @@ export default {
       this.currentActivity = params.row
     },
     async openAnswerModal (params) {
-      let answerList = await getAnswerList(this.currentAnswerPage, this.pageAnswerSize)
+      let answerList = await getAnswerList(this.currentAnswerPage, this.pageAnswerSize, params.row.activityID)
       this.answerAllList = answerList.data.data.data
       this.totalAnswerPages = answerList.data.data.totalPages
       this.countAnswer = answerList.data.data.count
@@ -269,6 +269,10 @@ export default {
       this.editAnswer = true
       this.isAnswer = true
       console.log('answerList', this.siteData)
+    },
+    answerCloseModal () {
+      this.editAnswer = false
+      this.isAnswer = false
     },
     openModal (params) {
       console.log('params', params)
