@@ -281,29 +281,35 @@ export default {
       if (schoolIdString.length > 0) {
         schoolIdString = schoolIdString.substr(0, schoolIdString.length - 1)
       }
+      debugger
       this.$set(this.activityForm, 'needschoolrang', schoolIdString)
       console.log('schoolIdString', schoolIdString)
       let getSceneryFromSchoolList = await getSceneryFromSchool(schoolIdString)
       this.data2 = []
       this.activityForm.targetKeys2 = []
+      let data2Arr = []
+      let targetKeys2Arr = []
       _.each((getSceneryFromSchoolList.data.data), schoolSceneryItem => {
         this.data2.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
         this.activityForm.targetKeys2.push(schoolSceneryItem.sceneryID)
+        data2Arr.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
+        targetKeys2Arr.push(schoolSceneryItem.sceneryID)
       })
+      console.log('data2Arr', data2Arr)
+      console.log('targetKeys2Arr', targetKeys2Arr)
       let sceneryIdString = ''
-      _.each(this.activityForm.targetKeys2, (sceneryId) => {
+      _.each(targetKeys2Arr, (sceneryId) => {
         sceneryIdString = sceneryIdString + sceneryId + ','
       })
       if (sceneryIdString.length > 0) {
         sceneryIdString = sceneryIdString.substr(0, sceneryIdString.length - 1)
       }
       this.$set(this.activityForm, 'needsceneryrang', sceneryIdString)
+      console.log('this.activityForm.needsceneryrang', this.activityForm.needsceneryrang)
     },
     handleChange2 (newTargetKeys, direction, moveKeys) {
-      console.log(newTargetKeys)
-      console.log(direction)
-      console.log(moveKeys)
       this.activityForm.targetKeys2 = newTargetKeys
+      console.log('this.activityForm.targetKeys2', this.activityForm.targetKeys2)
       let sceneryIdString = ''
       _.each(this.activityForm.targetKeys2, (sceneryId) => {
         sceneryIdString = sceneryIdString + sceneryId + ','
@@ -312,6 +318,7 @@ export default {
         sceneryIdString = sceneryIdString.substr(0, sceneryIdString.length - 1)
       }
       this.$set(this.activityForm, 'needsceneryrang', sceneryIdString)
+      console.log('this.activityForm.needsceneryrang', this.activityForm.needsceneryrang)
     }
     // handleView (name) {
     //   this.imgName = name

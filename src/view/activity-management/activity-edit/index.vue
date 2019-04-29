@@ -19,14 +19,14 @@
         <FormItem prop="enddateAll" label="结束日期" :style="{'width': 'calc((100% - 30px)/3)'}">
             <DatePicker v-model="activityForm.enddateAll" type="date" placeholder="输入结束日期" :style="{'width': '100%'}" @on-change="timeCheck"></DatePicker>
         </FormItem>
-        <FormItem prop="universities" :required='true' label="学校范围" :style="{'width': 'calc((100% - 20px)/2)'}">
+        <FormItem prop="targetKeys1" label="学校范围" :style="{'width': 'calc((100% - 20px)/2)'}">
         <Transfer
         :data="data1"
         :target-keys="activityForm.targetKeys1"
         :render-format="render1"
         @on-change="handleChange1"></Transfer>
         </FormItem>
-        <FormItem prop="scenic" :required='true' label="景点选择" :style="{'width': 'calc((100% - 20px)/2)'}">
+        <FormItem prop="targetKeys2" label="景点选择" :style="{'width': 'calc((100% - 20px)/2)'}">
         <Transfer
         :data="data2"
         :target-keys="activityForm.targetKeys2"
@@ -54,7 +54,7 @@
         </FormItem>
         <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
             <Checkbox v-model="activityForm.isgroupBoolean">是否团队赛</Checkbox>
-            <br/>组队人数：<InputNumber :min="1" v-model="activityForm.groupnum" :disabled="!activityForm.isgroupBoolean"></InputNumber>
+            <br/>组队人数：<InputNumber :min="1" v-model="activityForm.groupNum" :disabled="!activityForm.isgroupBoolean"></InputNumber>
         </FormItem>
         <FormItem prop="shdesc" label="活动描述" :style="{'width': 'calc(100% - 10px)'}">
             <Input type="textarea" v-model="activityForm.shdesc" placeholder="输入描述"></Input>
@@ -70,7 +70,7 @@
 
 <script>
 import Upload from '@/view/components/uploadImage/index'
-// import { addActivity } from '@/api/activity'
+import { editActivity } from '@/api/activity'
 import { getSchoolList } from '@/api/school'
 import { getSceneryFromSchool } from '@/api/scenery'
 import moment from 'moment'
@@ -94,9 +94,9 @@ export default {
       visible: false,
       uploadList: [],
       data1: [],
-      targetKeys1: [],
+      // targetKeys1: [],
       data2: [],
-      targetKeys2: [],
+      // targetKeys2: [],
       activityForm: {
         needSchoolPass: 1,
         needSceneryPass: 1,
@@ -132,7 +132,6 @@ export default {
     }
   },
   mounted () {
-    this.getSchoolList()
     this.getCurrentActivity()
   },
   methods: {
@@ -145,21 +144,36 @@ export default {
         }
       }
     },
-    async getSchoolList () {
+    async getCurrentActivity () {
+      // getSchoolList
       const list = await getSchoolList({ page: 1, pageSize: 100 })
       this.schoolList = list.data.data.data ? list.data.data.data : []
       _.each(this.schoolList, (schoolItem) => {
         this.data1.push({ key: schoolItem.schoolID, label: schoolItem.schoolName })
       })
-    },
-    async getCurrentActivity () {
+      // currentActivity
       this.activityForm = this.currentActivity
       console.log('this.activityForm', this.activityForm)
+      // 学校范围
+      // let needSchoolRang = this.currentActivity.needSchoolRang
+      // let needSchoolRangArr = needSchoolRang.split(',')
+      // let targetKeyList = []
+      // _.each(needSchoolRangArr, (needSchoolId) => {
+      //   _.each(this.schoolList, (schoolItem) => {
+      //     if (schoolItem.schoolID === parseInt(needSchoolId)) {
+      //       targetKeyList.push(schoolItem.schoolID)
+      //     }
+      //   })
+      // })
+      // 景点选择
+      // let needSceneryRang = this.currentActivity.needSceneryRang
+      // this.$set(this.activityForm, 'targetKeys1', targetKeyList)
       // 开始时间
       let firststartDate = this.currentActivity.startDate.split(' ')[0]
       let secondstartDate = this.currentActivity.startDate.split(' ')[1]
       let startdateAll = firststartDate + 'T' + secondstartDate
       this.$set(this.activityForm, 'startdateAll', startdateAll)
+      console.log('this.activityForm.startdateAll', this.activityForm.startdateAll)
       // 结束时间
       let firendDate = this.currentActivity.endDate.split(' ')[0]
       let secondendDate = this.currentActivity.endDate.split(' ')[1]
@@ -198,6 +212,13 @@ export default {
             title: '开始日期不能大于结束日期'
           })
         } else if (valid && this.activityForm.targetKeys1.length > 0 && this.activityForm.targetKeys2.length > 0) {
+          // 活动名称
+          this.$set(this.activityForm, 'activityname', this.activityForm.activityName)
+          // 主会场
+          this.$set(this.activityForm, 'meetingplace', this.activityForm.meetingPlace)
+          // 主办方
+          // 协办方
+          this.$set(this.activityForm, 'secondsponsor', this.activityForm.secondSponsor)
           // 开始时间
           if (this.activityForm.startdateAll) {
             let startdate = moment(this.activityForm.startdateAll).format('YYYY-MM-DD')
@@ -208,27 +229,39 @@ export default {
             let enddate = moment(this.activityForm.enddateAll).format('YYYY-MM-DD')
             this.$set(this.activityForm, 'enddate', enddate)
           }
-          // 是否团体赛
-          if (this.activityForm.isgroupBoolean) {
-            this.$set(this.activityForm, 'isgroup', 1)
-          } else {
-            this.$set(this.activityForm, 'isgroup', 0)
-            this.$set(this.activityForm, 'groupnum', null)
-          }
+          // 学校范围
+          // 景点选择
+          // 通关阈值(学校)
+          this.$set(this.activityForm, 'needschoolpass', this.activityForm.needSchoolPass)
+          // 通关阈值(景点)
+          this.$set(this.activityForm, 'needscenerypass', this.activityForm.needSceneryPass)
           // 是否起点
           if (this.activityForm.settingStartBoolean) {
             this.$set(this.activityForm, 'settingstart', 1)
+            this.$set(this.activityForm, 'startsceneryid', this.activityForm.startSceneryId)
           } else {
             this.$set(this.activityForm, 'settingstart', 0)
-            this.$set(this.activityForm, 'startSceneryid', null)
+            this.$set(this.activityForm, 'startsceneryid', null)
           }
           // 是否终点
           if (this.activityForm.settingEndBoolean) {
             this.$set(this.activityForm, 'settingend', 1)
+            this.$set(this.activityForm, 'endsceneryid', this.activityForm.endSceneryId)
           } else {
             this.$set(this.activityForm, 'settingend', 0)
-            this.$set(this.activityForm, 'endSceneryid', null)
+            this.$set(this.activityForm, 'endsceneryid', null)
           }
+          // 是否团体赛
+          if (this.activityForm.isgroupBoolean) {
+            this.$set(this.activityForm, 'isgroup', 1)
+            this.$set(this.activityForm, 'groupnum', this.activityForm.groupNum)
+          } else {
+            this.$set(this.activityForm, 'isgroup', 0)
+            this.$set(this.activityForm, 'groupnum', null)
+          }
+          // 描述
+          let editReturn = await editActivity(this.activityForm, this.activityForm.activityID)
+          console.log('editReturn', editReturn)
         } else {
           this.$Notice.error({
             title: '请填写完整必填字段'
@@ -237,13 +270,13 @@ export default {
       })
     // }
     //   console.log('this.activityForm', this.activityForm)
-    //   let addReturn = await addActivity(this.activityForm)
-    //   if (addReturn.data.insertid) {
+    //   let editReturn = await addActivity(this.activityForm)
+    //   if (editReturn.data.insertid) {
     //     this.addActivitySuccess = true
     //     this.$Notice.success({
     //       title: '活动添加成功'
     //     })
-    //     this.parentId = addReturn.data.insertid
+    //     this.parentId = editReturn.data.insertid
     //   }
     },
     render1 (item) {
@@ -251,6 +284,7 @@ export default {
     },
     async handleChange1 (newTargetKeys, direction, moveKeys) {
       this.activityForm.targetKeys1 = newTargetKeys
+      console.log('this.targetKeys1', this.activityForm.targetKeys1)
       let schoolIdString = ''
       _.each(this.activityForm.targetKeys1, (schoolId) => {
         schoolIdString = schoolIdString + schoolId + ','
@@ -260,21 +294,31 @@ export default {
       }
       this.$set(this.activityForm, 'needschoolrang', schoolIdString)
       let getSceneryFromSchoolList = await getSceneryFromSchool(schoolIdString)
+      this.data2 = []
+      this.activityForm.targetKeys2 = []
+      let data2Arr = []
+      let targetKeys2Arr = []
       _.each((getSceneryFromSchoolList.data.data), schoolSceneryItem => {
         this.data2.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
-        this.targetKeys2.push(schoolSceneryItem.sceneryID)
+        this.activityForm.targetKeys2.push(schoolSceneryItem.sceneryID)
+        data2Arr.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
+        targetKeys2Arr.push(schoolSceneryItem.sceneryID)
       })
+      console.log('data2Arr', data2Arr)
+      console.log('targetKeys2Arr', targetKeys2Arr)
       let sceneryIdString = ''
-      _.each(this.activityForm.targetKeys2, (sceneryId) => {
+      _.each(targetKeys2Arr, (sceneryId) => {
         sceneryIdString = sceneryIdString + sceneryId + ','
       })
       if (sceneryIdString.length > 0) {
         sceneryIdString = sceneryIdString.substr(0, sceneryIdString.length - 1)
       }
       this.$set(this.activityForm, 'needsceneryrang', sceneryIdString)
+      console.log('this.activityForm.needsceneryrang', this.activityForm.needsceneryrang)
     },
     handleChange2 (newTargetKeys, direction, moveKeys) {
       this.activityForm.targetKeys2 = newTargetKeys
+      console.log('this.activityForm.targetKeys2', this.activityForm.targetKeys2)
       let sceneryIdString = ''
       _.each(this.activityForm.targetKeys2, (sceneryId) => {
         sceneryIdString = sceneryIdString + sceneryId + ','
@@ -283,6 +327,7 @@ export default {
         sceneryIdString = sceneryIdString.substr(0, sceneryIdString.length - 1)
       }
       this.$set(this.activityForm, 'needsceneryrang', sceneryIdString)
+      console.log('this.activityForm.needsceneryrang', this.activityForm.needsceneryrang)
     }
   }
 }

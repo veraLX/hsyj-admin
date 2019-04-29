@@ -16,6 +16,7 @@ export const addActivity = (obj) => {
     'meetingplace': obj.meetingplace,
     'secondsponsor': obj.secondsponsor,
     'needschoolrang': obj.needschoolrang,
+    'needsceneryrang': obj.needsceneryrang,
     'startdate': obj.startdate,
     'enddate': obj.enddate,
     'shdesc': obj.shdesc,
@@ -39,7 +40,7 @@ export const addActivity = (obj) => {
 
 export const editActivity = (obj, id) => {
   const data = {
-    'activityName': obj.activityName,
+    'activityname': obj.activityname,
     'sponsor': obj.sponsor,
     'meetingplace': obj.meetingplace,
     'secondsponsor': obj.secondsponsor,
