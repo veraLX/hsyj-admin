@@ -3,18 +3,15 @@
     <Card>
       <p slot="title">新增景点</p>
       <span slot="extra" :style="{ 'cursor':'pointer'}" @click="getPoint">经纬度查询 ></span>
-      <Form :model="siteForm" :rules="ruleInline" inline label-position="right" :label-width="90">
-        <FormItem prop="name" label="景点名称" :style="{'width': 'calc((100% - 30px)/3)'}">
+      <Form ref="formInline" :model="siteForm" :rules="ruleInline" inline label-position="right" :label-width="90">
+        <FormItem prop="scenerytitle" label="景点名称" :style="{'width': 'calc((100% - 30px)/3)'}">
             <Input v-model="siteForm.scenerytitle" placeholder="输入景点名称"></Input>
         </FormItem>
-         <FormItem prop="school" label="校区" :style="{'width': 'calc((100% - 30px)/3)'}">
+         <FormItem prop="address" label="校区" :style="{'width': 'calc((100% - 30px)/3)'}">
             <!-- <Input v-model="siteForm.address" placeholder="输入景点名称"></Input> -->
             <Select v-model="siteForm.schoolid" :label-in-value="true" @on-change="handleChange">
                 <Option v-for="item in schoolList" :value="item.schoolID" :label="item.address" :key="item.schoolID">{{ item.schoolName }}</Option>
             </Select>
-        </FormItem>
-        <FormItem prop="audioURL" label="音频URL地址" :style="{'width': 'calc((100% - 30px)/3)'}">
-            <Input v-model="siteForm.soundurl" placeholder="输入音频URL地址"></Input>
         </FormItem>
         <FormItem prop="longitude" label="经度" :style="{'width': 'calc((100% - 30px)/3)'}">
             <Input v-model="siteForm.longitude" placeholder="输入经度"></Input>
@@ -25,7 +22,10 @@
         <FormItem prop="videoURL" label="视频URL地址" :style="{'width': 'calc((100% - 30px)/3)'}">
             <Input v-model="siteForm.videourl" placeholder="输入视频URL地址"></Input>
         </FormItem>
-        <FormItem prop="description" label="描述" :style="{'width': 'calc(100% - 10px)'}">
+        <FormItem prop="soundurl" label="音频URL地址" :style="{'width': 'calc((100% - 30px)/3)'}">
+            <Input v-model="siteForm.soundurl" placeholder="输入音频URL地址"></Input>
+        </FormItem>
+        <FormItem prop="shdesc" label="描述" :style="{'width': 'calc(100% - 10px)'}">
             <Input type="textarea" v-model="siteForm.shdesc" placeholder="输入描述"></Input>
         </FormItem>
         <!-- <Row class="imgRow">
@@ -88,9 +88,21 @@ export default {
         videourl: ''
       },
       ruleInline: {
-        // password: [
-        //   { required: true, message: '请输入景点名称', trigger: 'blur' }
-        // ]
+        scenerytitle: [
+          { required: true, message: '请输入景点名称', trigger: 'blur' }
+        ],
+        address: [
+          { required: true, message: '请输入校区', trigger: 'change' }
+        ],
+        longitude: [
+          { required: true, message: '请输入经度', trigger: 'blur' }
+        ],
+        latitude: [
+          { required: true, message: '请输入纬度', trigger: 'blur' }
+        ],
+        shdesc: [
+          { required: true, message: '请输入描述', trigger: 'blur' }
+        ]
       },
       siteColumns: [
         { title: ' ', type: 'index', width: 60, align: 'center' },
@@ -401,12 +413,22 @@ export default {
       this.count = scene.data.data.count
     },
     async addSite () {
-      if (!_.isEmpty(this.siteForm.scenerytitle)) {
-        await addScenery(this.siteForm)
-        this.flashAllSiteData()
-        this.siteForm = {}
-        // console.log('addSite', data)
-      }
+      this.$refs['formInline'].validate(async (valid) => {
+        if (valid) {
+          this.$Message.success('Success!')
+          await addScenery(this.siteForm)
+          this.flashAllSiteData()
+          this.siteForm = {}
+        } else {
+          this.$Message.error('Fail!')
+        }
+      })
+      // if (!_.isEmpty(this.siteForm.scenerytitle)) {
+      //   await addScenery(this.siteForm)
+      //   this.flashAllSiteData()
+      //   this.siteForm = {}
+      //   // console.log('addSite', data)
+      // }
     },
     // async editSite () {
     //   let data = await editScenery(this.siteForm)
