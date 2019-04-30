@@ -7,39 +7,53 @@
       </div>
       <Tabs value="app" @on-click="tabsChange">
         <TabPane label="首页留言" name="app">
-          <Table :columns="appMessageColumns" :data="appMessageList" @on-selection-change="onAppSelectionChange"></Table>
-          <Page :total="appCount"  @on-change="appChange"/>
+          <Table
+            :columns="appMessageColumns"
+            :data="appMessageList"
+            @on-selection-change="onAppSelectionChange"
+          ></Table>
+          <Page :total="appCount" @on-change="appChange"/>
           <Row>
-          <Col span="2">
-          <Button  @click="acceptance" type='primary'>一键受理</Button>
-          </Col>
-          <Col span="2" style="margin-left:10px">
-          <Button  @click="refuse" type='error'>一键拒绝</Button>
-          </Col>
+            <Col span="2">
+              <Button @click="acceptance" type="primary">一键受理</Button>
+            </Col>
+            <Col span="2" style="margin-left:10px">
+              <Button @click="refuse" type="error">一键拒绝</Button>
+            </Col>
           </Row>
         </TabPane>
         <TabPane label="景点留言" name="sight">
-          <Table stripe :columns="sightMessageColumns" :data="sightMessageList"  @on-selection-change="onSightSelectionChange"></Table>
-          <Page :total="sightCount"  @on-change="sightChange"/>
+          <Table
+            stripe
+            :columns="sightMessageColumns"
+            :data="sightMessageList"
+            @on-selection-change="onSightSelectionChange"
+          ></Table>
+          <Page :total="sightCount" @on-change="sightChange"/>
           <Row>
-          <Col span="2">
-          <Button  @click="sightPass" type='primary'>一键通过</Button>
-          </Col>
-          <Col span="2" style="margin-left:10px">
-          <Button  @click="sightDeleteFun" type='error'>一键删除</Button>
-          </Col>
+            <Col span="2">
+              <Button @click="sightPass" type="primary">一键通过</Button>
+            </Col>
+            <Col span="2" style="margin-left:10px">
+              <Button @click="sightDeleteFun" type="error">一键删除</Button>
+            </Col>
           </Row>
         </TabPane>
         <TabPane label="活动留言" name="activity">
-          <Table stripe :columns="activityMessageColumns" :data="activityMessageList"  @on-selection-change="onActivitySelectionChange"></Table>
-          <Page :total="activityCount"  @on-change="activityChange"/>
+          <Table
+            stripe
+            :columns="activityMessageColumns"
+            :data="activityMessageList"
+            @on-selection-change="onActivitySelectionChange"
+          ></Table>
+          <Page :total="activityCount" @on-change="activityChange"/>
           <Row>
-          <Col span="2">
-          <Button  @click="activityPass" type='primary'>一键通过</Button>
-          </Col>
-          <Col span="2" style="margin-left:10px">
-          <Button  @click="activityDeleteFun" type='error'>一键删除</Button>
-          </Col>
+            <Col span="2">
+              <Button @click="activityPass" type="primary">一键通过</Button>
+            </Col>
+            <Col span="2" style="margin-left:10px">
+              <Button @click="activityDeleteFun" type="error">一键删除</Button>
+            </Col>
           </Row>
         </TabPane>
       </Tabs>
@@ -48,7 +62,7 @@
 </template>
 
 <script>
-import { getMessageList, acceptMessage } from '@/api/message'
+import { getMessageList, acceptMessage, recommendMessage } from '@/api/message'
 export default {
   name: 'directive_page',
   data () {
@@ -60,12 +74,49 @@ export default {
         { title: '学籍号', key: 'studentid' },
         { title: '留言日期', key: 'time' },
         { title: '留言内容', key: 'content', width: 300 },
-        { title: '状态',
+        {
+          title: '状态',
           key: 'shstate',
           width: 100,
           render: (h, params) => {
-            return h('div', params.row.shstate ? params.row.shstate === 3 ? '已受理' : '已拒绝' : '')
-          } },
+            return h(
+              'div',
+              params.row.shstate
+                ? params.row.shstate === 3
+                  ? '已受理'
+                  : '已拒绝'
+                : ''
+            )
+          }
+        },
+        {
+          title: '是否推荐',
+          key: 'isrecommend',
+          width: 140,
+          align: 'center',
+          // options: ['delete'],
+          render: (h, params) => {
+            return h('div', [
+              h('i-switch', {
+                // style: { 'margin-right': '8px' },
+                props: {
+                  value: params.row.isrecommend === 1,
+                  size: 'small'
+                },
+                on: {
+                  'on-change': async () => {
+                    console.log('11111', params.row.isrecommend)
+                    await recommendMessage({
+                      id: params.row.discussID,
+                      isrecommend: params.row.isrecommend === 0 ? 1 : 0
+                    })
+                    this.getMessageList()
+                  }
+                }
+              })
+            ])
+          }
+        },
         {
           title: '操作',
           key: 'action',
@@ -85,7 +136,10 @@ export default {
                   on: {
                     click: async () => {
                       console.log('params.row', params.row)
-                      await acceptMessage({ id: params.row.discussID, shstate: 3 })
+                      await acceptMessage({
+                        id: params.row.discussID,
+                        shstate: 3
+                      })
                       this.getMessageList()
                     }
                   }
@@ -101,7 +155,10 @@ export default {
                   },
                   on: {
                     'on-ok': async () => {
-                      await acceptMessage({ id: params.row.discussID, shstate: 4 })
+                      await acceptMessage({
+                        id: params.row.discussID,
+                        shstate: 4
+                      })
                       this.getMessageList()
                     }
                   }
@@ -131,12 +188,50 @@ export default {
         { title: '学籍号', key: 'studentid' },
         { title: '留言日期', key: 'time' },
         { title: '留言内容', key: 'content', width: 300 },
-        { title: '状态',
+        {
+          title: '状态',
           key: 'shstate',
           width: 100,
           render: (h, params) => {
-            return h('div', params.row.shstate ? params.row.shstate === 1 ? '已通过' : '已删除' : '')
-          } },
+            return h(
+              'div',
+              params.row.shstate
+                ? params.row.shstate === 1
+                  ? '已通过'
+                  : '已删除'
+                : ''
+            )
+          }
+        },
+        {
+          title: '是否推荐',
+          key: 'isrecommend',
+          width: 140,
+          align: 'center',
+          // options: ['delete'],
+          render: (h, params) => {
+            return h('div', [
+              h('i-switch', {
+                // style: { 'margin-right': '8px' },
+                props: {
+                  value: params.row.isrecommend === 1,
+                  size: 'small'
+                },
+                on: {
+                  'on-change': async () => {
+                    debugger
+                    console.log('11111', params.row.isrecommend)
+                    await recommendMessage({
+                      id: params.row.discussID,
+                      isrecommend: params.row.isrecommend === 0 ? 1 : 0
+                    })
+                    this.getMessageList()
+                  }
+                }
+              })
+            ])
+          }
+        },
         {
           title: '操作',
           key: 'action',
@@ -155,7 +250,10 @@ export default {
                   },
                   on: {
                     click: async () => {
-                      await acceptMessage({ id: params.row.discussID, shstate: 1 })
+                      await acceptMessage({
+                        id: params.row.discussID,
+                        shstate: 1
+                      })
                       this.getMessageList()
                     }
                   }
@@ -171,7 +269,10 @@ export default {
                   },
                   on: {
                     'on-ok': async () => {
-                      await acceptMessage({ id: params.row.discussID, shstate: 2 })
+                      await acceptMessage({
+                        id: params.row.discussID,
+                        shstate: 2
+                      })
                       this.getMessageList()
                     }
                   }
@@ -201,12 +302,49 @@ export default {
         { title: '学籍号', key: 'studentid' },
         { title: '留言日期', key: 'time' },
         { title: '留言内容', key: 'content', width: 300 },
-        { title: '状态',
+        {
+          title: '状态',
           key: 'shstate',
           width: 100,
           render: (h, params) => {
-            return h('div', params.row.shstate ? params.row.shstate === 1 ? '已通过' : '已删除' : '')
-          } },
+            return h(
+              'div',
+              params.row.shstate
+                ? params.row.shstate === 1
+                  ? '已通过'
+                  : '已删除'
+                : ''
+            )
+          }
+        },
+        {
+          title: '是否推荐',
+          key: 'isrecommend',
+          width: 140,
+          align: 'center',
+          // options: ['delete'],
+          render: (h, params) => {
+            return h('div', [
+              h('i-switch', {
+                // style: { 'margin-right': '8px' },
+                props: {
+                  value: params.row.isrecommend === 1,
+                  size: 'small'
+                },
+                on: {
+                  'on-change': async () => {
+                    console.log('11111', params.row.isrecommend)
+                    await recommendMessage({
+                      id: params.row.discussID,
+                      isrecommend: params.row.isrecommend === 0 ? 1 : 0
+                    })
+                    this.getMessageList()
+                  }
+                }
+              })
+            ])
+          }
+        },
         {
           title: '操作',
           key: 'action',
@@ -225,7 +363,10 @@ export default {
                   },
                   on: {
                     click: async () => {
-                      await acceptMessage({ id: params.row.discussID, shstate: 1 })
+                      await acceptMessage({
+                        id: params.row.discussID,
+                        shstate: 1
+                      })
                       this.getMessageList()
                     }
                   }
@@ -241,7 +382,10 @@ export default {
                   },
                   on: {
                     'on-ok': async () => {
-                      await acceptMessage({ id: params.row.discussID, shstate: 2 })
+                      await acceptMessage({
+                        id: params.row.discussID,
+                        shstate: 2
+                      })
                       this.getMessageList()
                     }
                   }
@@ -280,15 +424,37 @@ export default {
   },
   methods: {
     async getMessageList () {
-      const sightList = await getMessageList({ page: 1, pagesize: 10, distype: 0 })
-      this.sightMessageList = sightList.data.data.data ? sightList.data.data.data : []
-      this.sightCount = sightList.data.data.count ? sightList.data.data.count : 0
-      const appList = await getMessageList({ page: 1, pagesize: 10, distype: 3 })
-      this.appMessageList = appList.data.data.data ? appList.data.data.data : []
+      const sightList = await getMessageList({
+        page: 1,
+        pagesize: 10,
+        distype: 0
+      })
+      this.sightMessageList = sightList.data.data.data
+        ? sightList.data.data.data
+        : []
+      this.sightCount = sightList.data.data.count
+        ? sightList.data.data.count
+        : 0
+      const appList = await getMessageList({
+        page: 1,
+        pagesize: 10,
+        distype: 3
+      })
+      this.appMessageList = appList.data.data.data
+        ? appList.data.data.data
+        : []
       this.appCount = appList.data.data.count ? appList.data.data.count : 0
-      const activityList = await getMessageList({ page: 1, pagesize: 10, distype: 1 })
-      this.activityMessageList = activityList.data.data.data ? activityList.data.data.data : []
-      this.activityCount = activityList.data.data.count ? activityList.data.data.count : 0
+      const activityList = await getMessageList({
+        page: 1,
+        pagesize: 10,
+        distype: 1
+      })
+      this.activityMessageList = activityList.data.data.data
+        ? activityList.data.data.data
+        : []
+      this.activityCount = activityList.data.data.count
+        ? activityList.data.data.count
+        : 0
     },
     getDistype (id) {
       // distype：留言类型0,景点; 1,活动,2 学校,3首页
@@ -304,16 +470,34 @@ export default {
       }
     },
     async appChange (e) {
-      const appList = await getMessageList({ page: e, pagesize: 10, distype: 3 })
-      this.appMessageList = appList.data.data.data ? appList.data.data.data : []
+      const appList = await getMessageList({
+        page: e,
+        pagesize: 10,
+        distype: 3
+      })
+      this.appMessageList = appList.data.data.data
+        ? appList.data.data.data
+        : []
     },
     async sightChange (e) {
-      const sightList = await getMessageList({ page: e, pagesize: 10, distype: 0 })
-      this.sightMessageList = sightList.data.data.data ? sightList.data.data.data : []
+      const sightList = await getMessageList({
+        page: e,
+        pagesize: 10,
+        distype: 0
+      })
+      this.sightMessageList = sightList.data.data.data
+        ? sightList.data.data.data
+        : []
     },
     async activityChange (e) {
-      const activityList = await getMessageList({ page: e, pagesize: 10, distype: 1 })
-      this.activityMessageList = activityList.data.data.data ? activityList.data.data.data : []
+      const activityList = await getMessageList({
+        page: e,
+        pagesize: 10,
+        distype: 1
+      })
+      this.activityMessageList = activityList.data.data.data
+        ? activityList.data.data.data
+        : []
     },
     tabsChange () {
       console.log('change')
@@ -397,7 +581,10 @@ export default {
     },
     onActivitySelectionChange (list) {
       this.activityMessageSelectedList = list
-      console.log('onActivitySelectionChange', this.activityMessageSelectedList)
+      console.log(
+        'onActivitySelectionChange',
+        this.activityMessageSelectedList
+      )
     },
     onSelectAll (e) {
       console.log('onSelectAll', e)

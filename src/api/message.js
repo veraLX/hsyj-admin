@@ -13,3 +13,10 @@ export const acceptMessage = (obj) => {
     method: 'get'
   })
 }
+
+export const recommendMessage = (obj) => {
+  return axios.request({
+    url: 'admin/discuss/update?id=' + obj.id + '&isrecommend=' + obj.isrecommend,
+    method: 'get'
+  })
+}
