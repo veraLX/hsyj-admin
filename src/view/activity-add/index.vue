@@ -100,7 +100,7 @@ import Upload from '@/view/components/uploadImage/index'
 import { addActivity } from '@/api/activity'
 import { getSchoolList } from '@/api/school'
 import { getAnswerList } from '@/api/answer'
-import { getSceneryFromSchool, sceneryList } from '@/api/scenery'
+import { getSceneryFromSchool } from '@/api/scenery'
 // import { getAnswerList } from '@/api/answer'
 import moment from 'moment'
 export default {
@@ -259,8 +259,8 @@ export default {
       this.activityIdEach = this.parentId
       this.pageAnswerSize = answerList.data.data.pageSize
       this.currentAnswerPage = answerList.data.data.currentPage
-      let siteList = await sceneryList()
-      this.siteData = siteList.data.data.data
+      // let siteList = await sceneryList()
+      // this.siteData = siteList.data.data.data
       this.currentStep = 2
     },
     // openImageStep () {
@@ -281,10 +281,10 @@ export default {
       if (schoolIdString.length > 0) {
         schoolIdString = schoolIdString.substr(0, schoolIdString.length - 1)
       }
-      debugger
       this.$set(this.activityForm, 'needschoolrang', schoolIdString)
       console.log('schoolIdString', schoolIdString)
       let getSceneryFromSchoolList = await getSceneryFromSchool(schoolIdString)
+      this.siteData = getSceneryFromSchoolList.data.data
       this.data2 = []
       this.activityForm.targetKeys2 = []
       let data2Arr = []
