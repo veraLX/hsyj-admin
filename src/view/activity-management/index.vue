@@ -20,7 +20,7 @@
         <Icon type="ios-paper-outline"></Icon>
         <span> 活动编辑</span>
       </p>
-      <Activity v-if="updateActivityModalShow" :currentActivity='currentActivity'/>
+      <Activity @editActivityModalCancel="editActivityModalCancel" v-if="updateActivityModalShow" :currentActivity='currentActivity'/>
       <div slot="footer">
           <!-- <Button type="primary" >确认</Button> -->
       </div>

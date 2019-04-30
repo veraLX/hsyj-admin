@@ -19,14 +19,14 @@
         <FormItem prop="enddateAll" label="结束日期" :style="{'width': 'calc((100% - 30px)/3)'}">
             <DatePicker v-model="activityForm.enddateAll" type="date" placeholder="输入结束日期" :style="{'width': '100%'}" @on-change="timeCheck"></DatePicker>
         </FormItem>
-        <FormItem prop="targetKeys1" label="学校范围" :style="{'width': 'calc((100% - 20px)/2)'}">
+        <FormItem prop="targetKeys1" :required='true' label="学校范围" :style="{'width': 'calc((100% - 20px)/2)'}">
         <Transfer
         :data="data1"
         :target-keys="activityForm.targetKeys1"
         :render-format="render1"
         @on-change="handleChange1"></Transfer>
         </FormItem>
-        <FormItem prop="targetKeys2" label="景点选择" :style="{'width': 'calc((100% - 20px)/2)'}">
+        <FormItem prop="targetKeys2" :required='true' label="景点选择" :style="{'width': 'calc((100% - 20px)/2)'}">
         <Transfer
         :data="data2"
         :target-keys="activityForm.targetKeys2"
@@ -74,6 +74,7 @@ import { editActivity } from '@/api/activity'
 import { getSchoolList } from '@/api/school'
 import { getSceneryFromSchool } from '@/api/scenery'
 import moment from 'moment'
+// import { constants } from 'fs'
 export default {
   name: 'directive_page',
   components: {
@@ -155,16 +156,17 @@ export default {
       this.activityForm = this.currentActivity
       console.log('this.activityForm', this.activityForm)
       // 学校范围
-      // let needSchoolRang = this.currentActivity.needSchoolRang
-      // let needSchoolRangArr = needSchoolRang.split(',')
-      // let targetKeyList = []
-      // _.each(needSchoolRangArr, (needSchoolId) => {
-      //   _.each(this.schoolList, (schoolItem) => {
-      //     if (schoolItem.schoolID === parseInt(needSchoolId)) {
-      //       targetKeyList.push(schoolItem.schoolID)
-      //     }
-      //   })
-      // })
+      let needSchoolRang = this.currentActivity.needSchoolRang
+      let needSchoolRangArr = needSchoolRang.split(',')
+      let targetKeyList = []
+      _.each(needSchoolRangArr, (needSchoolId) => {
+        _.each(this.schoolList, (schoolItem) => {
+          if (schoolItem.schoolID === parseInt(needSchoolId)) {
+            targetKeyList.push(schoolItem.schoolID)
+          }
+        })
+      })
+      this.$set(this.activityForm, 'targetKeys1', targetKeyList)
       // 景点选择
       // let needSceneryRang = this.currentActivity.needSceneryRang
       // this.$set(this.activityForm, 'targetKeys1', targetKeyList)
@@ -207,7 +209,12 @@ export default {
     },
     async editComfirm () {
       this.$refs['formInline'].validate(async (valid) => {
-        if (this.activityForm.enddateAll < this.activityForm.startdateAll) {
+        console.log('this.activityForm.targetKeys2', this.activityForm.targetKeys2)
+        if (this.activityForm.targetKeys1 || this.activityForm.targetKeys2) {
+          this.$Notice.error({
+            title: '请填写完整必填字段'
+          })
+        } else if (this.activityForm.enddateAll < this.activityForm.startdateAll) {
           this.$Notice.error({
             title: '开始日期不能大于结束日期'
           })
@@ -262,6 +269,12 @@ export default {
           // 描述
           let editReturn = await editActivity(this.activityForm, this.activityForm.activityID)
           console.log('editReturn', editReturn)
+          if (editReturn.data.errno === 0) {
+            this.$Notice.success({
+              title: '活动修改成功'
+            })
+            this.$emit('editActivityModalCancel')
+          }
         } else {
           this.$Notice.error({
             title: '请填写完整必填字段'
@@ -289,9 +302,8 @@ export default {
       _.each(this.activityForm.targetKeys1, (schoolId) => {
         schoolIdString = schoolIdString + schoolId + ','
       })
-      if (schoolIdString.length > 0) {
-        schoolIdString = schoolIdString.substr(0, schoolIdString.length - 1)
-      }
+      schoolIdString = schoolIdString.substring(0, schoolIdString.length - 1)
+      console.log('schoolIdString', schoolIdString)
       this.$set(this.activityForm, 'needschoolrang', schoolIdString)
       let getSceneryFromSchoolList = await getSceneryFromSchool(schoolIdString)
       this.data2 = []
@@ -310,9 +322,7 @@ export default {
       _.each(targetKeys2Arr, (sceneryId) => {
         sceneryIdString = sceneryIdString + sceneryId + ','
       })
-      if (sceneryIdString.length > 0) {
-        sceneryIdString = sceneryIdString.substr(0, sceneryIdString.length - 1)
-      }
+      sceneryIdString = sceneryIdString.substring(0, sceneryIdString.length - 1)
       this.$set(this.activityForm, 'needsceneryrang', sceneryIdString)
       console.log('this.activityForm.needsceneryrang', this.activityForm.needsceneryrang)
     },
@@ -323,9 +333,10 @@ export default {
       _.each(this.activityForm.targetKeys2, (sceneryId) => {
         sceneryIdString = sceneryIdString + sceneryId + ','
       })
-      if (sceneryIdString.length > 0) {
-        sceneryIdString = sceneryIdString.substr(0, sceneryIdString.length - 1)
-      }
+      // if (sceneryIdString.length > 0) {
+      //   sceneryIdString = sceneryIdString.substr(0, sceneryIdString.length - 1)
+      // }
+      sceneryIdString = sceneryIdString.substring(0, sceneryIdString.length - 1)
       this.$set(this.activityForm, 'needsceneryrang', sceneryIdString)
       console.log('this.activityForm.needsceneryrang', this.activityForm.needsceneryrang)
     }

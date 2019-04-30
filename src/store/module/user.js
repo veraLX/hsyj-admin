@@ -106,12 +106,9 @@ export default {
           code
         ).then(res => {
           if (res.data.errno !== 0) {
-            // this.$Notice.error({
-            //   title: res.data.errmsg
-            // })
-            // let _self = this
             Notice.error({
-              title: res.data.errmsg.length > 0 ? res.data.errmsg : '验证出错,请刷新重试'
+              // title: res.data.errmsg.length > 0 ? res.data.errmsg : '验证出错,请刷新重试'
+              title: '验证出错,请刷新页面重试'
             })
           } else {
             const data = res.data
