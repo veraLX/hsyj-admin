@@ -10,7 +10,8 @@ export const addScenery = (obj) => {
     'longitude': obj.longitude,
     'latitude': obj.latitude,
     'soundurl': obj.soundurl,
-    'videourl': obj.videourl
+    'videourl': obj.videourl,
+    'isrecommend': obj.isrecommend
   }
   return axios.request({
     url: 'admin/scenery/addEdit',
@@ -29,7 +30,8 @@ export const editScenery = (obj) => {
     'longitude': obj.longitude,
     'latitude': obj.latitude,
     'soundurl': obj.soundurl,
-    'videourl': obj.videourl
+    'videourl': obj.videourl,
+    'isrecommend': obj.isrecommend
   }
   return axios.request({
     url: 'admin/scenery/addEdit?id=' + obj.sceneryID,

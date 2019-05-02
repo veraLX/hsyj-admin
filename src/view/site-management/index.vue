@@ -9,7 +9,7 @@
         </FormItem>
          <FormItem prop="address" label="校区" :style="{'width': 'calc((100% - 30px)/3)'}">
             <!-- <Input v-model="siteForm.address" placeholder="输入景点名称"></Input> -->
-            <Select v-model="siteForm.schoolid" :label-in-value="true" @on-change="handleChange">
+            <Select v-model="siteForm.schoolid" :label-in-value="true" filterable @on-change="handleChange">
                 <Option v-for="item in schoolList" :value="item.schoolID" :label="item.address" :key="item.schoolID">{{ item.schoolName }}</Option>
             </Select>
         </FormItem>
@@ -24,6 +24,9 @@
         </FormItem>
         <FormItem prop="soundurl" label="音频URL地址" :style="{'width': 'calc((100% - 30px)/3)'}">
             <Input v-model="siteForm.soundurl" placeholder="输入音频URL地址"></Input>
+        </FormItem>
+        <FormItem prop="recommend" label="是否推荐" :style="{'width': 'calc((100% - 30px)/3)'}">
+            <i-switch v-model="switchRecommend" @on-change="changeRecommend" />
         </FormItem>
         <FormItem prop="shdesc" label="描述" :style="{'width': 'calc(100% - 10px)'}">
             <Input type="textarea" v-model="siteForm.shdesc" placeholder="输入描述"></Input>
@@ -78,6 +81,7 @@ export default {
       pageSize: 5,
       totalPages: 1,
       currentPage: 1,
+      switchRecommend: false,
       siteForm: {
         scenerytitle: '',
         address: '',
@@ -85,7 +89,8 @@ export default {
         latitude: '',
         shdesc: '',
         soundurl: '',
-        videourl: ''
+        videourl: '',
+        isrecommend: 0
       },
       ruleInline: {
         scenerytitle: [
@@ -238,6 +243,34 @@ export default {
             }
           } },
         {
+          title: '是否推荐',
+          key: 'isrecommend',
+          width: 140,
+          align: 'center',
+          // options: ['delete'],
+          render: (h, params) => {
+            return h('div', [
+              h('i-switch', {
+                // style: { 'margin-right': '8px' },
+                props: {
+                  value: params.row.isrecommend === 1,
+                  size: 'small'
+                },
+                on: {
+                  'on-change': async () => {
+                    let obj = {
+                      sceneryID: params.row.sceneryID,
+                      isrecommend: params.row.isrecommend === 0 ? 1 : 0
+                    }
+                    await editScenery(obj)
+                    this.flashAllSiteData()
+                  }
+                }
+              })
+            ])
+          }
+        },
+        {
           title: '操作',
           key: 'action',
           width: 240,
@@ -381,12 +414,18 @@ export default {
     console.log('scene', scene)
   },
   methods: {
+    changeRecommend () {
+      if (this.switchRecommend) {
+        this.siteForm.isrecommend = 1
+      } else {
+        this.siteForm.isrecommend = 0
+      }
+    },
     handleChange (value) {
-      console.log('value', value)
-      console.log('siteForm.schoolid', this.siteForm.schoolid)
+      // console.log('value', value)
+      // console.log('siteForm.schoolid', this.siteForm.schoolid)
       this.$set(this.siteForm, 'schoolid', value.value)
       this.$set(this.siteForm, 'address', value.label)
-      console.log('siteForm', this.siteForm)
     },
     getPoint () {
       window.open('https://lbs.qq.com/tool/getpoint/')
@@ -436,9 +475,9 @@ export default {
     //   console.log('addSite', data)
     // },
     async deleteSite (rowData) {
-      sceneryDelete(rowData.sceneryID)
+      await sceneryDelete(rowData.sceneryID)
       this.flashAllSiteData()
-      console.log('deleteSite', rowData)
+      // console.log('deleteSite', rowData)
     },
     handleView (name) {
       this.imgName = name
