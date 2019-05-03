@@ -435,9 +435,11 @@ export default {
       console.log('schoolList', list)
       this.schoolList = list.data.data.data ? list.data.data.data : []
     },
-    openModal () {
+    openModal (params) {
+      console.log('params', params)
       this.editSiteImage = true
       this.siteModalShow = true
+      this.currentParentId = params.row.sceneryID
     },
     siteCloseModal () {
       this.editSiteImage = false
