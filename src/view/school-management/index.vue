@@ -29,7 +29,6 @@
           <Input type="textarea" v-model="schoolForm.schooldesc" placeholder="输入描述"/>
         </FormItem>
         <FormItem prop="image" style="width:100%;">
-          <!--<Button type="primary" @click="openModal">图片编辑</Button>-->
         </FormItem>
         <FormItem
           style="width:100%;display: flex;justify-content: flex-end;padding-right: 10px;margin-bottom: 0;"
@@ -37,21 +36,16 @@
           <Button class="bottomRight" type="primary" @click="addSchool('formInline')">增加</Button>
         </FormItem>
       </Form>
-      <Modal v-model="editImage" @on-cancel="childCloseModal" width="60%">
-        <p slot="header">
-          <Icon type="ios-paper-outline"></Icon>
-          <span>图片编辑</span>
-        </p>
-        <Upload
-          v-if="updateModalShow"
-          :parentId="currentParentId"
-          :sourceType="0"
-          :currentImageArray="currentImageArray"
-        />
-        <div slot="footer">
-          <Button type="primary" @click="childCloseModal">完成</Button>
-        </div>
-      </Modal>
+      <Modal v-model="editImage"  @on-cancel="childCloseModal" width="60%">
+      <p slot="header">
+        <Icon type="ios-paper-outline"></Icon>
+        <span>图片编辑</span>
+      </p>
+      <Upload v-if="updateModalShow" :parentId="currentParentId" :sourceType="0" :currentImageArray="currentImageArray"/>
+      <div slot="footer">
+          <Button type="primary" @click="childCloseModal" >完成</Button>
+      </div>
+    </Modal>
     </Card>
     <Card :style="{'margin-top': '20px'}">
       <p slot="title">校区列表</p>
@@ -86,8 +80,8 @@ export default {
         schooldesc: ''
       },
       uploadList: [],
-      currentImageArray: [],
       currentParentId: 0,
+      currentImageArray: [],
       editImage: false,
       updateModalShow: false,
       areaList: [],
@@ -427,10 +421,10 @@ export default {
       this.schoolList = list.data.data.data ? list.data.data.data : []
     },
     openModal (params) {
-      console.log('123456', params)
+      console.log('123456', params.row.schoolID)
       this.editImage = true
       this.updateModalShow = true
-      this.currentImageArray = params.row.pics
+      this.currentParentId = params.row.schoolID
     },
     getPoint () {
       window.open('https://lbs.qq.com/tool/getpoint/')
