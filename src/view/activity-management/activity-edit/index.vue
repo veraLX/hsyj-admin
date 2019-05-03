@@ -56,6 +56,9 @@
             <Checkbox v-model="activityForm.isgroupBoolean">是否团队赛</Checkbox>
             <br/>组队人数：<InputNumber :min="1" v-model="activityForm.groupNum" :disabled="!activityForm.isgroupBoolean"></InputNumber>
         </FormItem>
+        <FormItem prop="recommend" label="是否推荐" :style="{'width': 'calc((100% - 30px)/3)'}">
+            <i-switch v-model="switchRecommend" @on-change="changeRecommend" />
+          </FormItem>
         <FormItem prop="shdesc" label="活动描述" :style="{'width': 'calc(100% - 10px)'}">
             <Input type="textarea" v-model="activityForm.shdesc" placeholder="输入描述"></Input>
         </FormItem>
@@ -86,6 +89,7 @@ export default {
   },
   data () {
     return {
+      switchRecommend: false,
       parentId: 0,
       addActivitySuccess: false,
       single: '',
@@ -136,6 +140,13 @@ export default {
     this.getCurrentActivity()
   },
   methods: {
+    changeRecommend () {
+      if (this.switchRecommend) {
+        this.activityForm.isrecommend = 1
+      } else {
+        this.activityForm.isrecommend = 0
+      }
+    },
     timeCheck () {
       if (this.activityForm.startdateAll && this.activityForm.enddateAll) {
         if (this.activityForm.startdateAll > this.activityForm.enddateAll) {
@@ -167,15 +178,37 @@ export default {
         })
       })
       this.$set(this.activityForm, 'targetKeys1', targetKeyList)
+      console.log('targetKeyList', targetKeyList)
       // 景点选择
+      let getSceneryFromSchoolList = await getSceneryFromSchool(needSchoolRang)
+      this.data2 = []
+      let data2Arr = []
+      _.each((getSceneryFromSchoolList.data.data), schoolSceneryItem => {
+        this.data2.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
+        data2Arr.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
+      })
+      console.log('this.data2', this.data2)
+      let targetKeyList2 = []
+      debugger
+      _.each((this.currentActivity.sceneryRange), sceneryItem => {
+        targetKeyList2.push(sceneryItem.sceneryid)
+      })
+      console.log('targetKeyList2', targetKeyList2)
+      // let sceneryIdString = ''
+      // _.each(targetKeys2Arr, (sceneryId) => {
+      //   sceneryIdString = sceneryIdString + sceneryId + ','
+      // })
+      // if (sceneryIdString.length > 0) {
+      //   sceneryIdString = sceneryIdString.substr(0, sceneryIdString.length - 1)
+      // }
+      // this.$set(this.activityForm, 'needsceneryrang', sceneryIdString)
       // let needSceneryRang = this.currentActivity.needSceneryRang
-      // this.$set(this.activityForm, 'targetKeys1', targetKeyList)
+      // this.$set(this.activityForm, 'targetKeys2', targetKeyList)
       // 开始时间
       let firststartDate = this.currentActivity.startDate.split(' ')[0]
       let secondstartDate = this.currentActivity.startDate.split(' ')[1]
       let startdateAll = firststartDate + 'T' + secondstartDate
       this.$set(this.activityForm, 'startdateAll', startdateAll)
-      console.log('this.activityForm.startdateAll', this.activityForm.startdateAll)
       // 结束时间
       let firendDate = this.currentActivity.endDate.split(' ')[0]
       let secondendDate = this.currentActivity.endDate.split(' ')[1]
@@ -199,6 +232,13 @@ export default {
         settingEndBoolean = true
       }
       this.$set(this.activityForm, 'settingEndBoolean', settingEndBoolean)
+      // 是否推荐
+      // let isRecommend = false
+      this.switchRecommend = false
+      if (this.currentActivity.isrecommend === 1) {
+        // isRecommend = true
+        this.switchRecommend = true
+      }
     //   const list = await getCurrentSchool({ page: 1, pageSize: 100 })
     //   console.log('schoolList', list)
     //   this.schoolList = list.data.data.data ? list.data.data.data : []

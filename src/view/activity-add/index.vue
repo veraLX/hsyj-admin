@@ -63,6 +63,9 @@
               <Checkbox v-model="activityForm.isgroupBoolean">是否团队赛</Checkbox>
               <br/>组队人数：<InputNumber :min="1" v-model="activityForm.groupnum" :disabled="!activityForm.isgroupBoolean"></InputNumber>
           </FormItem>
+          <FormItem prop="recommend" label="是否推荐" :style="{'width': 'calc((100% - 30px)/3)'}">
+            <i-switch v-model="switchRecommend" @on-change="changeRecommend" />
+          </FormItem>
           <FormItem prop="shdesc" label="活动描述" :style="{'width': 'calc(100% - 10px)'}">
               <Input type="textarea" v-model="activityForm.shdesc" placeholder="输入描述"></Input>
           </FormItem>
@@ -111,6 +114,7 @@ export default {
   },
   data () {
     return {
+      switchRecommend: false,
       parentId: 0,
       currentStep: 0,
       addActivitySuccess: false,
@@ -169,8 +173,16 @@ export default {
   mounted () {
     // this.uploadList = this.$refs.upload.fileList
     this.getSchoolList()
+    this.changeRecommend()
   },
   methods: {
+    changeRecommend () {
+      if (this.switchRecommend) {
+        this.activityForm.isrecommend = 1
+      } else {
+        this.activityForm.isrecommend = 0
+      }
+    },
     timeCheck () {
       if (this.activityForm.startdateAll && this.activityForm.enddateAll) {
         if (this.activityForm.startdateAll > this.activityForm.enddateAll) {
