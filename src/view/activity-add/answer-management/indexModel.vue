@@ -31,6 +31,7 @@
             <Input v-model="formInline.rightanswer" placeholder="正确答案"></Input>
         </FormItem>
         <div class="rightButton">
+            <Button type="primary" ghost @click="beforeAnswerStep" style="margin-right: 20px;">上一步</Button>
             <Button type="primary" @click="addAnswer">增加</Button>
         </div>
       </Form>
@@ -151,6 +152,9 @@ export default {
     }
   },
   methods: {
+    beforeAnswerStep () {
+      this.$emit('beforeAnswerStep')
+    },
     async addAnswer () {
       if (!_.isEmpty(this.formInline.questiontitle)) {
         let data = await addAnswer(this.formInline, this.activityId)

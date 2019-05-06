@@ -80,10 +80,11 @@
         <div v-if="currentStep == 1">
             <Upload  v-show="updateModalShow" :parentId="parentId" :sourceType="2"/>
             <div class="rightButton">
+              <Button type="primary" ghost @click="beforeActivityStep" style="margin-right: 20px;">上一步</Button>
               <Button type="primary" @click="nextAnsewerStep">下一步</Button>
             </div>
         </div>
-        <Answer v-if="currentStep == 2" :objectList="answerAllList" :totalPages='totalAnswerPages' :count='countAnswer' :activityId='activityIdEach' :siteList='siteData'/>
+        <Answer @beforeAnswerStep="beforeAnswerStep" v-if="currentStep == 2" :objectList="answerAllList" :totalPages='totalAnswerPages' :count='countAnswer' :activityId='activityIdEach' :siteList='siteData'/>
     </Card>
     <!-- <Modal v-model="editImage"  @on-cancel="nextAnsewerStep" width="60%">
       <p slot="header">
@@ -100,7 +101,7 @@
 <script>
 import Answer from '@/view/activity-add/answer-management/indexModel'
 import Upload from '@/view/components/uploadImage/index'
-import { addActivity } from '@/api/activity'
+import { addActivity, editActivity } from '@/api/activity'
 import { getSchoolList } from '@/api/school'
 import { getAnswerList } from '@/api/answer'
 import { getSceneryFromSchool } from '@/api/scenery'
@@ -114,6 +115,7 @@ export default {
   },
   data () {
     return {
+      isEdit: false,
       switchRecommend: false,
       parentId: 0,
       currentStep: 0,
@@ -240,15 +242,28 @@ export default {
             this.$set(this.activityForm, 'endsceneryid', null)
           }
           console.log('this.activityForm', this.activityForm)
-          let addReturn = await addActivity(this.activityForm)
-          if (addReturn.data.insertid) {
-            this.addActivitySuccess = true
-            this.$Notice.success({
-              title: '活动添加成功'
-            })
-            this.parentId = addReturn.data.insertid
-            this.updateModalShow = true
-            this.currentStep = 1
+          if (this.isEdit) {
+            let editReturn = await editActivity(this.activityForm, this.parentId)
+            console.log('editReturn', editReturn)
+            if (editReturn.data.errno === 0) {
+              this.$Notice.success({
+                title: '活动修改成功'
+              })
+              this.updateModalShow = true
+              this.currentStep = 1
+            }
+          } else {
+            let addReturn = await addActivity(this.activityForm)
+            if (addReturn.data.insertid) {
+              this.addActivitySuccess = true
+              this.$Notice.success({
+                title: '活动添加成功'
+              })
+              console.log('addReturn', addReturn)
+              this.parentId = addReturn.data.insertid
+              this.updateModalShow = true
+              this.currentStep = 1
+            }
           }
         } else {
           this.$Notice.error({
@@ -263,6 +278,14 @@ export default {
     //   this.updateModalShow = true
     //   this.currentStep = 1
     // },
+    beforeActivityStep () {
+      this.isEdit = true
+      this.currentStep = 0
+    },
+    beforeAnswerStep () {
+      debugger
+      this.currentStep = 1
+    },
     async nextAnsewerStep () {
       let answerList = await getAnswerList(this.currentAnswerPage, this.pageAnswerSize, this.parentId)
       this.answerAllList = answerList.data.data.data
