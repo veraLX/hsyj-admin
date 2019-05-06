@@ -56,7 +56,7 @@
 
 <script>
 import {
-  addSchool, getSchoolList
+  addSchool, getAllSchoolList
 } from '@/api/school'
 import {
   addUser, getUserList, editUser, deleteUser
@@ -195,7 +195,7 @@ export default {
   },
   methods: {
     async getSchoolList () {
-      const list = await getSchoolList({ page: 1, pageSize: 100 })
+      const list = await getAllSchoolList({ page: 1, pageSize: 300 })
       this.schoolList = list.data.data.data ? list.data.data.data : []
     },
     async getUserList (id) {

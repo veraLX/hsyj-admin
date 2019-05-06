@@ -25,6 +25,12 @@ export const addSchool = (obj) => {
 
 export const getSchoolList = (data) => {
   return axios.request({
+    url: 'admin/school/index?pageindex=' + data.page + '&pagesize=' + data.pageSize,
+    method: 'get'
+  })
+}
+export const getAllSchoolList = (data) => {
+  return axios.request({
     url: 'api/school/index?pageindex=' + data.page + '&pagesize=' + data.pageSize,
     method: 'get'
   })

@@ -7,8 +7,8 @@
         <FormItem prop="schoolname" label="校区名称" :style="{'width': 'calc((100% - 30px)/3)'}">
           <Input v-model="schoolForm.schoolname" placeholder="输入校区名称"/>
         </FormItem>
-        <FormItem prop="city" label="所属区县" :style="{'width': 'calc((100% - 30px)/3)'}">
-          <Select v-model="schoolForm.city" @on-change="selectChange">
+        <FormItem prop="areaid" label="所属区县" :style="{'width': 'calc((100% - 30px)/3)'}">
+          <Select v-model="schoolForm.areaid" @on-change="selectChange">
             <Option
               v-for="(item,index) in areaList"
               :value="item.areaid.toString()"
@@ -73,11 +73,12 @@ export default {
     return {
       schoolForm: {
         schoolname: '',
-        city: '',
+        areaid: '',
         address: '',
         longitude: '',
         latitude: '',
-        schooldesc: ''
+        schooldesc: '',
+        parentid: ''
       },
       uploadList: [],
       currentParentId: 0,
@@ -90,7 +91,7 @@ export default {
         schoolname: [
           { required: true, message: '请输入学校名称', trigger: 'blur' }
         ],
-        city: [
+        areaid: [
           { required: true, message: '请选择所属区域', trigger: 'change' }
         ],
         longitude: [
@@ -130,19 +131,19 @@ export default {
         },
         {
           title: '所属区县',
-          key: 'city',
+          key: 'areaid',
           render: (h, params) => {
             if (params.row.$isEdit) {
               return h(
                 'Select',
                 {
                   domProps: {
-                    value: params.row.city
+                    value: params.row.areaid
                   },
                   on: {
                     'on-change': function (event) {
                       console.log('event', event)
-                      params.row.city = event
+                      params.row.areaid = event
                     }
                   }
                 },
@@ -156,7 +157,7 @@ export default {
                 })
               )
             } else {
-              return h('div', this.getAreaName(params.row.city))
+              return h('div', this.getAreaName(params.row.areaid))
             }
           }
         },
@@ -304,7 +305,7 @@ export default {
                         this.$set(params.row, '$isEdit', false)
                         let obj = {
                           schoolname: params.row.schoolName,
-                          city: params.row.city,
+                          areaid: params.row.areaid,
                           address: params.row.address,
                           longitude: params.row.longitude,
                           latitude: params.row.latitude,
@@ -313,7 +314,7 @@ export default {
                         }
                         if (obj.schoolname === '') {
                           this.$Message.info('学校名称不能为空')
-                        } else if (obj.city === '') {
+                        } else if (obj.areaid === '') {
                           this.$Message.info('所属区县不能为空')
                         } else if (obj.address === '') {
                           this.$Message.info('地址不能为空')
@@ -395,6 +396,8 @@ export default {
       this.$refs[name].validate(async (valid) => {
         if (valid) {
           this.$Message.success('Success!')
+          this.schoolForm.parentid = JSON.parse(sessionStorage.getItem('user')).schoolid
+          console.log('schoolid', JSON.parse(sessionStorage.getItem('user')))
           await addSchool(this.schoolForm)
           this.getSchoolList()
         } else {
@@ -404,7 +407,7 @@ export default {
 
       // if (this.schoolForm.schoolname === '') {
       //   this.$Message.info('学校名称不能为空')
-      // } else if (this.schoolForm.city === '') {
+      // } else if (this.schoolForm.areaid === '') {
       //   this.$Message.info('所属区县不能为空')
       // } else if (this.schoolForm.address === '') {
       //   this.$Message.info('地址不能为空')
@@ -422,8 +425,8 @@ export default {
     },
     selectChange (value) {
       console.log('value', value)
-      this.schoolForm.city = value
-      this.$set(this.schoolForm, 'city', value)
+      this.schoolForm.areaid = value
+      this.$set(this.schoolForm, 'areaid', value)
       console.log('value', this.schoolForm)
     },
     openModal (params) {
