@@ -3,7 +3,7 @@
     <Card >
       <p slot="title">新增机构</p>
       <Form ref="formInline" :model="formInline"  :rules="addSchoolRule" inline :label-width="80">
-        <FormItem prop="name" label="机构名称:" :style="{'width': '400px'}">
+        <FormItem prop="schoolname" label="机构名称:" :style="{'width': '400px'}">
             <Input v-model="formInline.schoolname" placeholder="输入机构名称"/>
         </FormItem>
         <Button type="primary" @click="addSchool('formInline')">增加</Button>
@@ -36,7 +36,7 @@
       </p>
       <p class="littleTitle">新增管理员</p>
       <Form ref="administrator" :model="administrator" :rules="administratorRule" inline :label-width="100">
-        <FormItem prop="name" label="管理员账户" :style="{'width': '40%'}">
+        <FormItem prop="userName" label="管理员账户" :style="{'width': '40%'}">
             <Input v-model="administrator.userName" placeholder="输入管理员账户"/>
         </FormItem>
         <FormItem prop="pwd" label="管理员密码" :style="{'width': '40%'}">
@@ -78,12 +78,12 @@ export default {
         schoolid: ''
       },
       addSchoolRule: {
-        name: [
+        schoolname: [
           { required: true, message: '请输入机构名称', trigger: 'blur' }
         ]
       },
       administratorRule: {
-        name: [
+        userName: [
           { required: true, message: '请输入管理员账户', trigger: 'blur' }
         ],
         pwd: [

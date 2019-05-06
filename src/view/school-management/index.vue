@@ -8,10 +8,10 @@
           <Input v-model="schoolForm.schoolname" placeholder="输入校区名称"/>
         </FormItem>
         <FormItem prop="city" label="所属区县" :style="{'width': 'calc((100% - 30px)/3)'}">
-          <Select v-model="schoolForm.city">
+          <Select v-model="schoolForm.city" @on-change="selectChange">
             <Option
               v-for="(item,index) in areaList"
-              :value="item.areaid"
+              :value="item.areaid.toString()"
               :key="'search-col-'+index"
             >{{ item.areaname }}</Option>
           </Select>
@@ -91,7 +91,7 @@ export default {
           { required: true, message: '请输入学校名称', trigger: 'blur' }
         ],
         city: [
-          { required: true, message: '请选择所属区域', trigger: 'blur' }
+          { required: true, message: '请选择所属区域', trigger: 'change' }
         ],
         longitude: [
           { required: true, message: '请输入经度', trigger: 'blur' }
@@ -420,6 +420,12 @@ export default {
       const list = await getSchoolList({ page: e, pageSize: 10 })
       this.schoolList = list.data.data.data ? list.data.data.data : []
     },
+    selectChange (value) {
+      console.log('value', value)
+      this.schoolForm.city = value
+      this.$set(this.schoolForm, 'city', value)
+      console.log('value', this.schoolForm)
+    },
     openModal (params) {
       console.log('123456', params.row.schoolID)
       this.editImage = true
@@ -430,7 +436,6 @@ export default {
       window.open('https://lbs.qq.com/tool/getpoint/')
     },
     getAreaName (id) {
-      debugger
       // distype：留言类型0,景点; 1,活动,2 学校,3首页
       switch (parseInt(id)) {
         case 1:
