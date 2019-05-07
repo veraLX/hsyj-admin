@@ -146,6 +146,17 @@ export default {
             return h('div', endDate)
           }
         },
+        { title: '是否推荐',
+          key: 'isrecommend',
+          render: (h, params) => {
+            let isRecommend = params.row.isrecommend
+            if (isRecommend) {
+              return h('div', '是')
+            } else {
+              return h('div', '否')
+            }
+          }
+        },
         // { title: '涉及高校', key: 'shdesc' },
         // { title: '学校数', key: 'shstate', width: 72 },
         // { title: '景点数量', key: 'sceneryCount', width: 84 },

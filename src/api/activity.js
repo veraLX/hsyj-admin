@@ -3,7 +3,7 @@ import axios from '@/libs/api.request'
 // 44、后台活动列表1,get
 export const getActivity1List = (page, size) => {
   return axios.request({
-    url: `api/activity/list?pageindex=${page}&pagesize=${size}`,
+    url: `admin/activity/list?pageindex=${page}&pagesize=${size}`,
     method: 'get'
   })
 }
