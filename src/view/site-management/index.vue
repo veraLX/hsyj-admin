@@ -10,7 +10,7 @@
          <FormItem prop="address" label="校区" :style="{'width': 'calc((100% - 30px)/3)'}">
             <!-- <Input v-model="siteForm.address" placeholder="输入景点名称"></Input> -->
             <Select v-model="siteForm.schoolid" :label-in-value="true" filterable @on-change="handleChange">
-                <Option v-for="item in schoolList" :value="item.schoolID" :label="item.address" :key="item.schoolID">{{ item.schoolName }}</Option>
+                <Option v-for="item in schoolList" :value="item.schoolID" :label="item.schoolName" :key="item.schoolID">{{ item.schoolName }}</Option>
             </Select>
         </FormItem>
         <FormItem prop="longitude" label="经度" :style="{'width': 'calc((100% - 30px)/3)'}">
