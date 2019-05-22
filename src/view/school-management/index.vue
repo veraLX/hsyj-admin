@@ -247,6 +247,26 @@ export default {
             }
           }
         },
+        {
+          title: '学校简称',
+          key: 'shortName',
+          render: (h, params) => {
+            if (params.row.$isEdit) {
+              return h('textarea', {
+                domProps: {
+                  value: params.row.shortName
+                },
+                on: {
+                  input: function (event) {
+                    params.row.shortName = event.target.value
+                  }
+                }
+              })
+            } else {
+              return h('div', params.row.shortName)
+            }
+          }
+        },
         // { title: '图片',
         //   key: 'action',
         //   width: 200,
