@@ -13,7 +13,8 @@ export const addSchool = (obj) => {
     'soundurl': obj.soundurl,
     'videourl': obj.videourl,
     'areaid': obj.areaid,
-    'parentid': obj.parentid // 本条是分校区
+    'parentid': obj.parentid, // 本条是分校区
+    'shortname': obj.shortname
   }
 
   return axios.request({

@@ -16,14 +16,17 @@
             >{{ item.areaname }}</Option>
           </Select>
         </FormItem>
-        <FormItem prop="longitude" label="经度" :style="{'width': 'calc((100% - 30px)/3)'}">
+        <FormItem prop="shortname" label="学校简称" :style="{'width': 'calc((100% - 30px)/3)'}">
+          <Input v-model="schoolForm.shortname" placeholder="输入学校简称"/>
+        </FormItem>
+        <FormItem prop="longitude" label="经度" :style="{'width': 'calc((100% - 60px)/6)'}">
           <Input v-model="schoolForm.longitude" placeholder="输入经度"/>
+        </FormItem>
+        <FormItem prop="latitude" label="纬度" :style="{'width': 'calc((100% - 60px)/6)'}">
+          <Input v-model="schoolForm.latitude" placeholder="输入纬度"/>
         </FormItem>
         <FormItem prop="address" label="地址" :style="{'width': 'calc((100% - 30px)/3*2 + 10px)'}">
           <Input v-model="schoolForm.address" placeholder="输入地址"/>
-        </FormItem>
-        <FormItem prop="latitude" label="纬度" :style="{'width': 'calc((100% - 30px)/3)'}">
-          <Input v-model="schoolForm.latitude" placeholder="输入纬度"/>
         </FormItem>
         <FormItem prop="schooldesc" label="描述" :style="{'width': 'calc(100% - 10px)'}">
           <Input type="textarea" v-model="schoolForm.schooldesc" placeholder="输入描述"/>
@@ -93,6 +96,9 @@ export default {
         ],
         areaid: [
           { required: true, message: '请选择所属区域', trigger: 'change' }
+        ],
+        shortname: [
+          { required: true, message: '请选择学校简称', trigger: 'change' }
         ],
         longitude: [
           { required: true, message: '请输入经度', trigger: 'blur' }
@@ -392,12 +398,10 @@ export default {
       this.updateModalShow = false
     },
     addSchool (name) {
-      debugger
       this.$refs[name].validate(async (valid) => {
         if (valid) {
           this.$Message.success('Success!')
           this.schoolForm.parentid = JSON.parse(sessionStorage.getItem('user')).schoolid
-          console.log('schoolid', JSON.parse(sessionStorage.getItem('user')))
           await addSchool(this.schoolForm)
           this.getSchoolList()
         } else {
