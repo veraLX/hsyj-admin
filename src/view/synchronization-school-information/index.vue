@@ -23,10 +23,8 @@ export default {
     }
   },
   async mounted () {
-    debugger
     const list = await getSchoolList({})
     this.schoolListNumber = list.data.data.count ? list.data.data.count : 1
-    console.log(list)
   },
   methods: {
   }

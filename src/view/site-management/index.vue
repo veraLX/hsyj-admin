@@ -287,7 +287,6 @@ export default {
               //   },
               //   on: {
               //     click: () => {
-              //       console.log(params)
               //     }
               //   }
               // }, '修改'),
@@ -302,7 +301,6 @@ export default {
                   },
                   on: {
                     click: () => {
-                      console.log(params)
                       this.openModal(params)
                     }
                   }
@@ -411,7 +409,6 @@ export default {
     this.pageSize = scene.data.data.pageSize
     this.currentPage = scene.data.data.currentPage
     this.count = scene.data.data.count
-    console.log('scene', scene)
   },
   methods: {
     changeRecommend () {
@@ -432,11 +429,9 @@ export default {
     },
     async getSchoolList () {
       const list = await getSchoolList({ page: 1, pageSize: 100 })
-      console.log('schoolList', list)
       this.schoolList = list.data.data.data ? list.data.data.data : []
     },
     openModal (params) {
-      console.log('params', params)
       this.editSiteImage = true
       this.siteModalShow = true
       this.currentParentId = params.row.sceneryID

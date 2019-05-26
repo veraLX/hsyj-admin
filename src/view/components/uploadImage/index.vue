@@ -43,14 +43,14 @@ export default {
   },
   async mounted () {
     // 这里就拿到了iframe的对象
-    console.log(this.$refs.iframe)
+    // console.log(this.$refs.iframe)
     // 这里就拿到了iframe的window对象
-    console.log(this.$refs.iframe.contentWindow)
+    // console.log(this.$refs.iframe.contentWindow)
     // 在外部vue的window上添加postMessage的监听，并且绑定处理函数handleMessage
     window.addEventListener('message', async (event) => {
       let imageList = await getImageList(this.parentId, this.sourceType)
       this.currentImage = imageList.data.data.data
-      console.log('vue文件接收的数据,接收的数据', event)
+      // console.log('vue文件接收的数据,接收的数据', event)
     })
     // window.addEventListener('message', this.handleMessage())
     this.iframeWin = this.$refs.iframe.contentWindow
@@ -59,12 +59,9 @@ export default {
     // }
     let imageList = await getImageList(this.parentId, this.sourceType)
     this.currentImage = imageList.data.data.data
-    console.log('imageLIst', imageList)
-    console.log('currentImage.length > 0', this.currentImage)
   },
   methods: {
     finish () {
-      console.log('this.iframeWin', this.iframeWin)
       this.$refs.iframe.contentWindow.postMessage({
         cmd: 'getFormJson',
         params: {},
@@ -76,7 +73,6 @@ export default {
       }, '*')
     },
     async handleRemove (item) {
-      console.log('item', item)
       let deleteImage = await deleteOneImage(item.sourceID)
       if (!deleteImage.data.errno) {
         this.$Message.warning('删除成功')

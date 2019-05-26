@@ -105,7 +105,6 @@ export default {
                 },
                 on: {
                   'on-change': async () => {
-                    console.log('11111', params.row.isrecommend)
                     await recommendMessage({
                       id: params.row.discussID,
                       isrecommend: params.row.isrecommend === 0 ? 1 : 0
@@ -135,7 +134,6 @@ export default {
                   },
                   on: {
                     click: async () => {
-                      console.log('params.row', params.row)
                       await acceptMessage({
                         id: params.row.discussID,
                         shstate: 3
@@ -219,8 +217,6 @@ export default {
                 },
                 on: {
                   'on-change': async () => {
-                    debugger
-                    console.log('11111', params.row.isrecommend)
                     await recommendMessage({
                       id: params.row.discussID,
                       isrecommend: params.row.isrecommend === 0 ? 1 : 0
@@ -333,7 +329,6 @@ export default {
                 },
                 on: {
                   'on-change': async () => {
-                    console.log('11111', params.row.isrecommend)
                     await recommendMessage({
                       id: params.row.discussID,
                       isrecommend: params.row.isrecommend === 0 ? 1 : 0
@@ -500,16 +495,13 @@ export default {
         : []
     },
     tabsChange () {
-      console.log('change')
       this.activityMessageSelectedList = []
       this.sightMessageSelectedList = []
       this.activityMessageSelectedList = []
     },
     async acceptance () {
-      debugger
       if (this.appMessageSelectedList.length !== 0) {
         for (const item of this.appMessageSelectedList) {
-          console.log(item)
           await acceptMessage({ id: item.discussID, shstate: 3 })
         }
         this.getMessageList()
@@ -520,7 +512,6 @@ export default {
     async refuse () {
       if (this.appMessageSelectedList.length !== 0) {
         for (const item of this.appMessageSelectedList) {
-          console.log(item)
           await acceptMessage({ id: item.discussID, shstate: 4 })
         }
         this.getMessageList()
@@ -569,25 +560,25 @@ export default {
       }
     },
     onSelect (e) {
-      console.log('onSelect', e)
+      // console.log('onSelect', e)
     },
     onAppSelectionChange (list) {
       this.appMessageSelectedList = list
-      console.log('onAppSelectionChange', this.appMessageSelectedList)
+      // console.log('onAppSelectionChange', this.appMessageSelectedList)
     },
     onSightSelectionChange (list) {
       this.sightMessageSelectedList = list
-      console.log('onSightSelectionChange', this.sightMessageSelectedList)
+      // console.log('onSightSelectionChange', this.sightMessageSelectedList)
     },
     onActivitySelectionChange (list) {
       this.activityMessageSelectedList = list
-      console.log(
-        'onActivitySelectionChange',
-        this.activityMessageSelectedList
-      )
+      // console.log(
+      //   'onActivitySelectionChange',
+      //   this.activityMessageSelectedList
+      // )
     },
     onSelectAll (e) {
-      console.log('onSelectAll', e)
+      // console.log('onSelectAll', e)
     }
   }
 }

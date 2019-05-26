@@ -24,9 +24,9 @@ export default {
   },
   async mounted () {
     // 这里就拿到了iframe的对象
-    console.log(this.$refs.iframe)
+    // console.log(this.$refs.iframe)
     // 这里就拿到了iframe的window对象
-    console.log(this.$refs.iframe.contentWindow)
+    // console.log(this.$refs.iframe.contentWindow)
     // window.addEventListener('message', this.handleMessage())
     this.iframeWin = this.$refs.iframe.contentWindow
     // if (this.currentImageArray) {
@@ -35,7 +35,6 @@ export default {
   },
   methods: {
     finish () {
-      console.log('this.iframeWin', this.iframeWin)
       this.$refs.iframe.contentWindow.postMessage({
         cmd: 'getFormJson',
         params: {},

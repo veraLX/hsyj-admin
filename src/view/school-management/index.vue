@@ -148,7 +148,6 @@ export default {
                   },
                   on: {
                     'on-change': function (event) {
-                      console.log('event', event)
                       params.row.areaid = event
                     }
                   }
@@ -294,7 +293,6 @@ export default {
               //   },
               //   on: {
               //     click: () => {
-              //       console.log(params)
               //     }
               //   }
               // }, '修改'),
@@ -309,7 +307,6 @@ export default {
                   },
                   on: {
                     click: () => {
-                      console.log(params)
                       this.openModal(params)
                     }
                   }
@@ -447,13 +444,10 @@ export default {
       this.schoolList = list.data.data.data ? list.data.data.data : []
     },
     selectChange (value) {
-      console.log('value', value)
       this.schoolForm.areaid = value
       this.$set(this.schoolForm, 'areaid', value)
-      console.log('value', this.schoolForm)
     },
     openModal (params) {
-      console.log('123456', params.row.schoolID)
       this.editImage = true
       this.updateModalShow = true
       this.currentParentId = params.row.schoolID

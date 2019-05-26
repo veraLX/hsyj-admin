@@ -148,7 +148,6 @@ export default {
       }
     },
     timeCheck () {
-      console.log('this.activityForm.startdateAll', this.activityForm.startdateAll)
       if (this.activityForm.startdateAll && this.activityForm.enddateAll) {
         if (this.activityForm.startdateAll > this.activityForm.enddateAll) {
           this.$Notice.error({
@@ -166,7 +165,6 @@ export default {
       })
       // currentActivity
       this.activityForm = this.currentActivity
-      console.log('this.activityForm', this.activityForm)
       // 学校范围
       let needSchoolRang = this.currentActivity.needSchoolRang
       let needSchoolRangArr = needSchoolRang.split(',')
@@ -179,7 +177,6 @@ export default {
         })
       })
       this.$set(this.activityForm, 'targetKeys1', targetKeyList)
-      console.log('targetKeyList', targetKeyList)
       // 景点选择
       let getSceneryFromSchoolList = await getSceneryFromSchool(needSchoolRang)
       this.data2 = []
@@ -192,22 +189,16 @@ export default {
       _.each((this.currentActivity.sceneryRange), sceneryItem => {
         targetKeyList2.push(sceneryItem.sceneryid)
       })
-      console.log('targetKeyList2', targetKeyList2)
       this.$set(this.activityForm, 'targetKeys2', targetKeyList2)
       // 开始时间
-      console.log('this.currentActivity.startDate', this.currentActivity.startDate)
       let firststartDate = this.currentActivity.startDate.split('T')[0]
-      console.log('firststartDate', firststartDate)
       // let secondstartDate = this.currentActivity.startDate.split('T')[1]
       let sYear = firststartDate.split('-')[0]
       let sMounth = firststartDate.split('-')[1]
       let sDay = firststartDate.split('-')[2]
-      console.log('sYear', sYear, sMounth, sDay)
       let startdateAll = new Date(sYear, sMounth - 1, sDay)
       this.$set(this.activityForm, 'startdateAll', startdateAll)
-      console.log('startdateAll', startdateAll)
       // 结束时间
-      console.log('this.currentActivity.endDate', this.currentActivity.endDate)
       let firendDate = this.currentActivity.endDate.split('T')[0]
       // let secondendDate = this.currentActivity.endDate.split('T')[1]
       let eYear = firendDate.split('-')[0]
@@ -244,7 +235,6 @@ export default {
     },
     async editComfirm () {
       this.$refs['formInline'].validate(async (valid) => {
-        console.log('this.activityForm.targetKeys2', this.activityForm.targetKeys2)
         if (!this.activityForm.targetKeys1 || !this.activityForm.targetKeys2) {
           this.$Notice.error({
             title: '请填写完整必填字段'
@@ -315,7 +305,6 @@ export default {
           }
           // 描述
           let editReturn = await editActivity(this.activityForm, this.activityForm.activityID)
-          console.log('editReturn', editReturn)
           if (editReturn.data.errno === 0) {
             this.$Notice.success({
               title: '活动修改成功'
@@ -329,7 +318,6 @@ export default {
         }
       })
     // }
-    //   console.log('this.activityForm', this.activityForm)
     //   let editReturn = await addActivity(this.activityForm)
     //   if (editReturn.data.insertid) {
     //     this.addActivitySuccess = true
@@ -344,13 +332,11 @@ export default {
     },
     async handleChange1 (newTargetKeys, direction, moveKeys) {
       this.activityForm.targetKeys1 = newTargetKeys
-      console.log('this.targetKeys1', this.activityForm.targetKeys1)
       let schoolIdString = ''
       _.each(this.activityForm.targetKeys1, (schoolId) => {
         schoolIdString = schoolIdString + schoolId + ','
       })
       schoolIdString = schoolIdString.substring(0, schoolIdString.length - 1)
-      console.log('schoolIdString', schoolIdString)
       this.$set(this.activityForm, 'needschoolrang', schoolIdString)
       let getSceneryFromSchoolList = await getSceneryFromSchool(schoolIdString)
       this.data2 = []
@@ -363,19 +349,15 @@ export default {
         data2Arr.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
         targetKeys2Arr.push(schoolSceneryItem.sceneryID)
       })
-      console.log('data2Arr', data2Arr)
-      console.log('targetKeys2Arr', targetKeys2Arr)
       let sceneryIdString = ''
       _.each(targetKeys2Arr, (sceneryId) => {
         sceneryIdString = sceneryIdString + sceneryId + ','
       })
       sceneryIdString = sceneryIdString.substring(0, sceneryIdString.length - 1)
       this.$set(this.activityForm, 'needsceneryrang', sceneryIdString)
-      console.log('this.activityForm.needsceneryrang', this.activityForm.needsceneryrang)
     },
     handleChange2 (newTargetKeys, direction, moveKeys) {
       this.activityForm.targetKeys2 = newTargetKeys
-      console.log('this.activityForm.targetKeys2', this.activityForm.targetKeys2)
       let sceneryIdString = ''
       _.each(this.activityForm.targetKeys2, (sceneryId) => {
         sceneryIdString = sceneryIdString + sceneryId + ','
@@ -385,7 +367,6 @@ export default {
       // }
       sceneryIdString = sceneryIdString.substring(0, sceneryIdString.length - 1)
       this.$set(this.activityForm, 'needsceneryrang', sceneryIdString)
-      console.log('this.activityForm.needsceneryrang', this.activityForm.needsceneryrang)
     }
   }
 }

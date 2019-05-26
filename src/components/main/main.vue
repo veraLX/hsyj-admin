@@ -84,7 +84,6 @@ export default {
       return this.$store.state.user.userName
     },
     userAvatar () {
-      console.log('111', this.$store.state.user)
       return this.$store.state.user.avatarImgPath
     },
     cacheList () {

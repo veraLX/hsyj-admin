@@ -182,7 +182,6 @@ export default {
                   },
                   on: {
                     click: () => {
-                      console.log(params)
                       this.openModal(params)
                     }
                   }
@@ -200,7 +199,6 @@ export default {
                 on: {
                   click: () => {
                     this.openAnswerModal(params)
-                    console.log(params)
                   }
                 }
               }, '答题'),
@@ -213,7 +211,6 @@ export default {
                 },
                 on: {
                   click: () => {
-                    console.log(params)
                     this.openActivityModal(params)
                   }
                 }
@@ -251,12 +248,10 @@ export default {
   async mounted () {
     let activityList = await getActivity1List(this.currentPage, this.pageSize)
     this.activityData = activityList.data.data.data
-    console.log('this.activityData', this.activityData)
     this.totalPages = activityList.data.data.totalPages
     this.pageSize = activityList.data.data.pageSize
     this.currentPage = activityList.data.data.currentPage
     this.count = activityList.data.data.count
-    console.log('activityList', activityList)
     // this.uploadList = this.$refs.upload.fileList
   },
   methods: {
@@ -279,14 +274,12 @@ export default {
       this.siteData = siteList.data.data.data
       this.editAnswer = true
       this.isAnswer = true
-      console.log('answerList', this.siteData)
     },
     answerCloseModal () {
       this.editAnswer = false
       this.isAnswer = false
     },
     openModal (params) {
-      console.log('params', params)
       this.editImage = true
       this.updateModalShow = true
       // this.currentImageArray = params.row.pics
@@ -305,8 +298,7 @@ export default {
       this.count = activityList.data.data.count
     },
     async addActivity () {
-      let addActivityItem = await addActivity(this.activityForm)
-      console.log('addActivityItem', addActivityItem)
+      await addActivity(this.activityForm)
     },
     handlePage (value) {
       this.currentPage = value

@@ -196,12 +196,10 @@ export default {
     },
     async getSchoolList () {
       const list = await getSchoolList({ page: 1, pageSize: 100 })
-      console.log('schoolList', list)
       this.schoolList = list.data.data.data ? list.data.data.data : []
       _.each(this.schoolList, (schoolItem) => {
         this.data1.push({ key: schoolItem.schoolID, label: schoolItem.schoolName })
       })
-      console.log('this.data1', this.data1)
     },
     async nextImageStep () {
       this.$refs['formInline'].validate(async (valid) => {
@@ -241,10 +239,8 @@ export default {
             this.$set(this.activityForm, 'settingend', 0)
             this.$set(this.activityForm, 'endsceneryid', null)
           }
-          console.log('this.activityForm', this.activityForm)
           if (this.isEdit) {
             let editReturn = await editActivity(this.activityForm, this.parentId)
-            console.log('editReturn', editReturn)
             if (editReturn.data.errno === 0) {
               this.$Notice.success({
                 title: '活动修改成功'
@@ -259,7 +255,6 @@ export default {
               this.$Notice.success({
                 title: '活动添加成功'
               })
-              console.log('addReturn', addReturn)
               this.parentId = addReturn.data.insertid
               this.updateModalShow = true
               this.currentStep = 1
@@ -283,7 +278,6 @@ export default {
       this.currentStep = 0
     },
     beforeAnswerStep () {
-      debugger
       this.currentStep = 1
     },
     async nextAnsewerStep () {
@@ -307,8 +301,6 @@ export default {
     },
     async handleChange1 (newTargetKeys, direction, moveKeys) {
       this.activityForm.targetKeys1 = newTargetKeys
-      // this.targetKeys1 = newTargetKeys
-      console.log('this.targetKeys1', this.activityForm.targetKeys1)
       let schoolIdString = ''
       _.each(this.activityForm.targetKeys1, (schoolId) => {
         schoolIdString = schoolIdString + schoolId + ','
@@ -317,7 +309,6 @@ export default {
         schoolIdString = schoolIdString.substr(0, schoolIdString.length - 1)
       }
       this.$set(this.activityForm, 'needschoolrang', schoolIdString)
-      console.log('schoolIdString', schoolIdString)
       let getSceneryFromSchoolList = await getSceneryFromSchool(schoolIdString)
       this.siteData = getSceneryFromSchoolList.data.data
       this.data2 = []
@@ -330,8 +321,6 @@ export default {
         data2Arr.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
         targetKeys2Arr.push(schoolSceneryItem.sceneryID)
       })
-      console.log('data2Arr', data2Arr)
-      console.log('targetKeys2Arr', targetKeys2Arr)
       let sceneryIdString = ''
       _.each(targetKeys2Arr, (sceneryId) => {
         sceneryIdString = sceneryIdString + sceneryId + ','
@@ -340,11 +329,9 @@ export default {
         sceneryIdString = sceneryIdString.substr(0, sceneryIdString.length - 1)
       }
       this.$set(this.activityForm, 'needsceneryrang', sceneryIdString)
-      console.log('this.activityForm.needsceneryrang', this.activityForm.needsceneryrang)
     },
     handleChange2 (newTargetKeys, direction, moveKeys) {
       this.activityForm.targetKeys2 = newTargetKeys
-      console.log('this.activityForm.targetKeys2', this.activityForm.targetKeys2)
       let sceneryIdString = ''
       _.each(this.activityForm.targetKeys2, (sceneryId) => {
         sceneryIdString = sceneryIdString + sceneryId + ','
@@ -353,7 +340,6 @@ export default {
         sceneryIdString = sceneryIdString.substr(0, sceneryIdString.length - 1)
       }
       this.$set(this.activityForm, 'needsceneryrang', sceneryIdString)
-      console.log('this.activityForm.needsceneryrang', this.activityForm.needsceneryrang)
     }
     // handleView (name) {
     //   this.imgName = name

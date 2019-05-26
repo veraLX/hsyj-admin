@@ -201,7 +201,6 @@ export default {
     async getUserList (id) {
       const list = await getUserList(id)
       this.administratorList = list.data.data ? list.data.data : []
-      console.log('1111', list)
     },
     async schoolDetail (school) {
       if (school.schoolID) {

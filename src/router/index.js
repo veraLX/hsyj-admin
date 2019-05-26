@@ -56,11 +56,9 @@ router.beforeEach((to, from, next) => {
     //     name: 'login'
     //   })
     // }
-    debugger
     const userString = sessionStorage.getItem('user')
     if (userString) {
       store.dispatch('getUserInfo').then(user => {
-        debugger
         let access = ''
         if (user.usertype === 1) {
           access = 'systemAdministrator'

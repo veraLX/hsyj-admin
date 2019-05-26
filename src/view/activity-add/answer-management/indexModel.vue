@@ -157,7 +157,7 @@ export default {
     },
     async addAnswer () {
       if (!_.isEmpty(this.formInline.questiontitle)) {
-        let data = await addAnswer(this.formInline, this.activityId)
+        await addAnswer(this.formInline, this.activityId)
         this.flashAllAnswerData()
         this.formInline = {
           sceneryid: null,
@@ -169,7 +169,6 @@ export default {
           answerd: '',
           rightanswer: ''
         }
-        console.log('addSite', data)
       }
     },
     async flashAllAnswerData () {
@@ -179,7 +178,6 @@ export default {
       this.pageSize = answerList.data.data.pageSize
       this.currentPage = answerList.data.data.currentPage
       this.count = answerList.data.data.count
-      console.log('answerList', answerList)
     },
     handlePage (value) {
       this.currentPage = value
