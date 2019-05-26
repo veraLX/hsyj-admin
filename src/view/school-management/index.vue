@@ -336,7 +336,8 @@ export default {
                           longitude: params.row.longitude,
                           latitude: params.row.latitude,
                           schooldesc: params.row.schooldesc,
-                          schoolID: params.row.schoolID
+                          schoolID: params.row.schoolID,
+                          shortname: params.row.shortName
                         }
                         if (obj.schoolname === '') {
                           this.$Message.info('学校名称不能为空')
@@ -392,7 +393,8 @@ export default {
           }
         }
       ],
-      schoolList: []
+      schoolList: [],
+      currentPage: 1
     }
   },
   mounted () {
@@ -401,17 +403,13 @@ export default {
   },
   methods: {
     async getSchoolList () {
-      console.log('123')
-      const list = await getSchoolList({ page: 1, pageSize: 10 })
+      const list = await getSchoolList({ page: this.currentPage, pageSize: 10 })
       this.schoolList = list.data.data.data ? list.data.data.data : []
       this.count = list.data.data.count ? list.data.data.count : 0
-      console.log(list)
     },
     async getArea () {
-      console.log('6663')
       const list = await getArea()
       this.areaList = list.data.data ? list.data.data : []
-      console.log(this.areaList)
     },
     childCloseModal () {
       this.editImage = false
@@ -444,6 +442,7 @@ export default {
       // }
     },
     async changePage (e) {
+      this.currentPage = e
       const list = await getSchoolList({ page: e, pageSize: 10 })
       this.schoolList = list.data.data.data ? list.data.data.data : []
     },
