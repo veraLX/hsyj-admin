@@ -30,3 +30,10 @@ export const addAnswer = (obj, activityid) => {
     method: 'post'
   })
 }
+
+export const deleteAnswer = (questionID) => {
+  return axios.request({
+    url: 'admin/activity/delete2?id=' + questionID,
+    method: 'get'
+  })
+}

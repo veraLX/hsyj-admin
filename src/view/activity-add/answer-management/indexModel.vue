@@ -3,7 +3,7 @@
     <Card>
       <p slot="title">新增活动景点题目</p>
       <Form ref="formInline" :model="formInline" :rules="ruleInline" :label-width="80">
-        <FormItem label="景点选择" :style="{'width': '400px'}">
+        <FormItem label="景点选择" :style="{'width': '400px'}" prop="sceneryID">
             <Select v-model="formInline.sceneryid" placeholder="输入景点">
               <Option v-for="item in siteList" :value="item.sceneryID" :key="item.sceneryID">{{ item.sceneryTitle }}</Option>
             </Select>
@@ -12,22 +12,22 @@
         <!-- <FormItem label="地点" :style="{'width': '400px'}">
             <Input type="textarea" v-model="formInline.startAddress" placeholder="地点"></Input>
         </FormItem> -->
-        <FormItem label="题干" :style="{'width': '400px'}">
+        <FormItem label="题干" :style="{'width': '400px'}" prop="questiontitle">
             <Input type="textarea" v-model="formInline.questiontitle" placeholder="输入题干"></Input>
         </FormItem>
-        <FormItem label="选项A" :style="{'width': '400px'}">
+        <FormItem label="选项A" :style="{'width': '400px'}" prop="answera">
             <Input v-model="formInline.answera" placeholder="输入选项A"></Input>
         </FormItem>
-        <FormItem label="选项B" :style="{'width': '400px'}">
+        <FormItem label="选项B" :style="{'width': '400px'}" prop="answerb">
             <Input v-model="formInline.answerb" placeholder="输入选项B"></Input>
         </FormItem>
-        <FormItem label="选项C" :style="{'width': '400px'}">
+        <FormItem label="选项C" :style="{'width': '400px'}" prop="answerc">
             <Input v-model="formInline.answerc" placeholder="输入选项C"></Input>
         </FormItem>
-        <FormItem label="选项D" :style="{'width': '400px'}">
+        <FormItem label="选项D" :style="{'width': '400px'}" prop="answerd">
             <Input v-model="formInline.answerd" placeholder="输入选项D"></Input>
         </FormItem>
-        <FormItem label="正确答案" :style="{'width': '400px'}">
+        <FormItem label="正确答案" :style="{'width': '400px'}" prop="rightanswer">
             <Input v-model="formInline.rightanswer" placeholder="正确答案"></Input>
         </FormItem>
         <div class="rightButton">
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { getAnswerList, addAnswer } from '@/api/answer'
+import { getAnswerList, addAnswer, deleteAnswer } from '@/api/answer'
 export default {
   name: 'directive_page',
   props: {
@@ -70,8 +70,26 @@ export default {
         rightanswer: ''
       },
       ruleInline: {
-        password: [
-          { required: true, message: '请输入机构名称', trigger: 'blur' }
+        sceneryID: [
+          { required: true, message: '请输入景点', trigger: 'blur' }
+        ],
+        questiontitle: [
+          { required: true, message: '请输入题干', trigger: 'blur' }
+        ],
+        answera: [
+          { required: true, message: '请输入选项A', trigger: 'blur' }
+        ],
+        answerb: [
+          { required: true, message: '请输入选项B', trigger: 'blur' }
+        ],
+        answerc: [
+          { required: true, message: '请输入选项C', trigger: 'blur' }
+        ],
+        answerd: [
+          { required: true, message: '请输入选项D', trigger: 'blur' }
+        ],
+        rightanswer: [
+          { required: true, message: '请输入正确答案', trigger: 'blur' }
         ]
       },
       AnswerColumns: [
@@ -134,6 +152,7 @@ export default {
                 },
                 on: {
                   'on-ok': async () => {
+                    this.deleteAnswer(params.row)
                   }
                 }
               }, [
@@ -152,6 +171,10 @@ export default {
     }
   },
   methods: {
+    async deleteAnswer (rowData) {
+      await deleteAnswer(rowData.questionID)
+      this.flashAllAnswerData()
+    },
     beforeAnswerStep () {
       this.$emit('beforeAnswerStep')
     },
