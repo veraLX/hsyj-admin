@@ -31,9 +31,9 @@ export const addAnswer = (obj, activityid) => {
   })
 }
 
-export const deleteAnswer = (questionID) => {
+export const deleteAnswer = (questionID, activityID, sceneryID) => {
   return axios.request({
-    url: 'admin/activity/delete2?id=' + questionID,
+    url: 'admin/activity/delete2?id=' + questionID + '&activityid=' + activityID + '&sceneryid=' + sceneryID,
     method: 'get'
   })
 }

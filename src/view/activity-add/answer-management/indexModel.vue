@@ -172,7 +172,7 @@ export default {
   },
   methods: {
     async deleteAnswer (rowData) {
-      await deleteAnswer(rowData.questionID)
+      await deleteAnswer(rowData.questionID, rowData.activityid, rowData.sceneryid)
       this.flashAllAnswerData()
     },
     beforeAnswerStep () {
