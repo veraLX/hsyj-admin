@@ -455,6 +455,7 @@ export default {
           await addScenery(this.siteForm)
           this.flashAllSiteData()
           this.siteForm = {}
+          this.switchRecommend = false
         } else {
           this.$Message.error('Fail!')
         }

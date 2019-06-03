@@ -5,7 +5,7 @@
       <Form ref="formInline" :model="formInline" :rules="ruleInline" :label-width="80">
         <FormItem label="景点选择" :style="{'width': '400px'}" prop="sceneryID">
             <Select v-model="formInline.sceneryid" placeholder="输入景点">
-              <Option v-for="item in siteList" :value="item.sceneryID" :key="item.sceneryID">{{ item.sceneryTitle }}</Option>
+              <Option v-for="item in currentSiteList" :value="item.sceneryID" :key="item.sceneryID">{{ item.sceneryTitle }}</Option>
             </Select>
             <!-- <Input v-model="formInline.sceneryid" placeholder="输入景点"></Input> -->
         </FormItem>
@@ -154,6 +154,7 @@ export default {
                 on: {
                   'on-ok': async () => {
                     this.deleteAnswer(params.row)
+                    this.calculateSite()
                   }
                 }
               }, [
@@ -168,10 +169,25 @@ export default {
           }
         }
       ],
-      AnswerData: this.objectList ? this.objectList : []
+      AnswerData: this.objectList ? this.objectList : [],
+      currentSiteList: []
     }
   },
+  created () {
+    this.calculateSite()
+  },
   methods: {
+    calculateSite () {
+      this.currentSiteList = JSON.parse(JSON.stringify(this.siteList))
+      debugger
+      _.each(this.siteList, (siteItem, index) => {
+        _.each(this.AnswerData, (answerItem) => {
+          if (siteItem.sceneryID === answerItem.sceneryid) {
+            this.currentSiteList.splice(index, 1)
+          }
+        })
+      })
+    },
     async deleteAnswer (rowData) {
       await deleteAnswer(rowData.questionID, rowData.activityid, rowData.sceneryid)
       this.flashAllAnswerData()
@@ -202,6 +218,7 @@ export default {
       this.pageSize = answerList.data.data.pageSize
       this.currentPage = answerList.data.data.currentPage
       this.count = answerList.data.data.count
+      this.calculateSite()
     },
     handlePage (value) {
       this.currentPage = value
