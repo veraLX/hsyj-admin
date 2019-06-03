@@ -2,7 +2,7 @@ import axios from '@/libs/api.request'
 
 export const getMessageList = (data) => {
   return axios.request({
-    url: 'api/discuss/list?pageindex=' + data.page + '&pagesize=' + data.pagesize + '&distype=' + data.distype,
+    url: 'admin/discuss/list?pageindex=' + data.page + '&pagesize=' + data.pagesize + '&distype=' + data.distype,
     method: 'get'
   })
 }

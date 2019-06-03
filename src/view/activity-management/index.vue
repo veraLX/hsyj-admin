@@ -30,7 +30,7 @@
         <Icon type="ios-paper-outline"></Icon>
         <span> 答题编辑</span>
       </p>
-      <Answer v-if="isAnswer" :objectList="answerAllList" :totalPages='totalAnswerPages' :count='countAnswer' :activityId='activityIdEach' :siteList='siteData'/>
+      <Answer :isEdit="true" v-if="isAnswer" :objectList="answerAllList" :totalPages='totalAnswerPages' :count='countAnswer' :activityId='activityIdEach' :siteList='siteData'/>
       <div slot="footer">
           <Button type="primary"  @click="answerCloseModal">完成</Button>
       </div>

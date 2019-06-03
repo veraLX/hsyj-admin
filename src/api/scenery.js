@@ -42,7 +42,7 @@ export const editScenery = (obj) => {
 
 export const sceneryList = (currentPage, pageSize) => {
   return axios.request({
-    url: 'api/scenery/index?pageindex=' + currentPage + '&pagesize=' + pageSize,
+    url: 'admin/scenery/index?pageindex=' + currentPage + '&pagesize=' + pageSize,
     method: 'get'
   })
 }

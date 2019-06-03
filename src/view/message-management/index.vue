@@ -3,10 +3,10 @@
     <Card>
       <div slot="title">
         <p style="display:inline">留言</p>&nbsp;&nbsp;
-        <Tag color="red">待审批留言数量 99 条</Tag>
+        <Tag color="red">待审批留言数量 {{unresoluved}} 条</Tag>
       </div>
-      <Tabs value="app" @on-click="tabsChange">
-        <TabPane label="首页留言" name="app">
+      <Tabs value="sight" @on-click="tabsChange">
+        <!-- <TabPane label="首页留言" name="app">
           <Table
             :columns="appMessageColumns"
             :data="appMessageList"
@@ -21,7 +21,7 @@
               <Button @click="refuse" type="error">一键拒绝</Button>
             </Col>
           </Row>
-        </TabPane>
+        </TabPane> -->
         <TabPane label="景点留言" name="sight">
           <Table
             stripe
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { getMessageList, acceptMessage, recommendMessage } from '@/api/message'
+import { getMessageList, acceptMessage } from '@/api/message'
 export default {
   name: 'directive_page',
   data () {
@@ -89,33 +89,31 @@ export default {
             )
           }
         },
-        {
-          title: '是否推荐',
-          key: 'isrecommend',
-          width: 140,
-          align: 'center',
-          // options: ['delete'],
-          render: (h, params) => {
-            return h('div', [
-              h('i-switch', {
-                // style: { 'margin-right': '8px' },
-                props: {
-                  value: params.row.isrecommend === 1,
-                  size: 'small'
-                },
-                on: {
-                  'on-change': async () => {
-                    await recommendMessage({
-                      id: params.row.discussID,
-                      isrecommend: params.row.isrecommend === 0 ? 1 : 0
-                    })
-                    this.getMessageList()
-                  }
-                }
-              })
-            ])
-          }
-        },
+        // {
+        //   title: '是否推荐',
+        //   key: 'isrecommend',
+        //   width: 140,
+        //   align: 'center',
+        //   render: (h, params) => {
+        //     return h('div', [
+        //       h('i-switch', {
+        //         props: {
+        //           value: params.row.isrecommend === 1,
+        //           size: 'small'
+        //         },
+        //         on: {
+        //           'on-change': async () => {
+        //             await recommendMessage({
+        //               id: params.row.discussID,
+        //               isrecommend: params.row.isrecommend === 0 ? 1 : 0
+        //             })
+        //             this.getMessageList()
+        //           }
+        //         }
+        //       })
+        //     ])
+        //   }
+        // },
         {
           title: '操作',
           key: 'action',
@@ -201,33 +199,31 @@ export default {
             )
           }
         },
-        {
-          title: '是否推荐',
-          key: 'isrecommend',
-          width: 140,
-          align: 'center',
-          // options: ['delete'],
-          render: (h, params) => {
-            return h('div', [
-              h('i-switch', {
-                // style: { 'margin-right': '8px' },
-                props: {
-                  value: params.row.isrecommend === 1,
-                  size: 'small'
-                },
-                on: {
-                  'on-change': async () => {
-                    await recommendMessage({
-                      id: params.row.discussID,
-                      isrecommend: params.row.isrecommend === 0 ? 1 : 0
-                    })
-                    this.getMessageList()
-                  }
-                }
-              })
-            ])
-          }
-        },
+        // {
+        //   title: '是否推荐',
+        //   key: 'isrecommend',
+        //   width: 140,
+        //   align: 'center',
+        //   render: (h, params) => {
+        //     return h('div', [
+        //       h('i-switch', {
+        //         props: {
+        //           value: params.row.isrecommend === 1,
+        //           size: 'small'
+        //         },
+        //         on: {
+        //           'on-change': async () => {
+        //             await recommendMessage({
+        //               id: params.row.discussID,
+        //               isrecommend: params.row.isrecommend === 0 ? 1 : 0
+        //             })
+        //             this.getMessageList()
+        //           }
+        //         }
+        //       })
+        //     ])
+        //   }
+        // },
         {
           title: '操作',
           key: 'action',
@@ -313,33 +309,31 @@ export default {
             )
           }
         },
-        {
-          title: '是否推荐',
-          key: 'isrecommend',
-          width: 140,
-          align: 'center',
-          // options: ['delete'],
-          render: (h, params) => {
-            return h('div', [
-              h('i-switch', {
-                // style: { 'margin-right': '8px' },
-                props: {
-                  value: params.row.isrecommend === 1,
-                  size: 'small'
-                },
-                on: {
-                  'on-change': async () => {
-                    await recommendMessage({
-                      id: params.row.discussID,
-                      isrecommend: params.row.isrecommend === 0 ? 1 : 0
-                    })
-                    this.getMessageList()
-                  }
-                }
-              })
-            ])
-          }
-        },
+        // {
+        //   title: '是否推荐',
+        //   key: 'isrecommend',
+        //   width: 140,
+        //   align: 'center',
+        //   render: (h, params) => {
+        //     return h('div', [
+        //       h('i-switch', {
+        //         props: {
+        //           value: params.row.isrecommend === 1,
+        //           size: 'small'
+        //         },
+        //         on: {
+        //           'on-change': async () => {
+        //             await recommendMessage({
+        //               id: params.row.discussID,
+        //               isrecommend: params.row.isrecommend === 0 ? 1 : 0
+        //             })
+        //             this.getMessageList()
+        //           }
+        //         }
+        //       })
+        //     ])
+        //   }
+        // },
         {
           title: '操作',
           key: 'action',
@@ -411,7 +405,8 @@ export default {
       activityCount: 0,
       appMessageSelectedList: [],
       sightMessageSelectedList: [],
-      activityMessageSelectedList: []
+      activityMessageSelectedList: [],
+      unresoluved: 0
     }
   },
   mounted () {
@@ -419,6 +414,7 @@ export default {
   },
   methods: {
     async getMessageList () {
+      this.unresoluved = 0
       const sightList = await getMessageList({
         page: 1,
         pagesize: 10,
@@ -427,6 +423,11 @@ export default {
       this.sightMessageList = sightList.data.data.data
         ? sightList.data.data.data
         : []
+      _.each(sightList.data.data.data, (list) => {
+        if (!list.shstate) {
+          this.unresoluved++
+        }
+      })
       this.sightCount = sightList.data.data.count
         ? sightList.data.data.count
         : 0
@@ -438,6 +439,11 @@ export default {
       this.appMessageList = appList.data.data.data
         ? appList.data.data.data
         : []
+      // _.each(appList.data.data.data, (list) => {
+      //   if (!list.shstate) {
+      //     this.unresoluved++
+      //   }
+      // })
       this.appCount = appList.data.data.count ? appList.data.data.count : 0
       const activityList = await getMessageList({
         page: 1,
@@ -447,6 +453,11 @@ export default {
       this.activityMessageList = activityList.data.data.data
         ? activityList.data.data.data
         : []
+      _.each(activityList.data.data.data, (list) => {
+        if (!list.shstate) {
+          this.unresoluved++
+        }
+      })
       this.activityCount = activityList.data.data.count
         ? activityList.data.data.count
         : 0
@@ -523,6 +534,10 @@ export default {
       if (this.sightMessageSelectedList.length !== 0) {
         for (const item of this.sightMessageSelectedList) {
           await acceptMessage({ id: item.discussID, shstate: 1 })
+          // await recommendMessage({
+          //   id: item.discussID,
+          //   isrecommend: 1
+          // })
         }
         this.getMessageList()
       } else {
@@ -533,6 +548,10 @@ export default {
       if (this.sightMessageSelectedList.length !== 0) {
         for (const item of this.sightMessageSelectedList) {
           await acceptMessage({ id: item.discussID, shstate: 2 })
+          // await recommendMessage({
+          //   id: item.discussID,
+          //   isrecommend: 0
+          // })
         }
         this.getMessageList()
       } else {

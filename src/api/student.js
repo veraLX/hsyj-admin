@@ -9,7 +9,7 @@ export const getStudentList = (obj) => {
   }
 
   return axios.request({
-    url: 'api/student/getStudentList',
+    url: 'admin/student/getStudentList',
     data,
     method: 'post'
   })

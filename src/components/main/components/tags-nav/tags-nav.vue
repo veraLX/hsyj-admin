@@ -199,6 +199,9 @@ export default {
   mounted () {
     setTimeout(() => {
       this.getTagElementByRoute(this.$route)
+      // 关闭所有，除了home
+      let res = this.list.filter(item => item.name === this.$config.homeName)
+      this.$emit('on-close', res, 'all')
     }, 200)
   }
 }

@@ -12,9 +12,9 @@
       <p slot="title">学生账户</p>
       <Form ref="formInline" :model="formInline" inline :label-width="100">
         <FormItem prop="stuno" label="学生学籍号码" :style="{'width': '400px'}">
-            <Input  v-model="formInline.stuno" placeholder="输入学生学籍号码"/>
+            <Input  v-model="formInline.stuno" placeholder="输入学生学籍号码" clearable @on-change="clearStuno"/>
         </FormItem>
-        <Button type="primary">查询</Button>
+        <Button type="primary" @click="getStudentList">查询</Button>
         <Table stripe :columns="StudentColumns" :data="studentList"></Table>
         <Page :total="0" />
       </Form>
@@ -38,25 +38,22 @@ export default {
       },
       StudentColumns: [
         { title: '学生姓名', key: 'studentName' },
-        { title: '学籍号', key: 'studentid' },
-        { title: '手机号码', key: 'phone' },
-        { title: '微信号码', key: 'weixin' }
+        { title: '学籍号', key: 'stuNo' },
+        { title: '手机号码', key: 'tel' },
+        { title: '微信号码', key: 'nickname' }
       ],
-      studentList: [
-        {
-          studentName: ' 万苏文',
-          studentid: '1111111111',
-          phone: '1302589758',
-          weixin: '123123'
-        }
-      ]
+      studentList: []
     }
   },
   mounted () {
     this.getStudentList()
   },
   methods: {
-
+    async clearStuno () {
+      if (this.formInline.stuno.length === 0) {
+        this.getStudentList()
+      }
+    },
     async getStudentList () {
       const list = await getStudentList(this.formInline)
       this.studentList = list.data.data.data ? list.data.data.data : []

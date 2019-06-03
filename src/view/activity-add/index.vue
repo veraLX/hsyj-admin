@@ -84,7 +84,7 @@
               <Button type="primary" @click="nextAnsewerStep">下一步</Button>
             </div>
         </div>
-        <Answer @beforeAnswerStep="beforeAnswerStep" v-if="currentStep == 2" :objectList="answerAllList" :totalPages='totalAnswerPages' :count='countAnswer' :activityId='activityIdEach' :siteList='siteData'/>
+        <Answer :isEdit="false" @beforeAnswerStep="beforeAnswerStep" v-if="currentStep == 2" :objectList="answerAllList" :totalPages='totalAnswerPages' :count='countAnswer' :activityId='activityIdEach' :siteList='siteData'/>
     </Card>
     <!-- <Modal v-model="editImage"  @on-cancel="nextAnsewerStep" width="60%">
       <p slot="header">

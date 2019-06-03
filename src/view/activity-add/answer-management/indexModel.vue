@@ -31,7 +31,7 @@
             <Input v-model="formInline.rightanswer" placeholder="正确答案"></Input>
         </FormItem>
         <div class="rightButton">
-            <Button type="primary" ghost @click="beforeAnswerStep" style="margin-right: 20px;">上一步</Button>
+            <Button v-if="!isEdit" type="primary" ghost @click="beforeAnswerStep" style="margin-right: 20px;">上一步</Button>
             <Button type="primary" @click="addAnswer">增加</Button>
         </div>
       </Form>
@@ -53,7 +53,8 @@ export default {
     totalPages: Number,
     count: Number,
     activityId: Number,
-    siteList: Array
+    siteList: Array,
+    isEdit: Boolean
   },
   data () {
     return {
