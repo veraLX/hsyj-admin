@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { getActivity1List, addActivity, deleteActivity1 } from '@/api/activity'
+import { getActivity1List, addActivity, deleteActivity1, finishActivity } from '@/api/activity'
 import { getAnswerList } from '@/api/answer'
 import { sceneryList } from '@/api/scenery'
 import Upload from '@/view/components/uploadImage/index'
@@ -266,6 +266,7 @@ export default {
     },
     async openAnswerModal (params) {
       let answerList = await getAnswerList(this.currentAnswerPage, this.pageAnswerSize, params.row.activityID)
+      this.currentActivity = params.row
       this.answerAllList = answerList.data.data.data
       this.totalAnswerPages = answerList.data.data.totalPages
       this.countAnswer = answerList.data.data.count
@@ -275,9 +276,16 @@ export default {
       this.editAnswer = true
       this.isAnswer = true
     },
-    answerCloseModal () {
+    async answerCloseModal () {
       this.editAnswer = false
       this.isAnswer = false
+      if (this.currentActivity.pics.length > 0) {
+        // console.log('currentActivity', this.currentActivity)
+        await finishActivity(this.currentActivity.activityID)
+        this.$Notice.success({
+          title: '该活动编辑完成'
+        })
+      }
     },
     openModal (params) {
       this.editImage = true

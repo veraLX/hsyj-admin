@@ -92,3 +92,11 @@ export const getActivityBySelf = (id) => {
     method: 'get'
   })
 }
+
+// 70,完成活动,get,iscomplate,1，完成活动,0，默认
+export const finishActivity = (id) => {
+  return axios.request({
+    url: `admin/activity/changeComplate?activityid=${id}&iscomplate=1`,
+    method: 'get'
+  })
+}

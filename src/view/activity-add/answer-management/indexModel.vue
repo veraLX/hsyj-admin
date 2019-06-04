@@ -40,12 +40,16 @@
       <p slot="title">答题列表</p>
       <Table stripe :columns="AnswerColumns" :data="AnswerData"></Table>
       <Page show-total :total="count" :current="currentPage" :page-size="pageSize" @on-change="handlePage"/>
+      <div class="rightButton">
+          <Button v-if="!isEdit" type="primary" @click="finishActivity">完成</Button>
+      </div>
     </Card>
   </div>
 </template>
 
 <script>
 import { getAnswerList, addAnswer, deleteAnswer } from '@/api/answer'
+import { getActivityBySelf, finishActivity } from '@/api/activity'
 export default {
   name: 'directive_page',
   props: {
@@ -177,9 +181,18 @@ export default {
     this.calculateSite()
   },
   methods: {
+    async finishActivity () {
+      let activityDetail = await getActivityBySelf(this.activityId)
+      if (activityDetail.data.data.pics.length > 0) {
+        await finishActivity(this.activityId)
+        this.$Notice.success({
+          title: '该活动编辑完成'
+        })
+      }
+    },
     calculateSite () {
       this.currentSiteList = JSON.parse(JSON.stringify(this.siteList))
-      debugger
+      // debugger
       _.each(this.siteList, (siteItem, index) => {
         _.each(this.AnswerData, (answerItem) => {
           if (siteItem.sceneryID === answerItem.sceneryid) {
