@@ -60,3 +60,10 @@ export const getSceneryFromSchool = (idArray) => {
     method: 'get'
   })
 }
+
+export const getSceneryDetail = (id) => {
+  return axios.request({
+    url: 'api/scenery/getscenerydetail?id=' + id + '&studentid=1',
+    method: 'get'
+  })
+}

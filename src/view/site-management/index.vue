@@ -4,27 +4,27 @@
       <p slot="title">新增景点</p>
       <span slot="extra" :style="{ 'cursor':'pointer'}" @click="getPoint">经纬度查询 ></span>
       <Form ref="formInline" :model="siteForm" :rules="ruleInline" inline label-position="right" :label-width="90">
-        <FormItem prop="scenerytitle" label="景点名称" :style="{'width': 'calc((100% - 30px)/3)'}">
+        <FormItem prop="scenerytitle" label="景点名称" :style="{'width': 'calc((100% - 40px)/4)'}">
             <Input v-model="siteForm.scenerytitle" placeholder="输入景点名称"></Input>
         </FormItem>
-         <FormItem prop="address" label="校区" :style="{'width': 'calc((100% - 30px)/3)'}">
+         <FormItem prop="address" label="校区" :style="{'width': 'calc((100% - 40px)/4)'}">
             <!-- <Input v-model="siteForm.address" placeholder="输入景点名称"></Input> -->
             <Select v-model="siteForm.schoolid" :label-in-value="true" filterable @on-change="handleChange">
                 <Option v-for="item in schoolList" :value="item.schoolID" :label="item.schoolName" :key="item.schoolID">{{ item.schoolName }}</Option>
             </Select>
         </FormItem>
-        <FormItem prop="longitude" label="经度" :style="{'width': 'calc((100% - 30px)/3)'}">
+        <FormItem prop="longitude" label="经度" :style="{'width': 'calc((100% - 40px)/4)'}">
             <Input v-model="siteForm.longitude" placeholder="输入经度"></Input>
         </FormItem>
-        <FormItem prop="latitude" label="纬度" :style="{'width': 'calc((100% - 30px)/3)'}">
+        <FormItem prop="latitude" label="纬度" :style="{'width': 'calc((100% - 40px)/4)'}">
             <Input v-model="siteForm.latitude" placeholder="输入纬度"></Input>
         </FormItem>
-        <FormItem prop="videoURL" label="视频URL地址" :style="{'width': 'calc((100% - 30px)/3)'}">
+        <!-- <FormItem prop="videoURL" label="视频URL地址" :style="{'width': 'calc((100% - 30px)/3)'}">
             <Input v-model="siteForm.videourl" placeholder="输入视频URL地址"></Input>
         </FormItem>
         <FormItem prop="soundurl" label="音频URL地址" :style="{'width': 'calc((100% - 30px)/3)'}">
             <Input v-model="siteForm.soundurl" placeholder="输入音频URL地址"></Input>
-        </FormItem>
+        </FormItem> -->
         <FormItem prop="recommend" label="是否推荐" :style="{'width': 'calc((100% - 30px)/3)'}">
             <i-switch v-model="switchRecommend" @on-change="changeRecommend" />
         </FormItem>
@@ -60,20 +60,49 @@
           <Button type="primary" @click="siteCloseModal" >完成</Button>
       </div>
     </Modal>
+    <Modal v-model="editAudio"  @on-cancel="audioCloseModal" width="60%">
+      <p slot="header">
+        <Icon type="ios-paper-outline"></Icon>
+        <span>音频上传</span>
+      </p>
+      <AudioUpload v-if="audioModalShow" :isAudio="true" :parentId="currentParentId" :sourceType="4" />
+      <div slot="footer">
+          <Button type="primary" @click="audioCloseModal" >完成</Button>
+      </div>
+    </Modal>
+    <Modal v-model="editVedio"  @on-cancel="vedioCloseModal" width="60%">
+      <p slot="header">
+        <Icon type="ios-paper-outline"></Icon>
+        <span>视频上传</span>
+      </p>
+      <AudioUpload v-if="vedioModalShow" :isAudio="false" :parentId="currentParentId" :sourceType="5"/>
+      <div slot="footer">
+          <Button type="primary" @click="vedioCloseModal" >完成</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script>
 import { addScenery, sceneryList, sceneryDelete, editScenery } from '@/api/scenery'
 import Upload from '@/view/components/uploadImage/index'
+import AudioUpload from '@/view/components/uploadAudio/index'
 import { getSchoolList } from '@/api/school'
+import { constants } from 'crypto'
 export default {
   name: 'directive_page',
   components: {
-    Upload
+    Upload,
+    AudioUpload
   },
   data () {
     return {
+      // currentSite: {},
+      // currentSiteId: null,
+      editAudio: false,
+      editVedio: false,
+      audioModalShow: false,
+      vedioModalShow: false,
       currentParentId: 0,
       editSiteImage: false,
       siteModalShow: false,
@@ -273,23 +302,49 @@ export default {
         {
           title: '操作',
           key: 'action',
-          width: 240,
+          width: 268,
           align: 'center',
           options: ['delete'],
           render: (h, params) => {
             return h('div', [
-              // h('Button', {
-              //   style: { 'margin-right': '8px' },
-              //   props: {
-              //     type: 'primary',
-              //     size: 'small',
-              //     disabled: params.row.isOriginal
-              //   },
-              //   on: {
-              //     click: () => {
-              //     }
-              //   }
-              // }, '修改'),
+              h(
+                'Button',
+                {
+                  style: { 'margin-right': '8px' },
+                  props: {
+                    type: 'primary',
+                    size: 'small',
+                    ghost: true
+                  },
+                  on: {
+                    click: () => {
+                      // this.currentSite = params.row
+                      // this.currentSiteId = params.row.sceneryID
+                      this.openAudioModal(params)
+                    }
+                  }
+                },
+                '音频'
+              ),
+              h(
+                'Button',
+                {
+                  style: { 'margin-right': '8px' },
+                  props: {
+                    type: 'primary',
+                    size: 'small',
+                    ghost: true
+                  },
+                  on: {
+                    click: () => {
+                      // this.currentSite = params.row
+                      // this.currentSiteId = params.row.sceneryID
+                      this.openVedioModal(params)
+                    }
+                  }
+                },
+                '视频'
+              ),
               h(
                 'Button',
                 {
@@ -305,7 +360,7 @@ export default {
                     }
                   }
                 },
-                '编辑/查看图片'
+                '图片'
               ),
               h(
                 'Button',
@@ -431,6 +486,26 @@ export default {
       const list = await getSchoolList({ page: 1, pageSize: 100 })
       this.schoolList = list.data.data.data ? list.data.data.data : []
     },
+    openAudioModal (params) {
+      this.editAudio = true
+      this.audioModalShow = true
+      this.currentParentId = params.row.sceneryID
+    },
+    audioCloseModal () {
+      this.editAudio = false
+      this.audioModalShow = false
+      this.flashAllSiteData()
+    },
+    openVedioModal (params) {
+      this.editVedio = true
+      this.vedioModalShow = true
+      this.currentParentId = params.row.sceneryID
+    },
+    vedioCloseModal () {
+      this.editVedio = false
+      this.vedioModalShow = false
+      this.flashAllSiteData()
+    },
     openModal (params) {
       this.editSiteImage = true
       this.siteModalShow = true
@@ -447,6 +522,7 @@ export default {
       this.pageSize = scene.data.data.pageSize
       this.currentPage = scene.data.data.currentPage
       this.count = scene.data.data.count
+      // this.currentSite = await getSceneryDetail(this.currentSiteId)
     },
     async addSite () {
       this.$refs['formInline'].validate(async (valid) => {
