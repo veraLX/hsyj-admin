@@ -37,6 +37,13 @@ export const getAllSchoolList = (data) => {
   })
 }
 
+export const getParentSchoolList = (data) => {
+  return axios.request({
+    url: 'api/school/indexOrgList?pageindex=' + data.page + '&pagesize=' + data.pageSize,
+    method: 'get'
+  })
+}
+
 export const getArea = () => {
   return axios.request({
     url: 'api/school/getArea',

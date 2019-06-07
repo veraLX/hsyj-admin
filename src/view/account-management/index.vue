@@ -13,6 +13,7 @@
       <i-col :xs="8" :md="8" :lg="4" class="schoolItem" v-for="(school, index) in schoolList" :key="index" @click="schoolDetail">
         <Card @click.native="schoolDetail(school)">
           <span>{{school.schoolName}}</span>
+          <Icon type="md-add-circle" class="accountDeleteIcon" @click.stop="deleteSchoolIcon(school)"/>
           <!-- <span :class="school.totalPeople == 0 ? 'zeroTip' : ''">{{school.totalPeople}}<span :style="{'color': '#000'}">人</span></span> -->
         </Card>
       </i-col>
@@ -56,7 +57,7 @@
 
 <script>
 import {
-  addSchool, getAllSchoolList
+  addSchool, getParentSchoolList, deleteSchool
 } from '@/api/school'
 import {
   addUser, getUserList, editUser, deleteUser
@@ -69,7 +70,7 @@ export default {
       schoolModal: false,
       formInline: {
         schoolname: '',
-        parentid: -1
+        parentid: 0
       },
       administrator: {
         userName: '',
@@ -194,8 +195,24 @@ export default {
     this.getSchoolList()
   },
   methods: {
+    deleteSchoolIcon (school) {
+      this.$Modal.confirm({
+        title: '删除机构',
+        content: '<p>请确认是否删除机构，若确认删除，该机构下的管理员、校区、景点、活动都将被删除，请谨慎选择。</p>',
+        onOk: async () => {
+          let deleteReturn = await deleteSchool(school.schoolID)
+          if (deleteReturn.data.errno === 0) {
+            this.$Message.success(deleteReturn.data.data)
+          } else {
+            this.$Message.error('Fail!')
+          }
+          this.getSchoolList()
+        },
+        onCancel: () => {}
+      })
+    },
     async getSchoolList () {
-      const list = await getAllSchoolList({ page: 1, pageSize: 300 })
+      const list = await getParentSchoolList({ page: 1, pageSize: 300 })
       this.schoolList = list.data.data.data ? list.data.data.data : []
     },
     async getUserList (id) {
@@ -214,9 +231,13 @@ export default {
       // if (this.administrator.userName !== '' && this.administrator.pwd !== '') {
       this.$refs[name].validate(async (valid) => {
         if (valid) {
-          await addUser(this.administrator)
+          let addUserReturn = await addUser(this.administrator)
           this.getUserList(this.administrator.schoolid)
-          this.$Message.success('Success!')
+          if (addUserReturn.data.errmsg) {
+            this.$Message.error(addUserReturn.data.errmsg)
+          } else {
+            this.$Message.success('Success!')
+          }
         } else {
           this.$Message.error('Fail!')
         }
@@ -257,6 +278,20 @@ export default {
 .schoolItem{
     text-align: center;
     padding: 10px;
+    position: relative;
+}
+.accountDeleteIcon{
+    font-size: 20px;
+    color: #ccc;
+    opacity: .2;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    transform: rotate(45deg);
+}
+.accountDeleteIcon:hover{
+    opacity: .5;
+    cursor: pointer;
 }
 .schoolItem > .ivu-card > .ivu-card-body{
     display: flex;

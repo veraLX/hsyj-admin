@@ -47,6 +47,7 @@ html,body{
 }
 .ivu-transfer-list{
   height: 420px!important;
+  width: 280px!important;
 }
 .ivu-page{
   padding: 15px 0!important;

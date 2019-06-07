@@ -88,7 +88,7 @@ import { addScenery, sceneryList, sceneryDelete, editScenery } from '@/api/scene
 import Upload from '@/view/components/uploadImage/index'
 import AudioUpload from '@/view/components/uploadAudio/index'
 import { getSchoolList } from '@/api/school'
-import { constants } from 'crypto'
+// import { constants } from 'crypto'
 export default {
   name: 'directive_page',
   components: {

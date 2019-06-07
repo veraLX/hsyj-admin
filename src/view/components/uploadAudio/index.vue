@@ -4,38 +4,36 @@
         <!-- <div class="audio-upload-list" v-for="(item,index) in uploadList" :key="index">
             <img :src="item.url">
         </div> -->
-        <div class="audio-upload-list" v-for="(item,index) in currentImage" :key="index">
-          <template v-if="currentImage.length > 0">
-            <p style="min-width: 100px">{{item.sourceAddress}}</p>
-              <div class="audio-upload-list-cover">
-                  <Icon size="40px" type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-              </div>
-          </template>
+        <div class="audio-upload-list" v-if="currentAudio.length > 0">
+            <p style="min-width: 100px">{{currentAudio}}</p>
+            <div class="audio-upload-list-cover">
+                <Icon size="40px" type="ios-trash-outline" @click.native="handleRemove(parentId)"></Icon>
+            </div>
         </div>
-        <template v-if="currentImage.length === 0">
+        <template v-if="currentAudio.length === 0">
             <p>你还没有上传{{isAudio ? '音频' : '视频'}}哟</p>
         </template>
         <p class="subTitle" style="margin-top: 20px;">上传{{isAudio ? '音频' : '视频'}}</p>
-        <iframe v-if="isAudio && currentImage.length < 1" ref="iframe" @load="finish" src="https://hsyj.100eduonline.com/static/images/admin/audioUpload/uploadAudio.html" height="120" width="100%" style="border: none;overflow:hidden"/>
-        <template v-if="currentImage.length >= 1">
+        <iframe v-if="isAudio && currentAudio.length < 1" ref="iframe" @load="finish" src="https://hsyj.100eduonline.com/static/images/admin/audioUpload/uploadAudio.html" height="120" width="100%" style="border: none;overflow:hidden"/>
+        <template v-if="currentAudio.length >= 1">
             <p> 已经有{{isAudio ? '音频' : '视频'}}了哟</p>
         </template>
-        <iframe v-if="!isAudio && currentImage.length < 1" ref="iframe" @load="finish" src="https://hsyj.100eduonline.com/static/images/admin/audioUpload/uploadVedio.html" height="120" width="100%" style="border: none;overflow:hidden"/>
+        <iframe v-if="!isAudio && currentAudio.length < 1" ref="iframe" @load="finish" src="https://hsyj.100eduonline.com/static/images/admin/audioUpload/uploadVedio.html" height="120" width="100%" style="border: none;overflow:hidden"/>
         <!-- <Button @click="sendMessage">向iframe发送信息</Button> -->
     </div>
 </template>
 <script>
-import { deleteOneImage, getImageList } from '@/api/data'
+// import { deleteOneImage, getImageList } from '@/api/data'
 import Cookies from 'js-cookie'
 import { TOKEN_KEY } from '@/libs/util'
-import { getSceneryDetail } from '@/api/scenery'
+import { getSceneryDetail, editScenery } from '@/api/scenery'
 export default {
   name: 'upload_page',
   props: {
     // isEdit: Boolean
     parentId: Number,
     sourceType: Number,
-    currentImageArray: Array,
+    currentAudioArray: Array,
     isAudio: Boolean
     // currentSite: Object
   },
@@ -44,9 +42,9 @@ export default {
   data () {
     return {
       iframeWin: {},
-      currentImage: [],
-      returnIframe: ''
-      // currentSite: {}
+      currentAudio: [],
+      returnIframe: '',
+      currentSite: {}
     }
   },
   async mounted () {
@@ -56,8 +54,19 @@ export default {
     // console.log(this.$refs.iframe.contentWindow)
     // 在外部vue的window上添加postMessage的监听，并且绑定处理函数handleMessage
     window.addEventListener('message', async (event) => {
-      let imageList = await getImageList(this.parentId, this.sourceType)
-      this.currentImage = imageList.data.data.data
+      if (this.isAudio) {
+        let currentSiteObj = await getSceneryDetail(this.parentId)
+        this.currentSite = currentSiteObj.data.data
+        let currentSiteObjSound = currentSiteObj.data.data.soundurl
+        let index = currentSiteObjSound.lastIndexOf('/')
+        this.currentAudio = currentSiteObjSound.slice(index + 1, currentSiteObjSound.length)
+      } else {
+        let currentSiteObj = await getSceneryDetail(this.parentId)
+        this.currentSite = currentSiteObj.data.data
+        let currentSiteObjAudio = currentSiteObj.data.data.videourl
+        let index = currentSiteObjAudio.lastIndexOf('/')
+        this.currentAudio = currentSiteObjAudio.slice(index + 1, currentSiteObjAudio.length)
+      }
       // let currentSiteObj = await getSceneryDetail(this.parentId)
       // this.currentSite = currentSiteObj.data.data
       // console.log('this.currentSite', this.currentSite)
@@ -65,11 +74,24 @@ export default {
     })
     // window.addEventListener('message', this.handleMessage())
     this.iframeWin = this.$refs.iframe.contentWindow
-    // if (this.currentImageArray) {
-    //   this.currentImage = this.currentImageArray
+    // if (this.currentAudioArray) {
+    //   this.currentAudio = this.currentAudioArray
     // }
-    let imageList = await getImageList(this.parentId, this.sourceType)
-    this.currentImage = imageList.data.data.data
+    // let imageList = await getImageList(this.parentId, this.sourceType)
+    // this.currentAudio = imageList.data.data.data
+    if (this.isAudio) {
+      let currentSiteObj = await getSceneryDetail(this.parentId)
+      this.currentSite = currentSiteObj.data.data
+      let currentSiteObjSound = currentSiteObj.data.data.soundurl
+      let index = currentSiteObjSound.lastIndexOf('/')
+      this.currentAudio = currentSiteObjSound.slice(index + 1, currentSiteObjSound.length)
+    } else {
+      let currentSiteObj = await getSceneryDetail(this.parentId)
+      this.currentSite = currentSiteObj.data.data
+      let currentSiteObjAudio = currentSiteObj.data.data.videourl
+      let index = currentSiteObjAudio.lastIndexOf('/')
+      this.currentAudio = currentSiteObjAudio.slice(index + 1, currentSiteObjAudio.length)
+    }
     // let currentSiteObj = await getSceneryDetail(this.parentId)
     // this.currentSite = currentSiteObj.data.data
   },
@@ -87,11 +109,29 @@ export default {
       }, '*')
     },
     async handleRemove (item) {
-      let deleteImage = await deleteOneImage(item.sourceID)
-      if (!deleteImage.data.errno) {
+      if (this.isAudio) {
+        this.$set(this.currentSite, 'soundurl', '')
+      } else {
+        this.$set(this.currentSite, 'videourl', '')
+      }
+      let deleteAudio = await editScenery(this.currentSite)
+      if (!deleteAudio.data.errno) {
         this.$Message.warning('删除成功')
-        let imageList = await getImageList(this.parentId, this.sourceType)
-        this.currentImage = imageList.data.data.data
+        // let imageList = await getImageList(this.parentId, this.sourceType)
+        // this.currentAudio = imageList.data.data.data
+        if (this.isAudio) {
+          let currentSiteObj = await getSceneryDetail(this.parentId)
+          this.currentSite = currentSiteObj.data.data
+          let currentSiteObjSound = currentSiteObj.data.data.soundurl
+          let index = currentSiteObjSound.lastIndexOf('/')
+          this.currentAudio = currentSiteObjSound.slice(index + 1, currentSiteObjSound.length)
+        } else {
+          let currentSiteObj = await getSceneryDetail(this.parentId)
+          this.currentSite = currentSiteObj.data.data
+          let currentSiteObjAudio = currentSiteObj.data.data.videourl
+          let index = currentSiteObjAudio.lastIndexOf('/')
+          this.currentAudio = currentSiteObjAudio.slice(index + 1, currentSiteObjAudio.length)
+        }
       }
     }
     // sendMessage () {

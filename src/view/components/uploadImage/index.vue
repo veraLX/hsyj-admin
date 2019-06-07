@@ -15,7 +15,9 @@
         <template v-if="currentImage.length === 0">
             <p>你还没有上传图片哟</p>
         </template>
-        <p class="subTitle" style="border-top: 1px solid #ddd;margin-top: 20px;">上传图片</p>
+        <p class="subTitle" style="border-top: 1px solid #ddd;margin-top: 20px;">上传图片
+          <em class="notice">(图片大小不能超过2M，否则无法上传)</em>
+        </p>
         <iframe ref="iframe" @load="finish" src="https://hsyj.100eduonline.com/static/images/admin/uploadComponent/upload.html" height="120" width="100%" style="border: none;overflow:hidden"/>
         <!-- <Button @click="sendMessage">向iframe发送信息</Button> -->
     </div>
@@ -106,6 +108,12 @@ export default {
     font-size: 16px;
     font-weight: bold;
     padding: 10px 0;
+}
+.subTitle > .notice{
+    font-size: 12px;
+    font-style: normal;
+    font-weight: normal;
+    color: #ddd;
 }
 .demo-upload-list{
     box-shadow: 0px 0px 5px rgba(0,0,0,.5)!important;

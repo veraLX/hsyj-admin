@@ -83,7 +83,7 @@ export const restoreTrash = msg_id => {
 
 export const addUser = (obj) => {
   const data = {
-    'userName': obj.userName,
+    'username': obj.userName,
     'pwd': obj.pwd,
     'usertype': obj.usertype,
     'schoolid': obj.schoolid

@@ -334,7 +334,12 @@ export default {
                           latitude: params.row.latitude,
                           schooldesc: params.row.schooldesc,
                           schoolID: params.row.schoolID,
-                          shortname: params.row.shortName
+                          shortname: params.row.shortName,
+                          province: params.row.province,
+                          city: params.row.city,
+                          soundurl: params.row.soundurl,
+                          videourl: params.row.videourl,
+                          parentid: JSON.parse(sessionStorage.getItem('user')).schoolid
                         }
                         if (obj.schoolname === '') {
                           this.$Message.info('学校名称不能为空')

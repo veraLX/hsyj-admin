@@ -25,7 +25,7 @@
           <FormItem prop="enddateAll" label="结束日期" :style="{'width': 'calc((100% - 30px)/3)'}">
               <DatePicker v-model="activityForm.enddateAll" type="date" placeholder="输入结束日期" :style="{'width': '100%'}" @on-change="timeCheck"></DatePicker>
           </FormItem>
-          <FormItem prop="targetKeys1" :required='true' label="学校范围" :style="{'width': 'calc((100% - 20px)/2)'}">
+          <FormItem prop="targetKeys1" :required='true' label="学校范围" :style="{'width': '100%'}">
             <Transfer
             :data="data1"
             :target-keys="activityForm.targetKeys1"
@@ -33,7 +33,7 @@
             @on-change="handleChange1"
             required='true'></Transfer>
           </FormItem>
-          <FormItem prop="targetKeys2" :required='true' label="景点选择" :style="{'width': 'calc((100% - 20px)/2)'}">
+          <FormItem prop="targetKeys2" :required='true' label="景点选择" :style="{'width': '100%'}">
             <Transfer
             :data="data2"
             :target-keys="activityForm.targetKeys2"
