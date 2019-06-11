@@ -72,7 +72,17 @@ export default {
         // { title: ' ', type: 'index', width: 60, align: 'center' },
         { title: '学生姓名', key: 'studentName' },
         { title: '学籍号', key: 'studentid' },
-        { title: '留言日期', key: 'time' },
+        { title: '留言日期',
+          key: 'createdate',
+          render: (h, params) => {
+            let index = params.row.createdate.indexOf('T')
+            let time = params.row.createdate.slice(0, index)
+            return h(
+              'div',
+              time
+            )
+          }
+        },
         { title: '留言内容', key: 'content', width: 300 },
         {
           title: '状态',
@@ -182,7 +192,17 @@ export default {
         // { title: ' ', type: 'index', width: 60, align: 'center' },
         { title: '学生姓名', key: 'studentName' },
         { title: '学籍号', key: 'studentid' },
-        { title: '留言日期', key: 'time' },
+        { title: '留言日期',
+          key: 'createdate',
+          render: (h, params) => {
+            let index = params.row.createdate.indexOf('T')
+            let time = params.row.createdate.slice(0, index)
+            return h(
+              'div',
+              time
+            )
+          }
+        },
         { title: '留言内容', key: 'content', width: 300 },
         {
           title: '状态',
@@ -292,7 +312,17 @@ export default {
         // { title: ' ', type: 'index', width: 60, align: 'center' },
         { title: '学生姓名', key: 'studentName' },
         { title: '学籍号', key: 'studentid' },
-        { title: '留言日期', key: 'time' },
+        { title: '留言日期',
+          key: 'createdate',
+          render: (h, params) => {
+            let index = params.row.createdate.indexOf('T')
+            let time = params.row.createdate.slice(0, index)
+            return h(
+              'div',
+              time
+            )
+          }
+        },
         { title: '留言内容', key: 'content', width: 300 },
         {
           title: '状态',
