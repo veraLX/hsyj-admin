@@ -20,10 +20,10 @@
               <Input v-model="activityForm.secondsponsor" placeholder="输入协办方"></Input>
           </FormItem>
           <FormItem prop="startdateAll" label="开始日期" :style="{'width': 'calc((100% - 30px)/3)'}">
-              <DatePicker v-model="activityForm.startdateAll" type="date" placeholder="输入开始日期" :style="{'width': '100%'}" @on-change="timeCheck"></DatePicker>
+              <DatePicker v-model="activityForm.startdateAll" type="datetime" placeholder="输入开始日期" :style="{'width': '100%'}" @on-change="timeCheck"></DatePicker>
           </FormItem>
           <FormItem prop="enddateAll" label="结束日期" :style="{'width': 'calc((100% - 30px)/3)'}">
-              <DatePicker v-model="activityForm.enddateAll" type="date" placeholder="输入结束日期" :style="{'width': '100%'}" @on-change="timeCheck"></DatePicker>
+              <DatePicker v-model="activityForm.enddateAll" type="datetime" placeholder="输入结束日期" :style="{'width': '100%'}" @on-change="timeCheck"></DatePicker>
           </FormItem>
           <FormItem prop="targetKeys1" :required='true' label="学校范围" :style="{'width': '100%'}">
             <Transfer
@@ -210,12 +210,12 @@ export default {
         } else if (valid && this.activityForm.targetKeys1.length > 0 && this.activityForm.targetKeys2.length > 0) {
           // 开始时间
           if (this.activityForm.startdateAll) {
-            let startdate = moment(this.activityForm.startdateAll).format('YYYY-MM-DD')
+            let startdate = moment(this.activityForm.startdateAll).format('YYYY-MM-DD HH:mm:ss')
             this.$set(this.activityForm, 'startdate', startdate)
           }
           // 结束时间
           if (this.activityForm.enddateAll) {
-            let enddate = moment(this.activityForm.enddateAll).format('YYYY-MM-DD')
+            let enddate = moment(this.activityForm.enddateAll).format('YYYY-MM-DD HH:mm:ss')
             this.$set(this.activityForm, 'enddate', enddate)
           }
           // 是否团体赛

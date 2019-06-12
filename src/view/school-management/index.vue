@@ -420,10 +420,14 @@ export default {
     addSchool (name) {
       this.$refs[name].validate(async (valid) => {
         if (valid) {
-          this.$Message.success('Success!')
           this.schoolForm.parentid = JSON.parse(sessionStorage.getItem('user')).schoolid
-          await addSchool(this.schoolForm)
-          this.getSchoolList()
+          let adschool = await addSchool(this.schoolForm)
+          if (adschool.data.errno === 0) {
+            this.$Message.success('Success!')
+            this.getSchoolList()
+          } else {
+            this.$Message.error(adschool.data.errmsg)
+          }
         } else {
           this.$Message.error('Fail!')
         }

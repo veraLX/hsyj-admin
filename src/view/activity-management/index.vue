@@ -45,6 +45,8 @@ import { sceneryList } from '@/api/scenery'
 import Upload from '@/view/components/uploadImage/index'
 import Answer from '@/view/activity-add/answer-management/indexModel'
 import Activity from '@/view/activity-management/activity-edit/index'
+// import dayjs from 'dayjs'
+import moment from 'moment'
 // editActivity
 export default {
   name: 'directive_page',
@@ -122,7 +124,7 @@ export default {
           key: 'isGroup',
           render: (h, params) => {
             let isGroupBoolean = ''
-            if (params.row.isGroup) {
+            if (params.row.isGroup && params.row.groupNum) {
               isGroupBoolean = params.row.groupNum + '人团体赛'
             } else {
               isGroupBoolean = '个人赛'
@@ -132,18 +134,29 @@ export default {
         },
         { title: '开始日期',
           key: 'startDate',
+          width: 150,
           render: (h, params) => {
-            let startDateString = params.row.startDate
-            let startDate = startDateString.split('T')[0]
+            let startDate = moment(params.row.startDate).format('YYYY-MM-DD HH:mm:ss')
             return h('div', startDate)
           }
         },
         { title: '结束日期',
           key: 'endDate',
+          width: 150,
           render: (h, params) => {
-            let endDateString = params.row.endDate
-            let endDate = endDateString.split('T')[0]
+            let endDate = moment(params.row.endDate).format('YYYY-MM-DD HH:mm:ss')
             return h('div', endDate)
+          }
+        },
+        { title: '是否完成',
+          key: 'iscomplate',
+          render: (h, params) => {
+            let isComplate = params.row.iscomplate
+            if (isComplate === '0') {
+              return h('div', '否')
+            } else {
+              return h('div', '是')
+            }
           }
         },
         { title: '是否推荐',
@@ -255,9 +268,15 @@ export default {
     // this.uploadList = this.$refs.upload.fileList
   },
   methods: {
+    convertWebDateToSubmitDateTime (dateString) {
+      let d = dateString ? new Date(dateString) : new Date()
+      let month = d.getMonth() + 1
+      return d.getFullYear() + '-' + (month > 9 ? month : '0' + month) + '-' + (d.getDate() > 9 ? d.getDate() : '0' + d.getDate()) + ' ' + (d.getHours() > 9 ? d.getHours() : '0' + d.getHours()) + ':' + (d.getMinutes() > 9 ? d.getMinutes() : '0' + d.getMinutes()) + ':' + (d.getSeconds() > 9 ? d.getSeconds() : '0' + d.getSeconds())
+    },
     editActivityModalCancel () {
       this.editActivity = false
       this.updateActivityModalShow = false
+      this.flashAllActivityData()
     },
     openActivityModal (params) {
       this.editActivity = true

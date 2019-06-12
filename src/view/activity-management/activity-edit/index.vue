@@ -14,10 +14,10 @@
             <Input v-model="activityForm.secondSponsor" placeholder="输入协办方"></Input>
         </FormItem>
         <FormItem prop="startdateAll" label="开始日期" :style="{'width': 'calc((100% - 30px)/3)'}">
-            <DatePicker v-model="activityForm.startdateAll" type="date" placeholder="输入开始日期" :style="{'width': '100%'}" @on-change="timeCheck"></DatePicker>
+            <DatePicker v-model="activityForm.startdateAll" type="datetime" placeholder="输入开始日期" :style="{'width': '100%'}" @on-change="timeCheck"></DatePicker>
         </FormItem>
         <FormItem prop="enddateAll" label="结束日期" :style="{'width': 'calc((100% - 30px)/3)'}">
-            <DatePicker v-model="activityForm.enddateAll" type="date" placeholder="输入结束日期" :style="{'width': '100%'}" @on-change="timeCheck"></DatePicker>
+            <DatePicker v-model="activityForm.enddateAll" type="datetime" placeholder="输入结束日期" :style="{'width': '100%'}" @on-change="timeCheck"></DatePicker>
         </FormItem>
         <FormItem prop="targetKeys1" :required='true' label="学校范围" :style="{'width': 'calc((100% - 20px)/2)'}">
         <Transfer
@@ -77,6 +77,7 @@ import { editActivity } from '@/api/activity'
 import { getSchoolList } from '@/api/school'
 import { getSceneryFromSchool } from '@/api/scenery'
 import moment from 'moment'
+// import { constants } from 'crypto'
 // import { constants } from 'fs'
 export default {
   name: 'directive_page',
@@ -191,37 +192,26 @@ export default {
       })
       this.$set(this.activityForm, 'targetKeys2', targetKeyList2)
       // 开始时间
-      let firststartDate = this.currentActivity.startDate.split('T')[0]
-      // let secondstartDate = this.currentActivity.startDate.split('T')[1]
-      let sYear = firststartDate.split('-')[0]
-      let sMounth = firststartDate.split('-')[1]
-      let sDay = firststartDate.split('-')[2]
-      let startdateAll = new Date(sYear, sMounth - 1, sDay)
-      this.$set(this.activityForm, 'startdateAll', startdateAll)
+      this.$set(this.activityForm, 'startdateAll', new Date(this.currentActivity.startDate))
       // 结束时间
-      let firendDate = this.currentActivity.endDate.split('T')[0]
-      // let secondendDate = this.currentActivity.endDate.split('T')[1]
-      let eYear = firendDate.split('-')[0]
-      let eMounth = firendDate.split('-')[1]
-      let eDay = firendDate.split('-')[2]
-      let enddateAll = new Date(eYear, eMounth - 1, eDay)
-      // let enddateAll = firendDate + 'T' + secondendDate
-      this.$set(this.activityForm, 'enddateAll', enddateAll)
+      this.$set(this.activityForm, 'enddateAll', new Date(this.currentActivity.endDate))
       // 是否团体赛
       let isgroupBoolean = false
-      if (this.currentActivity.isGroup === 1) {
+      if (this.currentActivity.isGroup === 1 && this.currentActivity.groupNum) {
         isgroupBoolean = true
       }
       this.$set(this.activityForm, 'isgroupBoolean', isgroupBoolean)
       // 是否设置起点
       let settingStartBoolean = false
-      if (this.currentActivity.settingStart === 1) {
+      if (this.currentActivity.settingStart === 1 && this.currentActivity.startSceneryid) {
         settingStartBoolean = true
       }
       this.$set(this.activityForm, 'settingStartBoolean', settingStartBoolean)
+      console.log('settingStartBoolean', settingStartBoolean)
+      console.log('this.currentActivity.startSceneryid', this.currentActivity.startSceneryid)
       // 是否设置终点
       let settingEndBoolean = false
-      if (this.currentActivity.settingEnd === 1) {
+      if (this.currentActivity.settingEnd === 1 && this.currentActivity.endSceneryid) {
         settingEndBoolean = true
       }
       this.$set(this.activityForm, 'settingEndBoolean', settingEndBoolean)
@@ -253,12 +243,12 @@ export default {
           this.$set(this.activityForm, 'secondsponsor', this.activityForm.secondSponsor)
           // 开始时间
           if (this.activityForm.startdateAll) {
-            let startdate = moment(this.activityForm.startdateAll).format('YYYY-MM-DD')
+            let startdate = moment(this.activityForm.startdateAll).format('YYYY-MM-DD HH:mm:ss')
             this.$set(this.activityForm, 'startdate', startdate)
           }
           // 结束时间
           if (this.activityForm.enddateAll) {
-            let enddate = moment(this.activityForm.enddateAll).format('YYYY-MM-DD')
+            let enddate = moment(this.activityForm.enddateAll).format('YYYY-MM-DD HH:mm:ss')
             this.$set(this.activityForm, 'enddate', enddate)
           }
           // 学校范围
