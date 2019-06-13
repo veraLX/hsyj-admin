@@ -37,9 +37,14 @@ class HttpRequest {
   interceptors (instance, url) {
     // 请求拦截
     instance.interceptors.request.use(config => {
-      // if (config.url.includes('admin/') && !config.url.includes('admin/auth/adminLogin')) {
+      if (config.url.includes('admin/') && !config.url.includes('admin/auth/adminLogin')) {
+        let userString = sessionStorage.getItem('user')
+        if (userString) {
+          let user = JSON.parse(userString)
+          config.headers['sms-userid'] = user.sysUserID
+        }
+      }
       config.headers['sms-token'] = Cookies.get(TOKEN_KEY)
-      // }
       // 添加全局的loading...
       if (!Object.keys(this.queue).length) {
         // Spin.show() // 不建议开启，因为界面不友好
