@@ -105,6 +105,7 @@ export default {
           password,
           code
         ).then(res => {
+          console.log('loging.....', res)
           if (res.data.errno !== 0) {
             Notice.error({
               // title: res.data.errmsg.length > 0 ? res.data.errmsg : '验证出错,请刷新重试'
