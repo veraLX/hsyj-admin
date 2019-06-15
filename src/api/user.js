@@ -98,7 +98,7 @@ export const addUser = (obj) => {
 
 export const getUserList = (data) => {
   return axios.request({
-    url: 'api/user/getUserListBySchoolid?schoolid=' + data,
+    url: 'admin/user/getUserListBySchoolid?schoolid=' + data,
     method: 'get'
   })
 }
