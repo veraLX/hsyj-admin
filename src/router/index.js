@@ -72,6 +72,8 @@ router.beforeEach((to, from, next) => {
       })
     } else {
       Cookies.remove(TOKEN_KEY)
+      sessionStorage.clear()
+      localStorage.clear()
       setToken('')
       next({
         name: 'login'
