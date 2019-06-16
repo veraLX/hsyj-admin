@@ -88,7 +88,18 @@ export default {
           { required: true, message: '请输入管理员账户', trigger: 'blur' }
         ],
         pwd: [
-          { required: true, message: '请输入管理员密码', trigger: 'blur' }
+          { required: true, message: '请输入管理员密码', trigger: 'blur' },
+          { validator: (rule, value, callback) => {
+            if (value.length < 6) {
+              callback(new Error('密码应不少于6个字符'))
+            } else if (value.length > 8) {
+              callback(new Error('密码应不多于8个字符'))
+            } else {
+              callback()
+            }
+          },
+          trigger: 'change'
+          }
         ]
       },
       schoolList: [],
