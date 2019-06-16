@@ -13,11 +13,11 @@
                 <Option v-for="item in schoolList" :value="item.schoolID" :label="item.schoolName" :key="item.schoolID">{{ item.schoolName }}</Option>
             </Select>
         </FormItem>
-        <FormItem prop="longitude" label="经度" :style="{'width': 'calc((100% - 40px)/4)'}">
-            <Input v-model="siteForm.longitude" placeholder="输入经度"></Input>
-        </FormItem>
         <FormItem prop="latitude" label="纬度" :style="{'width': 'calc((100% - 40px)/4)'}">
             <Input v-model="siteForm.latitude" placeholder="输入纬度"></Input>
+        </FormItem>
+        <FormItem prop="longitude" label="经度" :style="{'width': 'calc((100% - 40px)/4)'}">
+            <Input v-model="siteForm.longitude" placeholder="输入经度"></Input>
         </FormItem>
         <!-- <FormItem prop="videoURL" label="视频URL地址" :style="{'width': 'calc((100% - 30px)/3)'}">
             <Input v-model="siteForm.videourl" placeholder="输入视频URL地址"></Input>

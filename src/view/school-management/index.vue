@@ -19,11 +19,11 @@
         <FormItem prop="shortname" label="学校简称" :style="{'width': 'calc((100% - 30px)/3)'}">
           <Input v-model="schoolForm.shortname" placeholder="输入学校简称"/>
         </FormItem>
-        <FormItem prop="longitude" label="经度" :style="{'width': 'calc((100% - 60px)/6)'}">
-          <Input v-model="schoolForm.longitude" placeholder="输入经度"/>
-        </FormItem>
         <FormItem prop="latitude" label="纬度" :style="{'width': 'calc((100% - 60px)/6)'}">
           <Input v-model="schoolForm.latitude" placeholder="输入纬度"/>
+        </FormItem>
+        <FormItem prop="longitude" label="经度" :style="{'width': 'calc((100% - 60px)/6)'}">
+          <Input v-model="schoolForm.longitude" placeholder="输入经度"/>
         </FormItem>
         <FormItem prop="address" label="地址" :style="{'width': 'calc((100% - 30px)/3*2 + 10px)'}">
           <Input v-model="schoolForm.address" placeholder="输入地址"/>
