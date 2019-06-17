@@ -33,11 +33,13 @@
         :render-format="render1"
         @on-change="handleChange2"></Transfer>
         </FormItem>
-        <FormItem prop="needSchoolPass" label="通关阈值(学校)" :style="{'width': 'calc((100% - 20px)/2)'}">
-        <InputNumber :min="1" v-model="activityForm.needSchoolPass"></InputNumber>
+        <FormItem prop="startAddress" label="活动起点" :style="{'width': 'calc((100% - 30px)/3)'}">
+            <Input v-model="activityForm.startAddress" placeholder="输入活动起点"></Input>
+          </FormItem>
+        <FormItem prop="needSchoolPass" label="通关阈值(学校)" :style="{'width': 'calc((100% - 30px)/3)'}">
+          <InputNumber :min="1" v-model="activityForm.needSchoolPass"></InputNumber>
         </FormItem>
-
-        <FormItem prop="needSceneryPass" label="通关阈值(景点)" :style="{'width': 'calc((100% - 20px)/2)'}">
+        <FormItem prop="needSceneryPass" label="通关阈值(景点)" :style="{'width': 'calc((100% - 30px)/3)'}">
         <InputNumber :min="1" v-model="activityForm.needSceneryPass"></InputNumber>
         </FormItem>
         <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
@@ -127,6 +129,9 @@ export default {
         ],
         enddateAll: [
           { required: true, type: 'date', message: '请输入结束日期', trigger: 'change' }
+        ],
+        startAddress: [
+          { required: true, message: '请输入活动起点', trigger: 'blur' }
         ],
         needSchoolPass: [
           { required: true, message: '请输入通关阈值(学校)', trigger: 'change', type: 'number' }
@@ -265,6 +270,8 @@ export default {
           })
           sceneryIdString = sceneryIdString.substring(0, sceneryIdString.length - 1)
           this.$set(this.activityForm, 'needsceneryrang', sceneryIdString)
+          // 活动起点
+          this.$set(this.activityForm, 'startaddress', this.activityForm.startAddress)
           // 通关阈值(学校)
           this.$set(this.activityForm, 'needschoolpass', this.activityForm.needSchoolPass)
           // 通关阈值(景点)

@@ -40,11 +40,13 @@
             :render-format="render1"
             @on-change="handleChange2"></Transfer>
           </FormItem>
-          <FormItem prop="needschoolpass" label="通关阈值(学校)" :style="{'width': 'calc((100% - 20px)/2)'}">
+          <FormItem prop="startaddress" label="活动起点" :style="{'width': 'calc((100% - 30px)/3)'}">
+            <Input v-model="activityForm.startaddress" placeholder="输入活动起点"></Input>
+          </FormItem>
+          <FormItem prop="needschoolpass" label="通关阈值(学校)" :style="{'width': 'calc((100% - 30px)/3)'}">
             <InputNumber :min="1" v-model="activityForm.needschoolpass"></InputNumber>
           </FormItem>
-
-          <FormItem prop="needscenerypass" label="通关阈值(景点)" :style="{'width': 'calc((100% - 20px)/2)'}">
+          <FormItem prop="needscenerypass" label="通关阈值(景点)" :style="{'width': 'calc((100% - 30px)/3)'}">
             <InputNumber :min="1" v-model="activityForm.needscenerypass"></InputNumber>
           </FormItem>
           <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
@@ -147,6 +149,9 @@ export default {
         ],
         enddateAll: [
           { required: true, type: 'date', message: '请输入结束日期', trigger: 'change' }
+        ],
+        startaddress: [
+          { required: true, message: '请输入活动起点', trigger: 'blur' }
         ],
         needschoolpass: [
           { required: true, message: '请输入通关阈值(学校)', trigger: 'change', type: 'number' }

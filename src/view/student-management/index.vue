@@ -123,13 +123,11 @@ export default {
   },
   methods: {
     async passStudent (params) {
-      let pass = await checkStudent(params.row.studentID, 4)
-      console.log('pass', pass)
+      await checkStudent(params.row.studentID, 4)
       this.getStudentList()
     },
     async disPassStudent (params) {
-      let dispass = await checkStudent(params.row.studentID, 3)
-      console.log('dispass', dispass)
+      await checkStudent(params.row.studentID, 3)
       this.getStudentList()
     },
     async deleteStudentMethod (params) {
