@@ -24,7 +24,7 @@
 
 <script>
 import {
-  getStudentList
+  getStudentList, checkStudent, deleteStudent
 } from '@/api/student'
 export default {
   name: 'directive_page',
@@ -40,7 +40,80 @@ export default {
         { title: '学生姓名', key: 'studentName' },
         { title: '学籍号', key: 'stuNo' },
         { title: '手机号码', key: 'tel' },
-        { title: '微信号码', key: 'nickname' }
+        { title: '微信号码', key: 'nickname' },
+        { title: '是否通过',
+          render: (h, params) => {
+            let status = ''
+            if (params.row.shstate === 2) {
+              status = '等待审核'
+            } else if (params.row.shstate === 3) {
+              status = '不通过'
+            } else if (params.row.shstate === 4) {
+              status = '通过'
+            }
+            return h('div', status)
+          }
+        },
+        {
+          title: '操作',
+          key: 'action',
+          width: 300,
+          align: 'center',
+          options: ['delete'],
+          render: (h, params) => {
+            return h('div', [
+              h(
+                'Button',
+                {
+                  style: { 'margin-right': '8px' },
+                  props: {
+                    type: 'primary',
+                    size: 'small'
+                  },
+                  on: {
+                    click: () => {
+                      this.passStudent(params)
+                    }
+                  }
+                },
+                '通过'
+              ),
+              h('Button', {
+                style: { 'margin-right': '8px' },
+                props: {
+                  type: 'primary',
+                  size: 'small',
+                  ghost: true
+                  // disabled: params.row.shstate
+                },
+                on: {
+                  click: () => {
+                    this.disPassStudent(params)
+                  }
+                }
+              }, '不通过'),
+              h('Poptip', {
+                props: {
+                  confirm: true,
+                  title: '你确定要删除吗?'
+                },
+                on: {
+                  'on-ok': async () => {
+                    this.deleteStudentMethod(params)
+                  }
+                }
+              }, [
+                h('Button', {
+                  props: {
+                    type: 'error',
+                    size: 'small'
+                    // disabled: params.row.isOriginal
+                  }
+                }, '删除')
+              ])
+            ])
+          }
+        }
       ],
       studentList: []
     }
@@ -49,6 +122,20 @@ export default {
     this.getStudentList()
   },
   methods: {
+    async passStudent (params) {
+      let pass = await checkStudent(params.row.studentID, 4)
+      console.log('pass', pass)
+      this.getStudentList()
+    },
+    async disPassStudent (params) {
+      let dispass = await checkStudent(params.row.studentID, 3)
+      console.log('dispass', dispass)
+      this.getStudentList()
+    },
+    async deleteStudentMethod (params) {
+      await deleteStudent(params.row.studentID)
+      this.getStudentList()
+    },
     async clearStuno () {
       if (this.formInline.stuno.length === 0) {
         this.getStudentList()

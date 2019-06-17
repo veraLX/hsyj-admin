@@ -14,3 +14,17 @@ export const getStudentList = (obj) => {
     method: 'post'
   })
 }
+
+export const checkStudent = (studentid, shstate) => {
+  return axios.request({
+    url: `admin/student/updateStatus?studentid=${studentid}&shstate=${shstate}`,
+    method: 'get'
+  })
+}
+
+export const deleteStudent = (studentid) => {
+  return axios.request({
+    url: `admin/student/delete?id=${studentid}`,
+    method: 'get'
+  })
+}
