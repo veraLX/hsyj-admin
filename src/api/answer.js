@@ -37,3 +37,20 @@ export const deleteAnswer = (questionID, activityID, sceneryID) => {
     method: 'get'
   })
 }
+
+export const editAnswer = (obj) => {
+  const data = {
+    questiontitle: obj.questiontitle,
+    answera: obj.answera,
+    answerb: obj.answerb,
+    answerc: obj.answerc,
+    answerd: obj.answerd,
+    rightanswer: obj.rightanswer,
+    questionid: obj.questionID
+  }
+  return axios.request({
+    url: 'admin/question/addEdit',
+    data,
+    method: 'post'
+  })
+}

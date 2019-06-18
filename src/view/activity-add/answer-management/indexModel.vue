@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { getAnswerList, addAnswer, deleteAnswer } from '@/api/answer'
+import { getAnswerList, addAnswer, deleteAnswer, editAnswer } from '@/api/answer'
 import { getActivityBySelf, finishActivity } from '@/api/activity'
 export default {
   name: 'directive_page',
@@ -141,9 +141,15 @@ export default {
                   size: 'small'
                 },
                 on: {
-                  click: () => {
+                  click: async () => {
                     if (params.row.$isEdit) {
                       this.$set(params.row, '$isEdit', false)
+                      let editReturn = await editAnswer(params.row)
+                      if (editReturn.data.errno === 0) {
+                        this.$Message.success('活动修改成功')
+                      } else {
+                        this.$Message.error('活动修改失败')
+                      }
                     } else {
                       this.$set(params.row, '$isEdit', true)
                     }

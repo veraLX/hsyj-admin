@@ -178,24 +178,6 @@ export default {
             }
           }
         },
-        { title: '经度',
-          key: 'longitude',
-          render: (h, params) => {
-            if (params.row.$isSiteEdit) {
-              return h('input', {
-                domProps: {
-                  value: params.row.longitude
-                },
-                on: {
-                  input: function (event) {
-                    params.row.longitude = event.target.value
-                  }
-                }
-              })
-            } else {
-              return h('div', params.row.longitude)
-            }
-          } },
         { title: '纬度',
           key: 'latitude',
           render: (h, params) => {
@@ -212,6 +194,24 @@ export default {
               })
             } else {
               return h('div', params.row.latitude)
+            }
+          } },
+        { title: '经度',
+          key: 'longitude',
+          render: (h, params) => {
+            if (params.row.$isSiteEdit) {
+              return h('input', {
+                domProps: {
+                  value: params.row.longitude
+                },
+                on: {
+                  input: function (event) {
+                    params.row.longitude = event.target.value
+                  }
+                }
+              })
+            } else {
+              return h('div', params.row.longitude)
             }
           } },
         { title: '描述',

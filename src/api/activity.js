@@ -55,9 +55,9 @@ export const editActivity = (obj, id) => {
     'needschoolpass': obj.needschoolpass,
     'needscenerypass': obj.needscenerypass,
     'settingstart': obj.settingstart,
-    'startsceneryid': obj.startsceneryid,
+    'startsceneryid': obj.startSceneryid,
     'settingend': obj.settingend,
-    'endsceneryid': obj.endsceneryid,
+    'endsceneryid': obj.endSceneryid,
     'isgroup': obj.isgroup,
     'groupnum': obj.groupnum,
     'isrecommend': obj.isrecommend
