@@ -290,7 +290,7 @@ export default {
       this.totalAnswerPages = answerList.data.data.totalPages
       this.countAnswer = answerList.data.data.count
       this.activityIdEach = params.row.activityID
-      let siteList = await sceneryList()
+      let siteList = await sceneryList(this.currentPage, this.pageSize)
       this.siteData = siteList.data.data.data
       this.editAnswer = true
       this.isAnswer = true
