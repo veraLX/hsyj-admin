@@ -41,7 +41,7 @@
 <script>
 import { getActivity1List, addActivity, deleteActivity1, finishActivity } from '@/api/activity'
 import { getAnswerList } from '@/api/answer'
-import { sceneryList } from '@/api/scenery'
+// import { sceneryList } from '@/api/scenery'
 import Upload from '@/view/components/uploadImage/index'
 import Answer from '@/view/activity-add/answer-management/indexModel'
 import Activity from '@/view/activity-management/activity-edit/index'
@@ -290,21 +290,28 @@ export default {
       this.totalAnswerPages = answerList.data.data.totalPages
       this.countAnswer = answerList.data.data.count
       this.activityIdEach = params.row.activityID
-      let siteList = await sceneryList(this.currentPage, this.pageSize)
-      this.siteData = siteList.data.data.data
+      this.siteData = this.currentActivity.sceneryRange
+      // let siteList = await sceneryList(this.currentPage, this.pageSize)
+      // console.log('siteList.data.data.data', siteList.data.data.data)
+      // this.siteData = siteList.data.data.data
       this.editAnswer = true
       this.isAnswer = true
     },
     async answerCloseModal () {
-      this.editAnswer = false
-      this.isAnswer = false
       if (this.currentActivity.pics.length > 0) {
         // console.log('currentActivity', this.currentActivity)
         await finishActivity(this.currentActivity.activityID)
         this.$Notice.success({
           title: '该活动编辑完成'
         })
+      } else {
+        this.$Notice.error({
+          title: '尚未上传图片，请在活动列表操作栏上传图片',
+          duration: 4.5
+        })
       }
+      this.editAnswer = false
+      this.isAnswer = false
     },
     openModal (params) {
       this.editImage = true

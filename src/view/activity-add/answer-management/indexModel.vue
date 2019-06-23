@@ -5,7 +5,7 @@
       <Form ref="formInline" :model="formInline" :rules="ruleInline" :label-width="80">
         <FormItem label="景点选择" :style="{'width': '400px'}" prop="sceneryID">
             <Select v-model="formInline.sceneryid" placeholder="输入景点">
-              <Option v-for="item in currentSiteList" :value="item.sceneryID" :key="item.sceneryID">{{ item.sceneryTitle }}</Option>
+              <Option v-for="item in currentSiteList" :value="item.sceneryid" :key="item.sceneryid">{{ item.sceneryname }}</Option>
             </Select>
             <!-- <Input v-model="formInline.sceneryid" placeholder="输入景点"></Input> -->
         </FormItem>
@@ -27,8 +27,14 @@
         <FormItem label="选项D" :style="{'width': '400px'}" prop="answerd">
             <Input v-model="formInline.answerd" placeholder="输入选项D"></Input>
         </FormItem>
-        <FormItem label="正确答案" :style="{'width': '400px'}" prop="rightanswer">
-            <Input v-model="formInline.rightanswer" placeholder="正确答案"></Input>
+        <FormItem label="正确选项" :style="{'width': '400px'}" prop="rightanswer">
+            <!-- <Input v-model="formInline.rightanswer" placeholder="正确选项"></Input> -->
+            <RadioGroup v-model="formInline.rightanswer">
+                <Radio label="A"></Radio>
+                <Radio label="B"></Radio>
+                <Radio label="C"></Radio>
+                <Radio label="D"></Radio>
+            </RadioGroup>
         </FormItem>
         <div class="rightButton">
             <Button v-if="!isEdit" type="primary" ghost @click="beforeAnswerStep" style="margin-right: 20px;">上一步</Button>
@@ -42,6 +48,7 @@
       <Page show-total :total="count" :current="currentPage" :page-size="pageSize" @on-change="handlePage"/>
       <div class="rightButton">
           <Button v-if="!isEdit" type="primary" @click="finishActivity">完成</Button>
+          <!-- <Button type="primary" @click="finishActivity">完成</Button>       -->
       </div>
     </Card>
   </div>
@@ -94,7 +101,7 @@ export default {
           { required: true, message: '请输入选项D', trigger: 'blur' }
         ],
         rightanswer: [
-          { required: true, message: '请输入正确答案', trigger: 'blur' }
+          { required: true, message: '请选择正确选项', trigger: 'blur' }
         ]
       },
       AnswerColumns: [
@@ -125,7 +132,7 @@ export default {
         { title: '选项B', key: 'answerb' },
         { title: '选项C', key: 'answerc' },
         { title: '选项D', key: 'answerd' },
-        { title: '正确答案', key: 'rightanswer', width: 90 },
+        { title: '正确选项', key: 'rightanswer', width: 90 },
         {
           title: '操作',
           key: 'action',
@@ -164,7 +171,6 @@ export default {
                 on: {
                   'on-ok': async () => {
                     this.deleteAnswer(params.row)
-                    this.calculateSite()
                   }
                 }
               }, [
@@ -194,18 +200,31 @@ export default {
         this.$Notice.success({
           title: '该活动编辑完成'
         })
+      } else {
+        if (this.isEdit) {
+          this.$Notice.error({
+            title: '尚未上传图片，请在活动列表操作栏上传图片'
+          })
+        } else {
+          this.$Notice.error({
+            title: '尚未上传图片，请选择上一步增加图片'
+          })
+        }
       }
     },
-    calculateSite () {
+    calculateSite () { // 去掉已经在答题列表里面的景点
       this.currentSiteList = JSON.parse(JSON.stringify(this.siteList))
-      // debugger
-      _.each(this.siteList, (siteItem, index) => {
+      let arr = this.currentSiteList
+      var i = arr.length
+      while (i--) {
         _.each(this.AnswerData, (answerItem) => {
-          if (siteItem.sceneryID === answerItem.sceneryid) {
-            this.currentSiteList.splice(index, 1)
+          if (arr[i] && answerItem) {
+            if (arr[i].sceneryid === answerItem.sceneryid) {
+              arr.splice(i, 1)
+            }
           }
         })
-      })
+      }
     },
     async deleteAnswer (rowData) {
       await deleteAnswer(rowData.questionID, rowData.activityid, rowData.sceneryid)

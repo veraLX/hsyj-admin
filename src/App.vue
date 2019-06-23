@@ -54,4 +54,7 @@ html,body{
   display: flex!important;
   justify-content: flex-end!important;
 }
+.ivu-notice-title{
+  white-space: pre-wrap!important
+}
 </style>

@@ -106,7 +106,7 @@ import Upload from '@/view/components/uploadImage/index'
 import { addActivity, editActivity } from '@/api/activity'
 import { getSchoolList } from '@/api/school'
 import { getAnswerList } from '@/api/answer'
-import { getSceneryFromSchool } from '@/api/scenery'
+import { getSceneryFromSchool, getSceneryDetail } from '@/api/scenery'
 // import { getAnswerList } from '@/api/answer'
 import moment from 'moment'
 export default {
@@ -271,6 +271,17 @@ export default {
           })
         }
       })
+      // 已选择的景点列表
+      let sceneryIdList = this.activityForm.needsceneryrang.split(',')
+      let sceneryList = []
+      _.each(sceneryIdList, async (item) => {
+        let aceneryDetail = await getSceneryDetail(item)
+        sceneryList.push({
+          sceneryid: aceneryDetail.data.data.sceneryID,
+          sceneryname: aceneryDetail.data.data.sceneryTitle
+        })
+      })
+      this.siteData = sceneryList
     },
     // nextImageStep () {
     //   debugger
@@ -315,7 +326,7 @@ export default {
       }
       this.$set(this.activityForm, 'needschoolrang', schoolIdString)
       let getSceneryFromSchoolList = await getSceneryFromSchool(schoolIdString)
-      this.siteData = getSceneryFromSchoolList.data.data
+      // this.siteData = getSceneryFromSchoolList.data.data
       this.data2 = []
       this.activityForm.targetKeys2 = []
       let data2Arr = []
