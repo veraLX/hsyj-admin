@@ -45,7 +45,7 @@
     <Card :style="{'margin-top': '20px'}">
       <p slot="title">答题列表</p>
       <Table stripe :columns="AnswerColumns" :data="AnswerData"></Table>
-      <Page show-total :total="count" :current="currentPage" :page-size="pageSize" @on-change="handlePage"/>
+      <Page show-total :total="totalCount" :current="currentPage" :page-size="pageSize" @on-change="handlePage"/>
       <div class="rightButton">
           <Button v-if="!isEdit" type="primary" @click="finishActivity">完成</Button>
           <!-- <Button type="primary" @click="finishActivity">完成</Button>       -->
@@ -61,8 +61,8 @@ export default {
   name: 'directive_page',
   props: {
     objectList: Array,
-    totalPages: Number,
-    count: Number,
+    // totalPages: Number,
+    // totalCount: Number,
     activityId: Number,
     siteList: Array,
     isEdit: Boolean
@@ -71,6 +71,7 @@ export default {
     return {
       pageSize: 5,
       currentPage: 1,
+      totalCount: 0,
       formInline: {
         sceneryid: null,
         startAddress: '',
@@ -107,7 +108,6 @@ export default {
       AnswerColumns: [
         { title: ' ', type: 'index', width: 60, align: 'center' },
         { title: '景点名称', key: 'sceneryTitle' },
-        // { title: '地点', key: 'startAddress' },
         { title: '题干',
           key: 'questiontitle',
           width: 300,
@@ -185,12 +185,13 @@ export default {
           }
         }
       ],
-      AnswerData: this.objectList ? this.objectList : [],
+      AnswerData: [],
       currentSiteList: []
     }
   },
   created () {
     this.calculateSite()
+    this.flashAllAnswerData()
   },
   methods: {
     async finishActivity () {
@@ -252,10 +253,9 @@ export default {
     async flashAllAnswerData () {
       let answerList = await getAnswerList(this.currentPage, this.pageSize, this.activityId)
       this.AnswerData = answerList.data.data.data
-      this.totalPages = answerList.data.data.totalPages
       this.pageSize = answerList.data.data.pageSize
       this.currentPage = answerList.data.data.currentPage
-      this.count = answerList.data.data.count
+      this.totalCount = answerList.data.data.count
       this.calculateSite()
     },
     handlePage (value) {

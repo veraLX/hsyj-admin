@@ -91,20 +91,10 @@ export default {
       imgName: '',
       visible: false,
       uploadList: [],
-      data1: [{ key: '1', label: '复旦大学' },
-        { key: '2', label: '上海交通大学' },
-        { key: '3 ', label: '杨浦区教育局 ' },
-        { key: '4 ', label: '上海财经大学 ' },
-        { key: '5 ', label: '同济大学 ' },
-        { key: '6 ', label: '杨浦区教育局 ' },
-        { key: '7 ', label: '上海财经大学 ' },
-        { key: '8 ', label: '同济大学 ' }],
-      targetKeys1: ['1', '2'],
-      data2: [{ key: '1', label: '三好坞' },
-        { key: '2', label: '同济大学' },
-        { key: '3 ', label: '财大老门 ' },
-        { key: '4 ', label: '同济二食堂 ' }],
-      targetKeys2: ['1', '2', '3', '4'],
+      data1: [],
+      targetKeys1: [],
+      data2: [],
+      targetKeys2: [],
       activityForm: {
         name: '',
         school: '',
@@ -170,12 +160,6 @@ export default {
             }
           }
         },
-        // { title: '涉及高校', key: 'shdesc' },
-        // { title: '学校数', key: 'shstate', width: 72 },
-        // { title: '景点数量', key: 'sceneryCount', width: 84 },
-        // { title: '题目数量', key: 'sceneryCount', width: 84 },
-        // { title: '通关阈值', key: 'clearanceThreshold', width: 84 },
-        // { title: '描述', key: 'describe' },
         {
           title: '操作',
           key: 'action',
@@ -288,6 +272,8 @@ export default {
       this.currentActivity = params.row
       this.answerAllList = answerList.data.data.data
       this.totalAnswerPages = answerList.data.data.totalPages
+      this.pageSize = answerList.data.data.pageSize
+      this.currentPage = answerList.data.data.currentPage
       this.countAnswer = answerList.data.data.count
       this.activityIdEach = params.row.activityID
       this.siteData = this.currentActivity.sceneryRange

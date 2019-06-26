@@ -52,13 +52,13 @@
           <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
               <Checkbox v-model="activityForm.settingstartBoolean">是否设定起点</Checkbox>
               <Select v-model="activityForm.startsceneryid" :disabled="!activityForm.settingstartBoolean">
-                <Option v-for="item in data2" :value="item.key" :key="item.key">{{ item.label }}</Option>
+                <Option v-for="item in data2sort" :value="item.key" :key="item.key">{{ item.label }}</Option>
               </Select>
           </FormItem>
           <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
               <Checkbox v-model="activityForm.settingendBoolean">是否设定终点</Checkbox>
               <Select v-model="activityForm.endsceneryid" :disabled="!activityForm.settingendBoolean">
-                <Option v-for="item in data2" :value="item.key" :key="item.key">{{ item.label }}</Option>
+                <Option v-for="item in data2sort" :value="item.key" :key="item.key">{{ item.label }}</Option>
               </Select>
           </FormItem>
           <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
@@ -166,6 +166,7 @@ export default {
       data1: [],
       // targetKeys1: [],
       data2: [],
+      data2sort: [],
       // targetKeys2: [],
       activityForm: {
         needschoolpass: 1,
@@ -328,11 +329,13 @@ export default {
       let getSceneryFromSchoolList = await getSceneryFromSchool(schoolIdString)
       // this.siteData = getSceneryFromSchoolList.data.data
       this.data2 = []
+      this.data2sort = []
       this.activityForm.targetKeys2 = []
       let data2Arr = []
       let targetKeys2Arr = []
       _.each((getSceneryFromSchoolList.data.data), schoolSceneryItem => {
         this.data2.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
+        this.data2sort.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
         this.activityForm.targetKeys2.push(schoolSceneryItem.sceneryID)
         data2Arr.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
         targetKeys2Arr.push(schoolSceneryItem.sceneryID)
@@ -349,8 +352,14 @@ export default {
     handleChange2 (newTargetKeys, direction, moveKeys) {
       this.activityForm.targetKeys2 = newTargetKeys
       let sceneryIdString = ''
+      this.data2sort = []
       _.each(this.activityForm.targetKeys2, (sceneryId) => {
         sceneryIdString = sceneryIdString + sceneryId + ','
+        _.each(this.data2, (data2Item) => {
+          if (data2Item.key === sceneryId) {
+            this.data2sort.push(data2Item)
+          }
+        })
       })
       if (sceneryIdString.length > 0) {
         sceneryIdString = sceneryIdString.substr(0, sceneryIdString.length - 1)

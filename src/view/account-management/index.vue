@@ -47,7 +47,7 @@
       </Form>
       <p class="littleTitle">管理员列表</p>
       <Table stripe :columns="AdministratorColumns" :data="administratorList"></Table>
-      <Page :total="administratorList.length" />
+      <!-- <Page :total="administratorList.length" /> -->
       <div slot="footer">
           <!-- <Button :size="buttonSize" type="primary" @click="groupUpdateMethod" >确定</Button> -->
       </div>

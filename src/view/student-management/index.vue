@@ -16,7 +16,8 @@
         </FormItem>
         <Button type="primary" @click="getStudentList">查询</Button>
         <Table stripe :columns="StudentColumns" :data="studentList"></Table>
-        <Page :total="0" />
+        <Page show-total :total="count" :current="currentPage" :page-size="pageSize" @on-change="handlePage"/>
+        <!-- <Page :total="0" /> -->
       </Form>
     </Card>
   </div>
@@ -30,6 +31,9 @@ export default {
   name: 'directive_page',
   data () {
     return {
+      count: 0,
+      pageSize: 5,
+      currentPage: 1,
       formInline: {
         stuno: '',
         studentname: '',
@@ -122,6 +126,10 @@ export default {
     this.getStudentList()
   },
   methods: {
+    handlePage (value) {
+      this.currentPage = value
+      this.getStudentList()
+    },
     async passStudent (params) {
       await checkStudent(params.row.studentID, 4)
       this.getStudentList()
@@ -142,6 +150,9 @@ export default {
     async getStudentList () {
       const list = await getStudentList(this.formInline)
       this.studentList = list.data.data.data ? list.data.data.data : []
+      this.pageSize = list.data.data.pageSize
+      this.currentPage = list.data.data.currentPage
+      this.count = list.data.data.count
     },
     getDistype (id) {
       // distype：留言类型0,景点; 1,活动,2 学校,3首页

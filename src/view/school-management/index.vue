@@ -53,7 +53,8 @@
     <Card :style="{'margin-top': '20px'}">
       <p slot="title">校区列表</p>
       <Table stripe :columns="schoolColumns" :data="schoolList"></Table>
-      <Page :total="count" @on-change="changePage"/>
+      <!-- <Page :total="count" @on-change="changePage"/> -->
+      <Page show-total :total="count" :current="currentPage" :page-size="pageSize" @on-change="changePage"/>
     </Card>
   </div>
 </template>
@@ -83,6 +84,8 @@ export default {
         schooldesc: '',
         parentid: ''
       },
+      pageSize: 5,
+      currentPage: 1,
       uploadList: [],
       currentParentId: 0,
       currentImageArray: [],
@@ -395,8 +398,7 @@ export default {
           }
         }
       ],
-      schoolList: [],
-      currentPage: 1
+      schoolList: []
     }
   },
   mounted () {
@@ -405,9 +407,11 @@ export default {
   },
   methods: {
     async getSchoolList () {
-      const list = await getSchoolList({ page: this.currentPage, pageSize: 10 })
+      const list = await getSchoolList({ page: this.currentPage, pageSize: this.pageSize })
       this.schoolList = list.data.data.data ? list.data.data.data : []
       this.count = list.data.data.count ? list.data.data.count : 0
+      this.pageSize = list.data.data.pageSize
+      this.currentPage = list.data.data.currentPage
     },
     async getArea () {
       const list = await getArea()
@@ -449,8 +453,9 @@ export default {
     },
     async changePage (e) {
       this.currentPage = e
-      const list = await getSchoolList({ page: e, pageSize: 10 })
-      this.schoolList = list.data.data.data ? list.data.data.data : []
+      this.getSchoolList()
+      // const list = await getSchoolList({ page: e, pageSize: this.pageSize })
+      // this.schoolList = list.data.data.data ? list.data.data.data : []
     },
     selectChange (value) {
       this.schoolForm.areaid = value

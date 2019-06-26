@@ -19,14 +19,14 @@
         <FormItem prop="enddateAll" label="结束日期" :style="{'width': 'calc((100% - 30px)/3)'}">
             <DatePicker v-model="activityForm.enddateAll" type="datetime" placeholder="输入结束日期" :style="{'width': '100%'}" @on-change="timeCheck"></DatePicker>
         </FormItem>
-        <FormItem prop="targetKeys1" :required='true' label="学校范围" :style="{'width': 'calc((100% - 20px)/2)'}">
+        <FormItem prop="targetKeys1" :required='true' label="学校范围" :style="{'width': '100%'}">
         <Transfer
         :data="data1"
         :target-keys="activityForm.targetKeys1"
         :render-format="render1"
         @on-change="handleChange1"></Transfer>
         </FormItem>
-        <FormItem prop="targetKeys2" :required='true' label="景点选择" :style="{'width': 'calc((100% - 20px)/2)'}">
+        <FormItem prop="targetKeys2" :required='true' label="景点选择" :style="{'width': '100%'}">
         <Transfer
         :data="data2"
         :target-keys="activityForm.targetKeys2"
@@ -45,13 +45,13 @@
         <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
             <Checkbox v-model="activityForm.settingStartBoolean">是否设定起点</Checkbox>
             <Select v-model="activityForm.startSceneryid" :disabled="!activityForm.settingStartBoolean">
-            <Option v-for="item in data2" :value="item.key" :key="item.key">{{ item.label }}</Option>
+            <Option v-for="item in data2sort" :value="item.key" :key="item.key">{{ item.label }}</Option>
             </Select>
         </FormItem>
         <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
             <Checkbox v-model="activityForm.settingEndBoolean">是否设定终点</Checkbox>
             <Select v-model="activityForm.endSceneryid" :disabled="!activityForm.settingEndBoolean">
-            <Option v-for="item in data2" :value="item.key" :key="item.key">{{ item.label }}</Option>
+            <Option v-for="item in data2sort" :value="item.key" :key="item.key">{{ item.label }}</Option>
             </Select>
         </FormItem>
         <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
@@ -77,7 +77,7 @@
 import Upload from '@/view/components/uploadImage/index'
 import { editActivity } from '@/api/activity'
 import { getSchoolList } from '@/api/school'
-import { getSceneryFromSchool } from '@/api/scenery'
+import { getSceneryFromSchool, getSceneryDetail } from '@/api/scenery'
 import moment from 'moment'
 // import { constants } from 'crypto'
 // import { constants } from 'fs'
@@ -104,6 +104,7 @@ export default {
       data1: [],
       // targetKeys1: [],
       data2: [],
+      data2sort: [],
       // targetKeys2: [],
       activityForm: {
         needSchoolPass: 1,
@@ -186,15 +187,34 @@ export default {
       // 景点选择
       let getSceneryFromSchoolList = await getSceneryFromSchool(needSchoolRang)
       this.data2 = []
-      let data2Arr = []
+      this.data2sort = []
+      // let data2Arr = []
       _.each((getSceneryFromSchoolList.data.data), schoolSceneryItem => {
         this.data2.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
-        data2Arr.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
+        // data2Arr.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
       })
       let targetKeyList2 = []
-      _.each((this.currentActivity.sceneryRange), sceneryItem => {
-        targetKeyList2.push(sceneryItem.sceneryid)
+      let sceneryList = []
+      _.each((this.currentActivity.sceneryRange), async (sceneryItem) => {
+        sceneryList.push(sceneryItem.sceneryid)
+        // targetKeyList2.push(sceneryItem.sceneryid)
+        // let aceneryDetail = await getSceneryDetail(sceneryItem.sceneryid)
+        // this.data2sort.push({
+        //   key: aceneryDetail.data.data.sceneryID,
+        //   label: aceneryDetail.data.data.sceneryTitle
+        // })
       })
+      sceneryList = this.uniq(sceneryList)
+      _.each(sceneryList, async (sceneryIdItem) => {
+        targetKeyList2.push(sceneryIdItem)
+        let aceneryDetail = await getSceneryDetail(sceneryIdItem)
+        this.data2sort.push({
+          key: aceneryDetail.data.data.sceneryID,
+          label: aceneryDetail.data.data.sceneryTitle
+        })
+      })
+      targetKeyList2 = this.uniq(targetKeyList2)
+      this.data2sort = this.uniq(this.data2sort)
       this.$set(this.activityForm, 'targetKeys2', targetKeyList2)
       // 开始时间
       this.$set(this.activityForm, 'startdateAll', new Date(this.currentActivity.startDate))
@@ -212,8 +232,8 @@ export default {
         settingStartBoolean = true
       }
       this.$set(this.activityForm, 'settingStartBoolean', settingStartBoolean)
-      console.log('settingStartBoolean', settingStartBoolean)
-      console.log('this.currentActivity.startSceneryid', this.currentActivity.startSceneryid)
+      // console.log('settingStartBoolean', settingStartBoolean)
+      // console.log('this.currentActivity.startSceneryid', this.currentActivity.startSceneryid)
       // 是否设置终点
       let settingEndBoolean = false
       if (this.currentActivity.settingEnd === 1 && this.currentActivity.endSceneryid) {
@@ -265,6 +285,7 @@ export default {
           this.$set(this.activityForm, 'needschoolrang', schoolIdString)
           // 景点选择
           let sceneryIdString = ''
+          this.activityForm.targetKeys2 = this.uniq(this.activityForm.targetKeys2)
           _.each(this.activityForm.targetKeys2, (targetKeys2Id) => {
             sceneryIdString = sceneryIdString + targetKeys2Id + ','
           })
@@ -327,6 +348,15 @@ export default {
     render1 (item) {
       return item.label
     },
+    uniq (array) {
+      var temp = [] // 一个新的临时数组
+      for (var i = 0; i < array.length; i++) {
+        if (temp.indexOf(array[i]) === -1) {
+          temp.push(array[i])
+        }
+      }
+      return temp
+    },
     async handleChange1 (newTargetKeys, direction, moveKeys) {
       this.activityForm.targetKeys1 = newTargetKeys
       let schoolIdString = ''
@@ -337,15 +367,18 @@ export default {
       this.$set(this.activityForm, 'needschoolrang', schoolIdString)
       let getSceneryFromSchoolList = await getSceneryFromSchool(schoolIdString)
       this.data2 = []
+      this.data2sort = []
       this.activityForm.targetKeys2 = []
-      let data2Arr = []
+      // let data2Arr = []
       let targetKeys2Arr = []
       _.each((getSceneryFromSchoolList.data.data), schoolSceneryItem => {
         this.data2.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
+        this.data2sort.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
         this.activityForm.targetKeys2.push(schoolSceneryItem.sceneryID)
-        data2Arr.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
+        // data2Arr.push({ key: schoolSceneryItem.sceneryID, label: schoolSceneryItem.sceneryTitle })
         targetKeys2Arr.push(schoolSceneryItem.sceneryID)
       })
+      targetKeys2Arr = this.uniq(targetKeys2Arr)
       let sceneryIdString = ''
       _.each(targetKeys2Arr, (sceneryId) => {
         sceneryIdString = sceneryIdString + sceneryId + ','
@@ -354,10 +387,17 @@ export default {
       this.$set(this.activityForm, 'needsceneryrang', sceneryIdString)
     },
     handleChange2 (newTargetKeys, direction, moveKeys) {
+      this.uniq(newTargetKeys)
       this.activityForm.targetKeys2 = newTargetKeys
       let sceneryIdString = ''
+      this.data2sort = []
       _.each(this.activityForm.targetKeys2, (sceneryId) => {
         sceneryIdString = sceneryIdString + sceneryId + ','
+        _.each(this.data2, (data2Item) => {
+          if (data2Item.key === sceneryId) {
+            this.data2sort.push(data2Item)
+          }
+        })
       })
       // if (sceneryIdString.length > 0) {
       //   sceneryIdString = sceneryIdString.substr(0, sceneryIdString.length - 1)
