@@ -387,15 +387,16 @@ export default {
       })
       // let sortList1 = []
       // let sortNumber1 = 0
-      _.each(sightList.data.data.data, (list) => {
-        if (!list.shstate) {
-          this.unresoluved++
-        }
-        // if (list.scenerytype !== 1) {
-        //   sortList1.push(list)
-        //   sortNumber1++
-        // }
-      })
+      // _.each(sightList.data.data.data, (list) => {
+      //   if (!list.shstate) {
+      //     this.unresoluved++
+      //   }
+      //   // if (list.scenerytype !== 1) {
+      //   //   sortList1.push(list)
+      //   //   sortNumber1++
+      //   // }
+      // })
+      this.unresoluved = sightList.data.data.waitApprove
       this.sightPageSize = sightList.data.data.pageSize
       this.sightCurrentPage = sightList.data.data.currentPage
       this.sightMessageList = sightList.data.data.data ? sightList.data.data.data : []
@@ -425,11 +426,12 @@ export default {
         pagesize: 10,
         distype: 1
       })
-      _.each(activityList.data.data.data, (list) => {
-        if (!list.shstate) {
-          this.unresoluved++
-        }
-      })
+      // _.each(activityList.data.data.data, (list) => {
+      //   if (!list.shstate) {
+      //     this.unresoluved++
+      //   }
+      // })
+      this.unresoluved = activityList.data.data.waitApprove + this.unresoluved
       this.activityPageSize = activityList.data.data.pageSize
       this.activityCurrentPage = activityList.data.data.currentPage
       this.activityCount = activityList.data.data.count ? activityList.data.data.count : 0
