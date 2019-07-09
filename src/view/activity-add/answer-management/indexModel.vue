@@ -235,7 +235,7 @@ export default {
       this.$emit('beforeAnswerStep')
     },
     async addAnswer () {
-      if (!_.isEmpty(this.formInline.questiontitle) && !_.isEmpty(this.formInline.answera) &&
+      if (this.formInline.sceneryid && !_.isEmpty(this.formInline.questiontitle) && !_.isEmpty(this.formInline.answera) &&
        !_.isEmpty(this.formInline.answerb) && !_.isEmpty(this.formInline.answerc) &&
        !_.isEmpty(this.formInline.answerd) && !_.isEmpty(this.formInline.rightanswer)) {
         let answerData = await addAnswer(this.formInline, this.activityId)
