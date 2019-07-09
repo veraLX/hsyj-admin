@@ -235,19 +235,34 @@ export default {
       this.$emit('beforeAnswerStep')
     },
     async addAnswer () {
-      if (!_.isEmpty(this.formInline.questiontitle)) {
-        await addAnswer(this.formInline, this.activityId)
-        this.flashAllAnswerData()
-        this.formInline = {
-          sceneryid: null,
-          startAddress: '',
-          questiontitle: '',
-          answera: '',
-          answerb: '',
-          answerc: '',
-          answerd: '',
-          rightanswer: ''
+      if (!_.isEmpty(this.formInline.questiontitle) && !_.isEmpty(this.formInline.answera) &&
+       !_.isEmpty(this.formInline.answerb) && !_.isEmpty(this.formInline.answerc) &&
+       !_.isEmpty(this.formInline.answerd) && !_.isEmpty(this.formInline.rightanswer)) {
+        let answerData = await addAnswer(this.formInline, this.activityId)
+        if (answerData.data.errno === 0) {
+          this.$Notice.success({
+            title: '答题添加成功'
+          })
+          this.flashAllAnswerData()
+          this.formInline = {
+            sceneryid: null,
+            startAddress: '',
+            questiontitle: '',
+            answera: '',
+            answerb: '',
+            answerc: '',
+            answerd: '',
+            rightanswer: ''
+          }
+        } else {
+          this.$Notice.error({
+            title: '答题添加失败'
+          })
         }
+      } else {
+        this.$Notice.error({
+          title: '请完善活动景点题目信息'
+        })
       }
     },
     async flashAllAnswerData () {
