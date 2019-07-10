@@ -63,7 +63,7 @@
           </FormItem>
           <FormItem :style="{'width': 'calc((100% - 30px)/3)'}" class="checkboxForm">
               <Checkbox v-model="activityForm.isgroupBoolean">是否团队赛</Checkbox>
-              <br/>组队人数：<InputNumber :min="1" v-model="activityForm.groupnum" :disabled="!activityForm.isgroupBoolean"></InputNumber>
+              <br/>组队人数：<InputNumber :min="2" v-model="activityForm.groupnum" :disabled="!activityForm.isgroupBoolean"></InputNumber>
           </FormItem>
           <FormItem prop="recommend" label="是否推荐" :style="{'width': 'calc((100% - 30px)/3)'}">
             <i-switch v-model="switchRecommend" @on-change="changeRecommend" />
@@ -227,6 +227,12 @@ export default {
           // 是否团体赛
           if (this.activityForm.isgroupBoolean) {
             this.$set(this.activityForm, 'isgroup', 1)
+            if (!this.activityForm.groupnum) {
+              this.$Notice.error({
+                title: '未设置团队人数，将默认设置为2'
+              })
+              this.$set(this.activityForm, 'groupnum', 2)
+            }
           } else {
             this.$set(this.activityForm, 'isgroup', 0)
             this.$set(this.activityForm, 'groupnum', null)
