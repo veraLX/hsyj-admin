@@ -63,3 +63,17 @@ export const getImageList = (targetid, sourcetype) => {
     method: 'get'
   })
 }
+
+export const index = (action) => {
+  return axios.request({
+    url: `admin/count/` + action,
+    method: 'get'
+  })
+}
+
+export const mindex = (action, id) => {
+  return axios.request({
+    url: `admin/mcount/` + action + '?schoolId=' + id,
+    method: 'get'
+  })
+}

@@ -29,6 +29,9 @@ export default {
       let xAxisData = Object.keys(this.value)
       let seriesData = Object.values(this.value)
       let option = {
+        grid: {
+          bottom: '100px'
+        },
         title: {
           text: this.text,
           subtext: this.subtext,
@@ -36,7 +39,15 @@ export default {
         },
         xAxis: {
           type: 'category',
-          data: xAxisData
+          data: xAxisData,
+          axisLabel: {
+            interval: 0,
+            rotate: 45,
+            textStyle: {
+              color: '#333',
+              fontSize: 12
+            }
+          }
         },
         yAxis: {
           type: 'value'
