@@ -28,7 +28,7 @@
       </i-col>
       <i-col :md="24" :lg="12" style="margin-bottom: 20px;">
         <Card shadow>
-          <chart-bar style="height: 300px;" :value="topActivityOrg" text="Top5活动主办机构" v-if="topActivityOrg"/>
+          <chart-bar style="height: 300px;" :value="topActivityOrg" text="历年注册人数" v-if="topActivityOrg"/>
         </Card>
       </i-col>
     </Row>
@@ -91,7 +91,7 @@ export default {
       const scenerys = await mindex('topActivityOrg', this.user.schoolid)
       const scenery = {}
       for (const a of scenerys.data) {
-        scenery[a.sponsor] = a.num
+        scenery[a.year] = a.num
       }
       this.topActivityOrg = scenery
     }
