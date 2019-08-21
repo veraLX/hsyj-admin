@@ -106,7 +106,7 @@ export default [
           icon: 'ios-aperture',
           title: '数据统计'
         },
-        component: () => import('@/view/data-analysis/index.vue')
+        component: () => import('@/view/single-page/home')
       }
     ]
   },
