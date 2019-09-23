@@ -141,7 +141,7 @@ export default {
       siteColumns: [
         { title: ' ', type: 'index', width: 60, align: 'center' },
         { title: '景点名称',
-          key: 'sceneryTitle',
+          key: 'scenerytitle',
           render: (h, params) => {
             if (params.row.$isSiteEdit) {
               return h('input', {
@@ -150,7 +150,7 @@ export default {
                 },
                 on: {
                   input: function (event) {
-                    params.row.sceneryTitle = event.target.value
+                    params.row.scenerytitle = event.target.value
                   }
                 }
               })
@@ -375,6 +375,7 @@ export default {
                     click: async () => {
                       if (params.row.$isSiteEdit) {
                         this.$set(params.row, '$isSiteEdit', false)
+                        console.dir(params.row)
                         let obj = {
                           scenerytitle: params.row.scenerytitle,
                           address: params.row.address,
