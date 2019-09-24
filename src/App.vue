@@ -57,4 +57,5 @@ html,body{
 .ivu-notice-title{
   white-space: pre-wrap!important
 }
+
 </style>
